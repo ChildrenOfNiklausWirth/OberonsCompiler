@@ -1,19 +1,13 @@
 #include <stdio.h>
 
 
-
-int parsing(char fileName[]) {
-
+int charParsing(char *fileName) {
+    char c;
     FILE *file = fopen(fileName, "r");
+    while (fscanf(file, "%c", &c) != EOF)
+        printf("%c", c);
 
-    char symbol[80];
-    int i = 0;
 
-    while (fscanf(file, "%s", symbol) != EOF) {
-        printf("%s \n", symbol);
-        i++;
-    }
-    printf("%d",i);
     return 0;
 }
 
