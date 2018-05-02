@@ -1,4 +1,3 @@
 MODULE Main;
 VAR a=10,b=20;
 VAR c:INTEGER;
-c=a+b;
