@@ -1,0 +1,5 @@
+MODULE Main;
+VAR a=2,c=0;
+WHILE c<10 DO
+    a=a*a;
+END;
