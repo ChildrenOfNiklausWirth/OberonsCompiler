@@ -1,29 +1,29 @@
 #include <stdio.h>
-#include "Z_Structs.c"
+#include "Z_Tokens.c"
 
 
-void readNextToken(FILE *file, int currentTokenIndex, char c, struct Token *tokens) {
+struct Token readNextToken(FILE *file, char c) {
     int index = 0;
-    tokens[currentTokenIndex].length = 0;
+    struct Token token;
+    token.length = 0;
     while (c != ' ' && c != '\n' && c != EOF && c != ';') {
-        tokens[currentTokenIndex].symbols[index] = c;
-        tokens[currentTokenIndex].length++;
+        token.symbols[index] = c;
+        token.length++;
         index++;
         fscanf(file, "%c", &c);
     }
+    return token;
 
 }
 
-
-void leksParser(char *fileName, struct Token *tokens, int *tokensDigit) {
+void tokensParsing(char *fileName, struct TokensFlow *tokensFlow) {
     FILE *file = fopen(fileName, "r");
     char c;
-    *tokensDigit = 0;
     while (fscanf(file, "%c", &c) != EOF) {
-        readNextToken(file, *tokensDigit, c, tokens);
-        if (c != '\n')//TODO йняршкэ
-            *tokensDigit = *tokensDigit + 1;
+        struct Token token = readNextToken(file, c);
+        addToken(tokensFlow, &token);
     }
 
-};
+
+}
 
