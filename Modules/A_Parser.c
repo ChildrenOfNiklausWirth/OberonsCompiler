@@ -6,17 +6,15 @@
 struct TerminalSymbols terminalSymbols;
 
 struct Token readNextToken(FILE *file, char c) {
-    int index = 0;
     struct Token token;
     token.length = 0;
     while (c != ' ' && c != ';' && c != '\n' && c != EOF) {
         if (tss_containsChar(terminalSymbols, c) == 0) {
-            token.symbols[index] = c;
+            token.symbols[token.length] = c;
             token.length++;
-            index++;
             fscanf(file, "%c", &c);
-        } else
-            break;
+        } else break;
+
     }
     if (tss_containsToken(terminalSymbols, token) == 1)
         token.type = 't';

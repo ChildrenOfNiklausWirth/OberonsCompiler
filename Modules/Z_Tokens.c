@@ -2,7 +2,7 @@
 
 struct Token {
     //int numberOfLine;//Для информации об ошибках
-    char type;//Тип токена {n,t}
+    int type;//Тип токена {n,t}
     char symbols[30];
     int length;
 };
@@ -17,7 +17,7 @@ struct Token newToken(const char symbols[], int length) {
 
 }
 
-struct Token newTokenWithType(const char *symbols, int length, char type) {
+struct Token newTokenWithType(const char *symbols, int length, int type) {
     struct Token token;
     for (int i = 0; i < length; ++i)
         token.symbols[i] = symbols[i];
