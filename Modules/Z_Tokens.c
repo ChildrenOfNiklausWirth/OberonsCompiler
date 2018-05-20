@@ -7,11 +7,20 @@
 
 struct Token {
     //int numberOfLine;//Для информации об ошибках
-    //char type[10];//Тип токена
-    int indexOfNextSymbol;
+    char type;//Тип токена {v,t}
     char symbols[30];
     int length;
 };
+
+struct Token newToken(const char symbols[], int length) {
+    struct Token token;
+    for (int i = 0; i < length; ++i)
+        token.symbols[i] = symbols[i];
+    token.length = length;
+    return token;
+
+
+}
 
 //__________________________________________________________________________________________________
 
@@ -37,7 +46,7 @@ void tf_addToken(struct TokensFlow *tokensFlow, struct Token *token) {
 }
 
 
-void printTokensFlow(struct TokensFlow tokensFlow){
+void printTokensFlow(struct TokensFlow tokensFlow) {
     for (int i = 0; i < tokensFlow.size; ++i) {
         for (int j = 0; j < tokensFlow.tokens[i].length; ++j) {
             printf("%c", tokensFlow.tokens[i].symbols[j]);
