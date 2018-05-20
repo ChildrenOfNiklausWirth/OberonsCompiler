@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "Z_Tokens.c"
-#include "X_TerminalSymbols.c"
+#include "Y_TerminalSymbols.c"
+#include "X_DeclaredVariables.c"
 
 struct TerminalSymbols terminalSymbols;
 
@@ -27,7 +28,7 @@ struct Token readNextToken(FILE *file, char c) {
 }
 
 //TODO  находить терминальные символы без пробелов, при этом не тер€€ их
-void tokensParsing(char *fileName, struct TokensFlow *tokensFlow) {
+void tokensParsing(char *fileName, struct TokensFlow *tokensFlow, struct DeclaredVariables *declaredVariables) {
     tss_initialize(&terminalSymbols);
 
     FILE *file = fopen(fileName, "r");
