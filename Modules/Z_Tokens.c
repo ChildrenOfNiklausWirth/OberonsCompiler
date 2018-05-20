@@ -2,6 +2,9 @@
 #include <stdio.h>
 
 
+//__________________________________________________________________________________________________
+
+
 struct Token {
     //int numberOfLine;//Для информации об ошибках
     //char type[10];//Тип токена
@@ -21,13 +24,13 @@ struct TokensFlow {
 };
 
 
-void tokensFlowInitialize(struct TokensFlow *tokensFlow) {
+void tf_initialize(struct TokensFlow *tokensFlow) {
     tokensFlow->size = 0;
     tokensFlow->indexOfNextToken = 0;
 }
 
 
-void addToken(struct TokensFlow *tokensFlow, struct Token *token) {
+void tf_addToken(struct TokensFlow *tokensFlow, struct Token *token) {
     tokensFlow->tokens[tokensFlow->indexOfNextToken] = *token;
     tokensFlow->indexOfNextToken++;
     tokensFlow->size++;

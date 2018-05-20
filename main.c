@@ -4,7 +4,7 @@ char adress[] = "C:\\Users\\Danila Eremenko\\CLionProjects\\OberonsCompiler\\Tes
 struct TokensFlow tokensFlow;
 
 int main() {
-    tokensFlowInitialize(&tokensFlow);
+    tf_initialize(&tokensFlow);
     tokensParsing(adress, &tokensFlow);
     printTokensFlow(tokensFlow);
 
