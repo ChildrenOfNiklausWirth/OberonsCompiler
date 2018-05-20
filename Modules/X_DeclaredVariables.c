@@ -25,13 +25,13 @@ struct DeclaredVariables {
 
 };
 
-dv_initialize(struct DeclaredVariables *declaredVariables) {
+void dv_initialize(struct DeclaredVariables *declaredVariables) {
     declaredVariables->size = 0;
     declaredVariables->maxSize = 50;
 }
 
 
-dv_addNewVarialbe(struct DeclaredVariables *declaredVariables, struct Variable *variable) {
+void dv_addNewVarialbe(struct DeclaredVariables *declaredVariables, struct Variable *variable) {
     declaredVariables->variables[declaredVariables->size] = *variable;
     declaredVariables->size++;
 }
