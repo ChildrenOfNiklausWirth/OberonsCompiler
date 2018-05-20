@@ -3,5 +3,6 @@ project(OberonsCompiler C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(OberonsCompiler main.c)
+#add_executable(OberonsCompiler main.c)
+add_executable(OberonsCompiler Tests/TestsForModules/T_A_Parser/T_A_Parser.c)
 
