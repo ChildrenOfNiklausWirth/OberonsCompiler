@@ -1,12 +1,14 @@
-#include "C:\Users\Danila Eremenko\CLionProjects\OberonsCompiler\Modules\A_Parser.c"
+#include "Modules/B_LeksAnalyzer.c"
 
-char adress[] = "C:\\Users\\Danila Eremenko\\CLionProjects\\OberonsCompiler\\Tests\\ProgrammsOnOberon\\1_Test.txt";
+char adress[] = "C:\\Users\\danil\\CLionProjects\\OberonsCompiler\\Tests\\TestsForModules\\T_B_LeksAnalyzer.c\\1_Test.txt";
 struct TokensFlow tokensFlow;
+struct DeclaredVariables declaredVariables;
 
 int main() {
     tf_initialize(&tokensFlow);
-    tokensParsing(adress, &tokensFlow);
-    printTokensFlow(tokensFlow);
+    dv_initialize(&declaredVariables);
+    tokensParsing(adress, &tokensFlow, &declaredVariables);
+    tf_print(tokensFlow);
 
     return 0;
 }

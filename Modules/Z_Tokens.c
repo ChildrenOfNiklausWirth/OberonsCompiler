@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 //__________________________________________________________________________________________________
 
 struct Token {
@@ -60,4 +62,42 @@ void tf_print(struct TokensFlow tokensFlow) {
 
 }
 
+void tf_printWithType(struct TokensFlow tokensFlow) {
+    for (int i = 0; i < tokensFlow.size; ++i) {
+        for (int j = 0; j < tokensFlow.tokens[i].length; ++j) {
+            printf("%c", tokensFlow.tokens[i].symbols[j]);
+        }
+        printf("\t\ttype : %d\n", tokensFlow.tokens[i].type);
+    }
+}
+
+void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) {
+    for (int i = 0; i < tokensFlowOne.size; ++i) {
+        for (int j = 0; j < tokensFlowOne.tokens[i].length; ++j) {
+            printf("%c", tokensFlowOne.tokens[i].symbols[j]);
+        }
+        printf("\t\t\ttype : %d\t\t", tokensFlowOne.tokens[i].type);
+
+        for (int j = 0; j < tokensFlowTwo.tokens[i].length; ++j) {
+            printf("%c", tokensFlowTwo.tokens[i].symbols[j]);
+        }
+        printf("\t\t\t\ttype : %d\n", tokensFlowTwo.tokens[i].type);
+
+    }
+}
+
+int tf_equals(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) {
+    if (tokensFlowOne.size != tokensFlowTwo.size)
+        return 0;
+    for (int i = 0; i < tokensFlowOne.size; ++i) {
+        if (tokensFlowOne.tokens[i].length != tokensFlowTwo.tokens[i].length ||
+            tokensFlowOne.tokens[i].type != tokensFlowTwo.tokens[i].type)
+            return 0;
+        for (int j = 0; j < tokensFlowOne.tokens[i].length; ++j) {
+            if (tokensFlowOne.tokens[i].symbols[j] != tokensFlowTwo.tokens[i].symbols[j])
+                return 0;
+        }
+    }
+    return 1;
+}
 //__________________________________________________________________________________________________
