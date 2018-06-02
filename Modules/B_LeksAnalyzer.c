@@ -9,33 +9,27 @@ struct Token readNextToken(FILE *file, char currentSymbol) {
     while (currentSymbol == ' ' || currentSymbol == '\n')
         currentSymbol = (char) getc(file);
     struct Token token;
-    token.length = 0;
     char nextSymbol = (char) fgetc(file);
 
     if (bothCharIsMathSymbol(currentSymbol, nextSymbol)) {
-        token.symbols[token.length] = currentSymbol;
-        token.length++;
-        token.symbols[token.length] = nextSymbol;
-        token.length++;
+        token_addSymbol(&token, currentSymbol);
+        token_addSymbol(&token, nextSymbol);
     } else if (bothCharIsDigit(currentSymbol, nextSymbol)) {
         ungetc(nextSymbol, file);
         while (charIsDigit(currentSymbol)) {
-            token.symbols[token.length] = currentSymbol;
-            token.length++;
+            token_addSymbol(&token, currentSymbol);
             if ((fscanf(file, "%c", &currentSymbol)) == EOF)
                 break;
         }
         ungetc(currentSymbol, file);
     } else if (charIsASeparatingTerminalSymbol(terminalSymbols, currentSymbol)) {
-        token.symbols[token.length] = currentSymbol;
-        token.length++;
+        token_addSymbol(&token, currentSymbol);
         ungetc(nextSymbol, file);
     } else {
         ungetc(nextSymbol, file);
         while (currentSymbol != ' ' && currentSymbol != '\n' &&
                !charIsASeparatingTerminalSymbol(terminalSymbols, currentSymbol)) {
-            token.symbols[token.length] = currentSymbol;
-            token.length++;
+            token_addSymbol(&token, currentSymbol);
             if ((fscanf(file, "%c", &currentSymbol)) == EOF)
                 break;
             if (charIsASeparatingTerminalSymbol(terminalSymbols, currentSymbol)) {
@@ -53,6 +47,7 @@ struct Token readNextToken(FILE *file, char currentSymbol) {
 
 }
 
+//TODO заполнение DeclaredVariables
 void tokensParsing(char *fileName, struct TokensFlow *tokensFlow, struct DeclaredVariables *declaredVariables) {
     tss_initialize(&terminalSymbols);
 

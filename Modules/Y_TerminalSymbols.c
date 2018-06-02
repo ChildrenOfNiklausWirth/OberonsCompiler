@@ -81,27 +81,27 @@ int charIsDigit(char c) {
 int tss_defineType(struct TerminalSymbols terminalSymbols, struct Token token) {
     int sum = 0;
     for (int i = 0; i < terminalSymbols.size; ++i) {
-        if (i == 27)//На идентефикатор не проверяем
+        if (i == 27)//for variables
             i++;
-        if (token.length == terminalSymbols.terminalSymbols[i].length) {
-            for (int j = 0; j < token.length; ++j) {
+        if (token.size == terminalSymbols.terminalSymbols[i].length) {
+            for (int j = 0; j < token.size; ++j) {
                 if (token.symbols[j] == terminalSymbols.terminalSymbols[i].name[j])
                     sum++;
 
             }
 
-            if (sum == token.length)
+            if (sum == token.size)
                 return terminalSymbols.terminalSymbols[i].condtion;
         }
 
         sum = 0;
     }
-    for (int k = 0; k < token.length; ++k) {
+    for (int k = 0; k < token.size; ++k) {
         if (charIsDigit(token.symbols[k]))
             sum++;
 
     }
-    if (sum == token.length)
+    if (sum == token.size)
         return 34;
 
 
@@ -145,4 +145,3 @@ int charIsASeparatingTerminalSymbol(struct TerminalSymbols terminalSymbols, char
 
 
 //__________________________________________________________________________________________________
-
