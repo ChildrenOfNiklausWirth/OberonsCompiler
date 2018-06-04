@@ -13,11 +13,22 @@ int test_token_allocatedMemory() {
 
 int test_token_addSymbol() {
     struct Token token;
-    token_addSymbol(&token, 'M');
-    token_addSymbol(&token,'N');
-    if (token.size == 2&&token.symbols[0]=='M'&&token.symbols[1]=='N')
-        return 1;
-    return 0;
+    for (int i = 0; i < TOKEN_INIT_MAXSIZE; ++i)
+        if (i % 2 == 0)
+            token_addSymbol(&token, 'M');
+        else
+            token_addSymbol(&token, 'N');
+
+    for (int j = 0; j < token.size;) {
+        if (!(token.symbols[j] == 'M' && token.symbols[j + 1] == 'N'))
+            return 0;
+        j += 2;
+    }
+    if (!(token.size == TOKEN_INIT_MAXSIZE && token.maxSize == TOKEN_INIT_MAXSIZE * 2))
+        return 0;
+
+
+    return 1;
 }
 
 int test_token_newToken() {
@@ -65,7 +76,11 @@ int test_tf_allocatedMemory() {
     struct TokensFlow tokensFlow;
     tf_initialize(&tokensFlow);
     tf_allocatedMemory(&tokensFlow);
-    if (tokensFlow.maxSize == 32)
+    tf_allocatedMemory(&tokensFlow);
+    tf_allocatedMemory(&tokensFlow);
+    tf_allocatedMemory(&tokensFlow);
+
+    if (tokensFlow.maxSize == 256)
         return 1;
     return 0;
 
@@ -83,12 +98,12 @@ int test_tf_addToken() {
         return 0;
 
 
-    for (int i = 0; i < TF_INIT_MAXSIZE + 1; ++i) {
+    for (int i = 0; i < TF_INIT_MAXSIZE * 8 + 1; ++i) {
         struct Token token;
         tf_addToken(&tokensFlow, &token);
     }
 
-    if (tokensFlow.maxSize == 32 && tokensFlow.size == TF_INIT_MAXSIZE + 2)
+    if (tokensFlow.maxSize == 256 && tokensFlow.size == TF_INIT_MAXSIZE * 8 + 2)
         return 1;
     else return 0;
 

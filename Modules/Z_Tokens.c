@@ -14,11 +14,12 @@ struct Token {
 
 void token_allocatedMemory(struct Token *token) {
     token->maxSize = token->maxSize * 2;
-    token->symbols = realloc(token->symbols, (size_t) token->maxSize);
+    token->symbols = realloc(token->symbols, sizeof(struct Token) * token->maxSize);
 }
 
 void token_initialize(struct Token *token) {
     token->maxSize = TOKEN_INIT_MAXSIZE;
+    token->symbols = malloc(sizeof(char) * TOKEN_INIT_MAXSIZE);
     token->size = 0;
 }
 
@@ -80,26 +81,27 @@ struct TokensFlow {
 
 void tf_initialize(struct TokensFlow *tokensFlow) {
     tokensFlow->maxSize = TF_INIT_MAXSIZE;
-    tokensFlow->tokens = malloc(sizeof(struct Token) * tokensFlow->maxSize);
+    tokensFlow->tokens = malloc(sizeof(struct Token) * TF_INIT_MAXSIZE);
     tokensFlow->size = 0;
 }
 
 void tf_allocatedMemory(struct TokensFlow *tokensFlow) {
-    tokensFlow->tokens = realloc(tokensFlow->tokens, (size_t) tokensFlow->maxSize * 2);
     tokensFlow->maxSize = tokensFlow->maxSize * 2;
+    tokensFlow->tokens = realloc(tokensFlow->tokens, sizeof(struct Token) * tokensFlow->maxSize);
 }
 
 void tf_addToken(struct TokensFlow *tokensFlow, struct Token *token) {
+    if (tokensFlow->maxSize == 0)
+        tf_initialize(tokensFlow);
     if (tokensFlow->size == tokensFlow->maxSize - 1)
         tf_allocatedMemory(tokensFlow);
     tokensFlow->tokens[tokensFlow->size] = *token;
     tokensFlow->size++;
 }
 
-
 void tf_print(struct TokensFlow tokensFlow) {
     for (int i = 0; i < tokensFlow.size; ++i) {
-        for (int j = 0; j < sizeof(tokensFlow.tokens[i]); ++j) {
+        for (int j = 0; j < tokensFlow.tokens[i].size; ++j) {
             printf("%c", tokensFlow.tokens[i].symbols[j]);
         }
         printf("\n");
@@ -110,25 +112,10 @@ void tf_print(struct TokensFlow tokensFlow) {
 
 void tf_printWithType(struct TokensFlow tokensFlow) {
     for (int i = 0; i < tokensFlow.size; ++i) {
-        for (int j = 0; j < sizeof(tokensFlow.tokens[i]); ++j) {
+        for (int j = 0; j < tokensFlow.tokens[i].size; ++j) {
             printf("%c", tokensFlow.tokens[i].symbols[j]);
         }
         printf("\t\ttype : %d\n", tokensFlow.tokens[i].type);
-    }
-}
-
-void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) {
-    for (int i = 0; i < tokensFlowOne.size; ++i) {
-        for (int j = 0; j < sizeof(tokensFlowOne.tokens[i]); ++j) {
-            printf("%c", tokensFlowOne.tokens[i].symbols[j]);
-        }
-        printf("\t\t\ttype : %d\t\t", tokensFlowOne.tokens[i].type);
-
-        for (int j = 0; j < sizeof(tokensFlowTwo.tokens[i]); ++j) {
-            printf("%c", tokensFlowTwo.tokens[i].symbols[j]);
-        }
-        printf("\t\t\t\ttype : %d\n", tokensFlowTwo.tokens[i].type);
-
     }
 }
 
@@ -139,7 +126,7 @@ int tf_equals(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) 
 
         if (tokensFlowOne.tokens[i].type != tokensFlowTwo.tokens[i].type)
             return 0;
-        for (int j = 0; j < sizeof(tokensFlowOne.tokens[i]); ++j) {
+        for (int j = 0; j < tokensFlowOne.tokens[i].size; ++j) {
             if (tokensFlowOne.tokens[i].symbols[j] != tokensFlowTwo.tokens[i].symbols[j])
                 return 0;
         }

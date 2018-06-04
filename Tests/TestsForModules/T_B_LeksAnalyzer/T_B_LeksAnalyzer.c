@@ -103,8 +103,8 @@ int main() {
     tf_initialize(&rightTokensFlow);
 
     createRightResultForFirstTest(&rightTokensFlow);
-    tokensParsing(adress, &tokensFlow, &declaredVariables);//TODO problems in addSymbol/
-    tf_printWithTypeTwoTokensFlow(tokensFlow, rightTokensFlow);
+    tokensParsing(adress, &tokensFlow, &declaredVariables);
+    tf_printWithType(tokensFlow);
 
     printf("\n2 Test Result:\n");
     assertEquals(tokensFlow, rightTokensFlow);
