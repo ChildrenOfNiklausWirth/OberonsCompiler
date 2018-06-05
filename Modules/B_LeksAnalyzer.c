@@ -47,7 +47,6 @@ struct Token readNextToken(FILE *file, char currentSymbol) {
 
 }
 
-//TODO заполнение DeclaredVariables
 void tokensParsing(char *fileName, struct TokensFlow *tokensFlow, struct DeclaredVariables *declaredVariables) {
     tss_initialize(&terminalSymbols);
 

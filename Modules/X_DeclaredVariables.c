@@ -1,39 +1,35 @@
+#include "Z_Tokens.c"
 //__________________________________________________________________________________________________
 
-struct Variable {
-    char name[20];
-    int lengthOfName;
-    char type;
-
-};
-
-struct Variable v_newVariable(const char name[], int lengthOfName, char type) {
-    struct Variable variable;
-    variable.lengthOfName = lengthOfName;
-    for (int i = 0; i < lengthOfName; ++i)
-        variable.name[i] = name[i];
-    variable.type = type;
-    return variable;
-}
-
-//__________________________________________________________________________________________________
+int DV_INIT_MAXSIZE = 20;
 
 struct DeclaredVariables {
-    struct Variable variables[50];
+    struct Token *variables;
     int maxSize;
     int size;
 
 };
 
-void dv_initialize(struct DeclaredVariables *declaredVariables) {
-    declaredVariables->size = 0;
-    declaredVariables->maxSize = 50;
+void dv_allocatedMemory(struct DeclaredVariables *declaredVariables) {
+    declaredVariables->maxSize = declaredVariables->maxSize * 2;
+    declaredVariables->variables = realloc(declaredVariables->variables,
+                                           sizeof(struct Token) * declaredVariables->maxSize);
 }
 
 
-void dv_addNewVarialbe(struct DeclaredVariables *declaredVariables, struct Variable *variable) {
+void dv_initialize(struct DeclaredVariables *declaredVariables) {
+    declaredVariables->size = 0;
+    declaredVariables->maxSize = DV_INIT_MAXSIZE;
+    declaredVariables->variables = malloc(sizeof(struct Token) * DV_INIT_MAXSIZE);
+}
+
+void dv_addVarialbe(struct DeclaredVariables *declaredVariables, struct Token *variable) {
+    if (declaredVariables->maxSize == 0)
+        dv_initialize(declaredVariables);
+    if (declaredVariables->size == declaredVariables->maxSize - 1)
+        dv_allocatedMemory(declaredVariables);
     declaredVariables->variables[declaredVariables->size] = *variable;
     declaredVariables->size++;
 }
 
-//__________________________________________________________________________________________________
+

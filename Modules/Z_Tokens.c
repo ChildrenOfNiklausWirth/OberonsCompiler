@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "X_DeclaredVariables.c"
 
 //__________________________________________________________________________________________________
-const int TOKEN_INIT_MAXSIZE = 16;
+const int TOKEN_INIT_MAXSIZE = 8;
 
 struct Token {
     //int numberOfLine;//Для информации об ошибках
@@ -72,14 +73,17 @@ int token_equals(struct Token token1, struct Token token2) {
 int TF_INIT_MAXSIZE = 16;
 
 struct TokensFlow {
+    struct DeclaredVariables declaredVariables;
     struct Token *tokens;
     int maxSize;
     int size;
+
 
 };
 
 
 void tf_initialize(struct TokensFlow *tokensFlow) {
+    dv_initialize(&tokensFlow->declaredVariables);
     tokensFlow->maxSize = TF_INIT_MAXSIZE;
     tokensFlow->tokens = malloc(sizeof(struct Token) * TF_INIT_MAXSIZE);
     tokensFlow->size = 0;
@@ -95,6 +99,8 @@ void tf_addToken(struct TokensFlow *tokensFlow, struct Token *token) {
         tf_initialize(tokensFlow);
     if (tokensFlow->size == tokensFlow->maxSize - 1)
         tf_allocatedMemory(tokensFlow);
+    if (token->type == 37)
+        dv_addVarialbe(&tokensFlow->declaredVariables, token);
     tokensFlow->tokens[tokensFlow->size] = *token;
     tokensFlow->size++;
 }
