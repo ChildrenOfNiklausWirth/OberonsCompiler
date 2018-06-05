@@ -77,8 +77,7 @@ struct TokensFlow {
     struct Token *tokens;
     int maxSize;
     int size;
-
-
+    int pointer;
 };
 
 
@@ -87,6 +86,7 @@ void tf_initialize(struct TokensFlow *tokensFlow) {
     tokensFlow->maxSize = TF_INIT_MAXSIZE;
     tokensFlow->tokens = malloc(sizeof(struct Token) * TF_INIT_MAXSIZE);
     tokensFlow->size = 0;
+    tokensFlow->pointer = 0;
 }
 
 void tf_allocatedMemory(struct TokensFlow *tokensFlow) {
@@ -103,6 +103,12 @@ void tf_addToken(struct TokensFlow *tokensFlow, struct Token *token) {
         dv_addVarialbe(&tokensFlow->declaredVariables, token);
     tokensFlow->tokens[tokensFlow->size] = *token;
     tokensFlow->size++;
+}
+
+struct Token tf_next(struct TokensFlow *tokensFlow) {
+    struct Token token = tokensFlow->tokens[tokensFlow->pointer];
+    tokensFlow->pointer++;
+    return token;
 }
 
 void tf_print(struct TokensFlow tokensFlow) {
