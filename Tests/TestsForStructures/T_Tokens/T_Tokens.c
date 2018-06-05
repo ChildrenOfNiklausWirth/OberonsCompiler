@@ -1,4 +1,4 @@
-#include "C:\Users\danil\CLionProjects\OberonsCompiler\Modules\Z_Tokens.c"
+#include "../../../Modules/Structures/A_Tokens.c"
 
 //TOKEN
 int test_token_allocatedMemory() {

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "X_DeclaredVariables.c"
+#include "C_DeclaredVariables.c"
 
 //__________________________________________________________________________________________________
 const int TOKEN_INIT_MAXSIZE = 8;

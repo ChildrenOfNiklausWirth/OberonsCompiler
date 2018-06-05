@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "Z_Tokens.c"
-#include "Y_TerminalSymbols.c"
-#include "X_DeclaredVariables.c"
+#include "Structures/A_Tokens.c"
+#include "Structures/B_TerminalSymbols.c"
+#include "Structures/C_DeclaredVariables.c"
 
 struct TerminalSymbols terminalSymbols;
 
