@@ -1,17 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "C_DeclaredVariables.c"
+#include "A_Tokens.h"
+#include "C_DeclaredVariables.h"
+
 
 //__________________________________________________________________________________________________
-const int TOKEN_INIT_MAXSIZE = 8;
-
-struct Token {
-    //int numberOfLine;//Для информации об ошибках
-    int type;//Тип токена {n,t}
-    int maxSize;
-    int size;
-    char *symbols;
-};
 
 void token_allocatedMemory(struct Token *token) {
     token->maxSize = token->maxSize * 2;
@@ -70,15 +63,7 @@ int token_equals(struct Token token1, struct Token token2) {
 
 //__________________________________________________________________________________________________
 
-int TF_INIT_MAXSIZE = 16;
 
-struct TokensFlow {
-    struct DeclaredVariables declaredVariables;
-    struct Token *tokens;
-    int maxSize;
-    int size;
-    int pointer;
-};
 
 
 void tf_initialize(struct TokensFlow *tokensFlow) {

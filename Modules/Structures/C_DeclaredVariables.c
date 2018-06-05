@@ -1,21 +1,13 @@
-#include "A_Tokens.c"
+#include <stdlib.h>
+#include "C_DeclaredVariables.h"
+#include "A_Tokens.h"
 //__________________________________________________________________________________________________
-
-int DV_INIT_MAXSIZE = 20;
-
-struct DeclaredVariables {
-    struct Token *variables;
-    int maxSize;
-    int size;
-
-};
 
 void dv_allocatedMemory(struct DeclaredVariables *declaredVariables) {
     declaredVariables->maxSize = declaredVariables->maxSize * 2;
     declaredVariables->variables = realloc(declaredVariables->variables,
                                            sizeof(struct Token) * declaredVariables->maxSize);
 }
-
 
 void dv_initialize(struct DeclaredVariables *declaredVariables) {
     declaredVariables->size = 0;
