@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "A_Tokens.h"
-#include "C_DeclaredVariables.h"
+#include "C_DeclaredVariables.c"
 
 
 //__________________________________________________________________________________________________
@@ -123,10 +123,11 @@ int tf_equals(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) 
 
         if (tokensFlowOne.tokens[i].type != tokensFlowTwo.tokens[i].type)
             return 0;
-        for (int j = 0; j < tokensFlowOne.tokens[i].size; ++j) {
+
+        for (int j = 0; j < tokensFlowOne.tokens[i].size; ++j)
             if (tokensFlowOne.tokens[i].symbols[j] != tokensFlowTwo.tokens[i].symbols[j])
                 return 0;
-        }
+
     }
     return 1;
 }

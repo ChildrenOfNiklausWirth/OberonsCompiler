@@ -120,6 +120,7 @@ int test_tf_equals() {
 
     for (int i = 0; i < 10; ++i) {
         struct Token token;
+        token=token_newTokenWithType("MOD",3,10);
         tf_addToken(&tokensFlow1, &token);
         tf_addToken(&tokensFlow2, &token);
     }

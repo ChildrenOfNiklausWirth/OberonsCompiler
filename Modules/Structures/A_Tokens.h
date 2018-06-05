@@ -1,6 +1,6 @@
 #ifndef OBERONSCOMPILER_A_TOKENS_H
-#include "C_DeclaredVariables.h"
 #define OBERONSCOMPILER_A_TOKENS_H
+#include "C_DeclaredVariables.h"
 
 
 //__________________________________________________________________________________________________

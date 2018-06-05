@@ -1,4 +1,5 @@
-#include "C:\Users\danil\CLionProjects\OberonsCompiler\Modules\Structures\C_DeclaredVariables.c"
+#include <stdio.h>
+#include "../../../Modules/Structures/C_DeclaredVariables.c"
 
 int test_dv_initialize() {
     struct DeclaredVariables declaredVariables;

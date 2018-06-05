@@ -1,7 +1,6 @@
 #ifndef OBERONSCOMPILER_C_DECLAREDVARIABLES_H
-//__________________________________________________________________________________________________
-
 #define OBERONSCOMPILER_C_DECLAREDVARIABLES_H
+#include "A_Tokens.h"
 
 int DV_INIT_MAXSIZE = 20;
 

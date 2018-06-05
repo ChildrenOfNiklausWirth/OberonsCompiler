@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "C_DeclaredVariables.h"
 #include "A_Tokens.h"
+
 //__________________________________________________________________________________________________
 
 void dv_allocatedMemory(struct DeclaredVariables *declaredVariables) {
