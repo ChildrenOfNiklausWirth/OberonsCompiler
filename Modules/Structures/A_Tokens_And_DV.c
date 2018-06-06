@@ -124,9 +124,9 @@ void tf_addToken(struct TokensFlow *tokensFlow, struct Token *token) {
 }
 
 struct Token tf_next(struct TokensFlow *tokensFlow) {
-    struct Token token = tokensFlow->tokens[tokensFlow->pointer];
+    tokensFlow->currentToken = tokensFlow->tokens[tokensFlow->pointer];
     tokensFlow->pointer++;
-    return token;
+    return tokensFlow->currentToken;
 }
 
 void tf_print(struct TokensFlow tokensFlow) {
