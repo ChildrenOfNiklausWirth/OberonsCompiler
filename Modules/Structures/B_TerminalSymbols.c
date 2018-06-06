@@ -1,10 +1,7 @@
+#include "B_TerminalSymbols.h"
+
 //__________________________________________________________________________________________________
 
-struct TerminalSymbol {
-    int condtion;
-    char name[20];
-    int length;
-};
 
 void ts_newTerminalSymbol(struct TerminalSymbol *terminalSymbol, int length, const char *name, int condition) {
     terminalSymbol->length = length;
@@ -17,13 +14,11 @@ void ts_newTerminalSymbol(struct TerminalSymbol *terminalSymbol, int length, con
 
 //__________________________________________________________________________________________________
 
-struct TerminalSymbols {
-    struct TerminalSymbol terminalSymbols[100];
-    int size;
-};
+const int TS_SIZE = 44;
 
 void tss_initialize(struct TerminalSymbols *terminalSymbols) {
-    terminalSymbols->size = 44;
+    terminalSymbols->size = TS_SIZE;
+
 
     ts_newTerminalSymbol(&terminalSymbols->terminalSymbols[0], 4, "NULL", 0);
     ts_newTerminalSymbol(&terminalSymbols->terminalSymbols[1], 1, "*", 1);

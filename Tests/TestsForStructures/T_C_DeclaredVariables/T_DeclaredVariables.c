@@ -1,5 +1,5 @@
+#include "../../../Modules/Structures/A_Tokens_And_DV.h"
 #include <stdio.h>
-#include "../../../Modules/Structures/C_DeclaredVariables.c"
 
 int test_dv_initialize() {
     struct DeclaredVariables declaredVariables;
@@ -26,7 +26,7 @@ int test_dv_addVariable() {
     dv_initialize(&declaredVariables);
     for (int i = 0; i < DV_INIT_MAXSIZE * 2; ++i)
         dv_addVarialbe(&declaredVariables, &token);
-    if (declaredVariables.maxSize == DV_INIT_MAXSIZE * 4 && declaredVariables.size == declaredVariables.maxSize * 2 &&
+    if (declaredVariables.maxSize == DV_INIT_MAXSIZE * 4 && declaredVariables.size == DV_INIT_MAXSIZE * 2 &&
         token_equals(declaredVariables.variables[0], token))
         return 1;
     return 0;
@@ -36,7 +36,7 @@ int test_dv_addVariable() {
 
 int main() {
     int rightTestDigit = 0;
-    int maxTestDigit = 4;
+    int maxTestDigit = 3;
 
     printf("DeclaredVariables Testing...\n\n");
 

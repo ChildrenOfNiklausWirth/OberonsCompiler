@@ -1,4 +1,4 @@
-#include "Modules/B_LeksAnalyzer.c"
+#include "Modules/B_LexAnalyzer.c"
 
 char adress[] = "C:\\Users\\danil\\CLionProjects\\OberonsCompiler\\Tests\\TestsForModules\\T_B_LeksAnalyzer.c\\1_Test.txt";
 struct TokensFlow tokensFlow;

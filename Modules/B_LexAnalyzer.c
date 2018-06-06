@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include "Structures/A_Tokens.c"
-#include "Structures/B_TerminalSymbols.c"
-#include "Structures/C_DeclaredVariables.c"
+#include "B_LexAnalyzer.h"
 
-struct TerminalSymbols terminalSymbols;
 
 struct Token readNextToken(FILE *file, char currentSymbol) {
     while (currentSymbol == ' ' || currentSymbol == '\n')

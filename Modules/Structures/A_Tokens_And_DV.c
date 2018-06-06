@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "A_Tokens.h"
-#include "C_DeclaredVariables.c"
-
+#include "A_Tokens_And_DV.h"
 
 //__________________________________________________________________________________________________
+const int TOKEN_INIT_MAXSIZE = 8;
 
 void token_allocatedMemory(struct Token *token) {
     token->maxSize = token->maxSize * 2;
@@ -62,9 +61,31 @@ int token_equals(struct Token token1, struct Token token2) {
 }
 
 //__________________________________________________________________________________________________
+const int DV_INIT_MAXSIZE = 20;
 
+void dv_allocatedMemory(struct DeclaredVariables *declaredVariables) {
+    declaredVariables->maxSize = declaredVariables->maxSize * 2;
+    declaredVariables->variables = realloc(declaredVariables->variables,
+                                           sizeof(struct Token) * declaredVariables->maxSize);
+}
 
+void dv_initialize(struct DeclaredVariables *declaredVariables) {
+    declaredVariables->size = 0;
+    declaredVariables->maxSize = DV_INIT_MAXSIZE;
+    declaredVariables->variables = malloc(sizeof(struct Token) * DV_INIT_MAXSIZE);
+}
 
+void dv_addVarialbe(struct DeclaredVariables *declaredVariables, struct Token *variable) {
+    if (declaredVariables->maxSize == 0)
+        dv_initialize(declaredVariables);
+    if (declaredVariables->size == declaredVariables->maxSize - 1)
+        dv_allocatedMemory(declaredVariables);
+    declaredVariables->variables[declaredVariables->size] = *variable;
+    declaredVariables->size++;
+}
+
+//__________________________________________________________________________________________________
+const int TF_INIT_MAXSIZE = 16;
 
 void tf_initialize(struct TokensFlow *tokensFlow) {
     dv_initialize(&tokensFlow->declaredVariables);

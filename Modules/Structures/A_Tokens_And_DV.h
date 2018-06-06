@@ -1,10 +1,7 @@
 #ifndef OBERONSCOMPILER_A_TOKENS_H
 #define OBERONSCOMPILER_A_TOKENS_H
-#include "C_DeclaredVariables.h"
-
-
 //__________________________________________________________________________________________________
-const int TOKEN_INIT_MAXSIZE = 8;
+const int TOKEN_INIT_MAXSIZE;
 
 
 struct Token {
@@ -19,7 +16,6 @@ void token_allocatedMemory(struct Token *token);
 
 void token_initialize(struct Token *token);
 
-
 void token_addSymbol(struct Token *token, char symbol);
 
 struct Token token_newToken(char symbols[], int size);
@@ -29,8 +25,23 @@ struct Token token_newTokenWithType(char symbols[], int size, int type);
 int token_equals(struct Token token1, struct Token token2);
 
 //__________________________________________________________________________________________________
+const int DV_INIT_MAXSIZE;
 
-int TF_INIT_MAXSIZE = 16;
+struct DeclaredVariables {
+    struct Token *variables;
+    int maxSize;
+    int size;
+};
+
+void dv_allocatedMemory(struct DeclaredVariables *declaredVariables);
+
+void dv_initialize(struct DeclaredVariables *declaredVariables);
+
+void dv_addVarialbe(struct DeclaredVariables *declaredVariables, struct Token *variable);
+
+//__________________________________________________________________________________________________
+
+const int TF_INIT_MAXSIZE;
 
 struct TokensFlow {
     struct DeclaredVariables declaredVariables;
