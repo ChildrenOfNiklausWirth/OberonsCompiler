@@ -24,6 +24,9 @@ struct Token token_newTokenWithType(char symbols[], int size, int type);
 
 int token_equals(struct Token token1, struct Token token2);
 
+int token_equalsWithChar(struct Token token, const char name[]);
+
+char token_getName(struct Token token);
 //__________________________________________________________________________________________________
 const int DV_INIT_MAXSIZE;
 

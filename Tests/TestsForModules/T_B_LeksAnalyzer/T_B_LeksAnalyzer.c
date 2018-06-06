@@ -103,7 +103,7 @@ int main() {
     tf_initialize(&rightTokensFlow);
 
     createRightResultForFirstTest(&rightTokensFlow);
-    tokensParsing(adress, &tokensFlow, &declaredVariables);
+    lexAnalysis(adress, &tokensFlow);
     tf_printWithType(tokensFlow);
 
     printf("\n2 Test Result:\n");

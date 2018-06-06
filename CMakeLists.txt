@@ -20,7 +20,7 @@ add_executable(test_dv ${TEST_DV})
 add_executable(test_lex ${TEST_LEX})
 
 
-target_link_libraries(test_dv lib)
+target_link_libraries(main lib)
 target_link_libraries(test_tokens lib)
 target_link_libraries(test_dv lib)
 target_link_libraries(test_lex lib)

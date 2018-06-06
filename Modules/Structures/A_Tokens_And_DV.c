@@ -60,6 +60,21 @@ int token_equals(struct Token token1, struct Token token2) {
 
 }
 
+int token_equalsWithChar(struct Token token, const char name[]) {
+    for (int i = 0; i < token.size; ++i)
+        if (token.symbols[i] != name[i])
+            return 0;
+    return 1;
+}
+
+char token_getName(struct Token token) {
+    char name[token.size];
+    for (int i = 0; i < token.size; ++i)
+        name[i] = token.symbols[i];
+
+    return name;
+}
+
 //__________________________________________________________________________________________________
 const int DV_INIT_MAXSIZE = 20;
 

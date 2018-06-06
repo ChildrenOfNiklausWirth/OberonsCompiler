@@ -43,7 +43,8 @@ struct Token readNextToken(FILE *file, char currentSymbol) {
 
 }
 
-void tokensParsing(char *fileName, struct TokensFlow *tokensFlow, struct DeclaredVariables *declaredVariables) {
+void lexAnalysis(char *fileName, struct TokensFlow *tokensFlow) {
+    tf_initialize(tokensFlow);
     tss_initialize(&terminalSymbols);
 
     FILE *file = fopen(fileName, "r");
