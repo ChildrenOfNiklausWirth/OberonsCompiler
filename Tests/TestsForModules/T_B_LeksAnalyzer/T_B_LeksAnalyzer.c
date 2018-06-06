@@ -1,9 +1,8 @@
 #include "../../../Modules/B_LexAnalyzer.h"
 
-char adress[] = "C:\\Users\\danil\\CLionProjects\\OberonsCompiler\\Tests\\TestsForModules\\T_B_LeksAnalyzer\\1_Test.txt";
+char adress[] = "C:\\Users\\danil\\CLionProjects\\OberonsCompiler\\Tests\\ProgrammsOnOberon\\1_Test.txt";
 struct TokensFlow tokensFlow;
 struct TokensFlow rightTokensFlow;
-struct DeclaredVariables declaredVariables;
 
 void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
     struct Token token[50];
@@ -85,14 +84,14 @@ void assertEquals(struct TokensFlow tokensFlow, struct TokensFlow rightTokensFlo
     else if (result == 0) {
         printf("False\n");
         if (tokensFlow.size != rightTokensFlow.size)
-            printf("Not equal size of TokensFlow");
+            printf("Not equal size of TokensFlow\n");
         for (int i = 0; i < rightTokensFlow.size; ++i) {
             if (tokensFlow.tokens[i].size != rightTokensFlow.tokens[i].size ||
                 tokensFlow.tokens[i].type != rightTokensFlow.tokens[i].type)
-                printf("Not equal type (number %d)", i);
+                printf("Not equal type (number %d)\n", i);
             for (int j = 0; j < tokensFlow.tokens[i].size; ++j) {
                 if (tokensFlow.tokens[i].symbols[j] != rightTokensFlow.tokens[i].symbols[j])
-                    printf("Not equal name(number %d letter %d", i, j);
+                    printf("Not equal name(number %d letter %d\n", i, j);
             }
         }
 
@@ -101,13 +100,26 @@ void assertEquals(struct TokensFlow tokensFlow, struct TokensFlow rightTokensFlo
 
 int main() {
     tf_initialize(&rightTokensFlow);
-
     createRightResultForFirstTest(&rightTokensFlow);
     lexAnalysis(adress, &tokensFlow);
-    tf_printWithType(tokensFlow);
-
+    tf_printWithTypeTwoTokensFlow(tokensFlow, rightTokensFlow);
     printf("\n2 Test Result:\n");
     assertEquals(tokensFlow, rightTokensFlow);
 
+}
+
+void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) {
+    for (int i = 0; i < tokensFlowOne.size; ++i) {
+        for (int j = 0; j < tokensFlowOne.tokens[i].size; ++j) {
+            printf("%c", tokensFlowOne.tokens[i].symbols[j]);
+        }
+        printf("\t\t\ttype : %d\t\t", tokensFlowOne.tokens[i].type);
+
+        for (int j = 0; j < tokensFlowTwo.tokens[i].size; ++j) {
+            printf("%c", tokensFlowTwo.tokens[i].symbols[j]);
+        }
+        printf("\t\t\t\ttype : %d\n", tokensFlowTwo.tokens[i].type);
+
+    }
 }
 

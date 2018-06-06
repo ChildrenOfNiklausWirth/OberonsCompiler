@@ -153,7 +153,6 @@ int tf_equals(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) 
     if (tokensFlowOne.size != tokensFlowTwo.size)
         return 0;
     for (int i = 0; i < tokensFlowOne.size; ++i) {
-
         if (tokensFlowOne.tokens[i].type != tokensFlowTwo.tokens[i].type)
             return 0;
 

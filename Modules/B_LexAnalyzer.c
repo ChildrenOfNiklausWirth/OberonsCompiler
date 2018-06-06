@@ -46,7 +46,6 @@ struct Token readNextToken(FILE *file, char currentSymbol) {
 void lexAnalysis(char *fileName, struct TokensFlow *tokensFlow) {
     tf_initialize(tokensFlow);
     tss_initialize(&terminalSymbols);
-
     FILE *file = fopen(fileName, "r");
     char c;
     while (fscanf(file, "%c", &c) != EOF) {

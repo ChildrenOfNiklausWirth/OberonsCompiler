@@ -3,21 +3,61 @@
 
 #include "A_Tokens_And_DV.h"
 
-
 struct TerminalSymbol {
-    int condtion;
-    char name[20];
-    int length;
+    char *name;
+    int size;
+    int type;
 };
 
-void ts_newTerminalSymbol(struct TerminalSymbol *terminalSymbol, int length, const char *name, int condition);
+struct TerminalSymbol ts_newTerminalSymbol(char name[], int size, int type);
 
 //__________________________________________________________________________________________________
 
-const int TS_SIZE;
 struct TerminalSymbols {
-    struct TerminalSymbol terminalSymbols[44];
-    int size;
+    struct TerminalSymbol NULLL;
+    struct TerminalSymbol TIMES;
+    struct TerminalSymbol DIV;
+    struct TerminalSymbol MOD;
+    struct TerminalSymbol AND;
+    struct TerminalSymbol PLUS;
+    struct TerminalSymbol MINUS;
+    struct TerminalSymbol OR;
+    struct TerminalSymbol EQL;
+    struct TerminalSymbol NEQ;
+    struct TerminalSymbol LSS;
+    struct TerminalSymbol GEQ;
+    struct TerminalSymbol LEQ;
+    struct TerminalSymbol GTR;
+    struct TerminalSymbol PERIOD;
+    struct TerminalSymbol COMMA;
+    struct TerminalSymbol COLON;
+    struct TerminalSymbol RPAREN;
+    struct TerminalSymbol RBRAK;
+    struct TerminalSymbol OF;
+    struct TerminalSymbol THEN;
+    struct TerminalSymbol DO;
+    struct TerminalSymbol LPAREN;
+    struct TerminalSymbol LBRAK;
+    struct TerminalSymbol NOT;
+    struct TerminalSymbol BECOMES;
+    struct TerminalSymbol NUMBER;
+    struct TerminalSymbol IDENT;
+    struct TerminalSymbol SEMICOLON;
+    struct TerminalSymbol END;
+    struct TerminalSymbol ELSE;
+    struct TerminalSymbol ELSEIF;
+    struct TerminalSymbol IF;
+    struct TerminalSymbol WHILE;
+    struct TerminalSymbol ARRAY;
+    struct TerminalSymbol RECORD;
+    struct TerminalSymbol CONSTT;
+    struct TerminalSymbol INTEGER;
+    struct TerminalSymbol BOOLEAN;
+    struct TerminalSymbol VAR;
+    struct TerminalSymbol PROCEDURE;
+    struct TerminalSymbol BEGIN;
+    struct TerminalSymbol MODULE;
+    struct TerminalSymbol EOFF;
 };
 
 void tss_initialize(struct TerminalSymbols *terminalSymbols);
