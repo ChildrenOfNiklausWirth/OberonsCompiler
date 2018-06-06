@@ -63,6 +63,14 @@ int test_token_newTokenWithType() {
     return 0;
 }
 
+int test_token_equalsWithChar() {
+    struct Token token = token_newTokenWithType("MOD", 3, 10);
+    if (!token_equalsWithString(token, "MOD"))
+        return 0;
+    return 1;
+
+}
+
 //TOKENSFLOW
 int test_tf_initialize() {
     struct TokensFlow tokensFlow;
@@ -120,7 +128,7 @@ int test_tf_equals() {
 
     for (int i = 0; i < 10; ++i) {
         struct Token token;
-        token=token_newTokenWithType("MOD",3,10);
+        token = token_newTokenWithType("MOD", 3, 10);
         tf_addToken(&tokensFlow1, &token);
         tf_addToken(&tokensFlow2, &token);
     }
@@ -133,7 +141,7 @@ int test_tf_equals() {
 //
 int main() {
     int rightTestDigit = 0;
-    int maxTestDigit = 8;
+    int maxTestDigit = 9;
 
     printf("Token Testing...\n\n");
 
@@ -161,6 +169,11 @@ int main() {
         rightTestDigit++;
     } else printf("False\n\n");
 
+    printf("token_equalsWithString...\n");
+    if (test_token_newTokenWithType() == 1) {
+        printf("True\n\n");
+        rightTestDigit++;
+    } else printf("False\n\n");
 
     printf("TokensFlow Testing...\n\n");
 

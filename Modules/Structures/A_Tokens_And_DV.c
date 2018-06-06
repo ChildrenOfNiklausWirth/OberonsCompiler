@@ -60,19 +60,16 @@ int token_equals(struct Token token1, struct Token token2) {
 
 }
 
-int token_equalsWithChar(struct Token token, const char name[]) {
+int token_equalsWithString(struct Token token, const char *name) {
     for (int i = 0; i < token.size; ++i)
         if (token.symbols[i] != name[i])
             return 0;
     return 1;
 }
 
-char token_getName(struct Token token) {
-    char name[token.size];
+void token_print(struct Token token) {
     for (int i = 0; i < token.size; ++i)
-        name[i] = token.symbols[i];
-
-    return name;
+        printf("%c", token.symbols[i]);
 }
 
 //__________________________________________________________________________________________________
