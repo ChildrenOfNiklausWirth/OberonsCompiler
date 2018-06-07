@@ -17,7 +17,8 @@ void token_initialize(struct Token *token) {
 }
 
 void token_addSymbol(struct Token *token, char symbol) {
-    if (token->maxSize == 0)
+    //TODO so interesting
+    if (token->maxSize == 0||token->size<0)
         token_initialize(token);
     if (token->size == token->maxSize - 1)
         token_allocatedMemory(token);

@@ -1,6 +1,9 @@
 #include "../../../Modules/B_LexAnalyzer.h"
 
-char adress[] = "C:\\Users\\danil\\CLionProjects\\OberonsCompiler\\Tests\\ProgrammsOnOberon\\1_Test.txt";
+//char adress[] = "C:\\Users\\danil\\CLionProjects\\OberonsCompiler\\Tests\\ProgrammsOnOberon\\1_Test.txt";
+//TODO How to specify the correct local path?
+char adress[] = "C:\\Users\\Danila Eremenko\\CLionProjects\\OberonsCompiler\\Tests\\ProgrammsOnOberon\\1_Test.txt";
+
 struct TokensFlow tokensFlow;
 struct TokensFlow rightTokensFlow;
 
@@ -98,16 +101,6 @@ void assertEquals(struct TokensFlow tokensFlow, struct TokensFlow rightTokensFlo
     }
 }
 
-int main() {
-    tf_initialize(&rightTokensFlow);
-    createRightResultForFirstTest(&rightTokensFlow);
-    lexAnalysis(adress, &tokensFlow);
-    tf_printWithTypeTwoTokensFlow(tokensFlow, rightTokensFlow);
-    printf("\n2 Test Result:\n");
-    assertEquals(tokensFlow, rightTokensFlow);
-
-}
-
 void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) {
     for (int i = 0; i < tokensFlowOne.size; ++i) {
         for (int j = 0; j < tokensFlowOne.tokens[i].size; ++j) {
@@ -121,5 +114,15 @@ void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct Token
         printf("\t\t\t\ttype : %d\n", tokensFlowTwo.tokens[i].type);
 
     }
+}
+
+int main() {
+    tf_initialize(&rightTokensFlow);
+    createRightResultForFirstTest(&rightTokensFlow);
+    lexAnalysis(adress, &tokensFlow);
+    tf_printWithTypeTwoTokensFlow(tokensFlow, rightTokensFlow);
+    printf("\n2 Test Result:\n");
+    assertEquals(tokensFlow, rightTokensFlow);
+
 }
 

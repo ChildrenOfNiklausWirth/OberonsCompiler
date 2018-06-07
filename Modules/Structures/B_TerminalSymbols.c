@@ -152,15 +152,16 @@ int tss_defineType(struct TerminalSymbols terminalSymbols, struct Token token) {
         return terminalSymbols.EOFF.type;
 
     int sum = 0;
-    for (int k = 0; k < token.size; ++k) {
+    for (int k = 0; k < token.size; ++k)
         if (charIsDigit(token.symbols[k]))
             sum++;
-    }
+        else break;
+
     if (sum == token.size)
         return terminalSymbols.NUMBER.type;
 
 
-    return terminalSymbols.VAR.type;
+    return terminalSymbols.IDENT.type;
 
 }
 
