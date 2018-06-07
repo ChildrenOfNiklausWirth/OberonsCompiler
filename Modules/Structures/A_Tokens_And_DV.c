@@ -18,7 +18,7 @@ void token_initialize(struct Token *token) {
 
 void token_addSymbol(struct Token *token, char symbol) {
     //TODO so interesting
-    if (token->maxSize == 0||token->size<0)
+    if (token->maxSize == 0 || token->size < 0)
         token_initialize(token);
     if (token->size == token->maxSize - 1)
         token_allocatedMemory(token);
@@ -74,6 +74,12 @@ void token_print(struct Token token) {
 }
 
 //__________________________________________________________________________________________________
+
+
+//TODO struct Value
+
+//__________________________________________________________________________________________________
+
 const int DV_INIT_MAXSIZE = 20;
 
 void dv_allocatedMemory(struct DeclaredVariables *declaredVariables) {

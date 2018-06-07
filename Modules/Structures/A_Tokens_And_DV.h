@@ -28,6 +28,21 @@ int token_equalsWithString(struct Token token, const char *name);
 
 char token_getName(struct Token token);
 //__________________________________________________________________________________________________
+
+
+const int V_MAX_NAMELENGTH;
+//TODO neccessary constant
+
+struct Variable {
+    char *name;
+    int nameLength;
+    //TODO type and value
+
+};
+//TODO seters
+
+//__________________________________________________________________________________________________
+
 const int DV_INIT_MAXSIZE;
 
 struct DeclaredVariables {
