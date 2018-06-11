@@ -1,5 +1,8 @@
 #ifndef OBERONSCOMPILER_A_TOKENS_H
 #define OBERONSCOMPILER_A_TOKENS_H
+
+#include "B_TerminalSymbols.h"
+
 //__________________________________________________________________________________________________
 const int TOKEN_INIT_MAXSIZE;
 
@@ -27,26 +30,36 @@ int token_equals(struct Token token1, struct Token token2);
 int token_equalsWithString(struct Token token, const char *name);
 
 char token_getName(struct Token token);
+
+int token_defineType(struct Token token, struct TerminalSymbols terminalSymbols);
+
 //__________________________________________________________________________________________________
-
-
-const int V_MAX_NAMELENGTH;
 //TODO neccessary constant
+const int V_MAX_NAMELENGTH;
 
-struct Variable {
-    char *name;
-    int nameLength;
-    //TODO type and value
+enum TypesOfVariable {
+    INTEG, BOOLE
 
 };
-//TODO seters
+
+struct Variable {
+    char name[20];
+    int nameLength;
+    enum TypesOfVariable type;
+};
+
+
+void v_setName(struct Variable *variable, char name[], int nameLength);
+
+
+void v_createFromToken(struct Variable *variable, struct Token *token, struct TerminalSymbols terminalSymbols);
 
 //__________________________________________________________________________________________________
 
 const int DV_INIT_MAXSIZE;
 
 struct DeclaredVariables {
-    struct Token *variables;
+    struct Variable *variables;
     int maxSize;
     int size;
 };
@@ -55,14 +68,16 @@ void dv_allocatedMemory(struct DeclaredVariables *declaredVariables);
 
 void dv_initialize(struct DeclaredVariables *declaredVariables);
 
-void dv_addVarialbe(struct DeclaredVariables *declaredVariables, struct Token *variable);
+void dv_addVarialbe(struct DeclaredVariables *declaredVariables, struct Token *token,
+                    struct TerminalSymbols terminalSymbols);
+
+int dv_equals(struct DeclaredVariables declaredVariablesOne, struct DeclaredVariables declaredVariablesTwo);
 
 //__________________________________________________________________________________________________
 
 const int TF_INIT_MAXSIZE;
 
 struct TokensFlow {
-    struct DeclaredVariables declaredVariables;
     struct Token *tokens;
     int maxSize;
     int size;

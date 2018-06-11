@@ -1,13 +1,15 @@
 #include "../../../Modules/B_LexAnalyzer.h"
 
-//char adress[] = "C:\\Users\\danil\\CLionProjects\\OberonsCompiler\\Tests\\ProgrammsOnOberon\\1_Test.txt";
 //TODO How to specify the correct local path?
-char adress[] = "C:\\Users\\Danila Eremenko\\CLionProjects\\OberonsCompiler\\Tests\\ProgrammsOnOberon\\1_Test.txt";
+//char adress[] = "C:\\Users\\Danila Eremenko\\CLionProjects\\OberonsCompiler\\Tests\\ProgrammsOnOberon\\1_Test.txt";
+char adress[] = "C:\\Users\\danil\\CLionProjects\\OberonsCompiler\\Tests\\ProgrammsOnOberon\\1_Test.txt";
 
 struct TokensFlow tokensFlow;
 struct TokensFlow rightTokensFlow;
+struct DeclaredVariables declaredVariables;
+struct DeclaredVariables rightDeclaredVariables;
 
-void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
+void createRightResultForFirstTest(struct TokensFlow *tokensflow, struct DeclaredVariables declaredVariables) {
     struct Token token[50];
     int tokenSize = 42;
 
@@ -30,7 +32,7 @@ void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
     token[11] = token_newTokenWithType("INTEGER", 7, 58);
     token[12] = token_newTokenWithType(";", 1, 38);
 
-    //BoolVar: BOOLEAN;
+    //BoolVar: BOOLE;
     token[13] = token_newTokenWithType("BoolVar", 7, 37);
     token[14] = token_newTokenWithType(":", 1, 20);
     token[15] = token_newTokenWithType("BOOLEAN", 7, 58);
@@ -73,17 +75,16 @@ void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
     token[41] = token_newTokenWithType(";", 1, 38);
 
 
-    //TODO problems on 31 step
     for (int i = 0; i < tokenSize; ++i)
         tf_addToken(tokensflow, &token[i]);
 
 
 }
 
-void assertEquals(struct TokensFlow tokensFlow, struct TokensFlow rightTokensFlow) {
+void tf_assertEquals(struct TokensFlow tokensFlow, struct TokensFlow rightTokensFlow) {
     int result = tf_equals(tokensFlow, rightTokensFlow);
     if (result == 1)
-        printf("True");
+        printf("True\n");
     else if (result == 0) {
         printf("False\n");
         if (tokensFlow.size != rightTokensFlow.size)
@@ -100,6 +101,28 @@ void assertEquals(struct TokensFlow tokensFlow, struct TokensFlow rightTokensFlo
 
     }
 }
+
+void dv_assertEqauls(struct DeclaredVariables declaredVariables, struct DeclaredVariables rightDeclaredVariables) {
+    int result = dv_equals(declaredVariables, rightDeclaredVariables);
+    if (result == 1)
+        printf("True\n");
+    else if (result == 0) {
+        printf("False\n");
+        if (declaredVariables.size != rightDeclaredVariables.size)
+            printf("Not equal size of TokensFlow\n");
+        for (int i = 0; i < rightTokensFlow.size; ++i) {
+            if (declaredVariables.variables[i].nameLength != rightDeclaredVariables.variables[i].nameLength ||
+                declaredVariables.variables[i].type != rightDeclaredVariables.variables[i].type)
+                printf("Not equal type (number %d)\n", i);
+            for (int j = 0; j < declaredVariables.variables[i].nameLength; ++j) {
+                if (declaredVariables.variables[i].name[j] != rightDeclaredVariables.variables[i].name[j])
+                    printf("Not equal name(number %d letter %d\n", i, j);
+            }
+        }
+
+    }
+}
+
 
 void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) {
     for (int i = 0; i < tokensFlowOne.size; ++i) {
@@ -118,11 +141,18 @@ void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct Token
 
 int main() {
     tf_initialize(&rightTokensFlow);
-    createRightResultForFirstTest(&rightTokensFlow);
-    lexAnalysis(adress, &tokensFlow);
+    dv_initialize(&declaredVariables);
+
+    createRightResultForFirstTest(&rightTokensFlow, rightDeclaredVariables);
+
+    lexAnalysis(adress, &tokensFlow, declaredVariables);
+
     tf_printWithTypeTwoTokensFlow(tokensFlow, rightTokensFlow);
     printf("\n2 Test Result:\n");
-    assertEquals(tokensFlow, rightTokensFlow);
 
+    printf("Compare TokensFlows\n");
+    tf_assertEquals(tokensFlow, rightTokensFlow);
+    printf("Compare DeclaredVariables\n");
+    dv_assertEqauls(declaredVariables, rightDeclaredVariables);
 }
 

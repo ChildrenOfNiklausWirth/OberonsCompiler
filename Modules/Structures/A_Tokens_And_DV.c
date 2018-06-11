@@ -73,10 +73,135 @@ void token_print(struct Token token) {
         printf("%c", token.symbols[i]);
 }
 
+int token_defineType(struct Token token, struct TerminalSymbols terminalSymbols) {
+    if (token_equalsWithString(token, terminalSymbols.NULLL.name))
+        return terminalSymbols.NULLL.type;
+    if (token_equalsWithString(token, terminalSymbols.TIMES.name))
+        return terminalSymbols.TIMES.type;
+    if (token_equalsWithString(token, terminalSymbols.DIV.name))
+        return terminalSymbols.DIV.type;
+    if (token_equalsWithString(token, terminalSymbols.MOD.name))
+        return terminalSymbols.MOD.type;
+    if (token_equalsWithString(token, terminalSymbols.AND.name))
+        return terminalSymbols.AND.type;
+    if (token_equalsWithString(token, terminalSymbols.PLUS.name))
+        return terminalSymbols.PLUS.type;
+    if (token_equalsWithString(token, terminalSymbols.MINUS.name))
+        return terminalSymbols.MINUS.type;
+    if (token_equalsWithString(token, terminalSymbols.OR.name))
+        return terminalSymbols.OR.type;
+    if (token_equalsWithString(token, terminalSymbols.EQL.name))
+        return terminalSymbols.EQL.type;
+    if (token_equalsWithString(token, terminalSymbols.NEQ.name))
+        return terminalSymbols.NEQ.type;
+    if (token_equalsWithString(token, terminalSymbols.LSS.name))
+        return terminalSymbols.LSS.type;
+    if (token_equalsWithString(token, terminalSymbols.GEQ.name))
+        return terminalSymbols.GEQ.type;
+    if (token_equalsWithString(token, terminalSymbols.LEQ.name))
+        return terminalSymbols.LEQ.type;
+    if (token_equalsWithString(token, terminalSymbols.GTR.name))
+        return terminalSymbols.GTR.type;
+    if (token_equalsWithString(token, terminalSymbols.PERIOD.name))
+        return terminalSymbols.PERIOD.type;
+    if (token_equalsWithString(token, terminalSymbols.COMMA.name))
+        return terminalSymbols.COMMA.type;
+    if (token_equalsWithString(token, terminalSymbols.COLON.name))
+        return terminalSymbols.COLON.type;
+    if (token_equalsWithString(token, terminalSymbols.RPAREN.name))
+        return terminalSymbols.RPAREN.type;
+    if (token_equalsWithString(token, terminalSymbols.RBRAK.name))
+        return terminalSymbols.RBRAK.type;
+    if (token_equalsWithString(token, terminalSymbols.OF.name))
+        return terminalSymbols.OF.type;
+    if (token_equalsWithString(token, terminalSymbols.THEN.name))
+        return terminalSymbols.THEN.type;
+    if (token_equalsWithString(token, terminalSymbols.DO.name))
+        return terminalSymbols.DO.type;
+    if (token_equalsWithString(token, terminalSymbols.LPAREN.name))
+        return terminalSymbols.LPAREN.type;
+    if (token_equalsWithString(token, terminalSymbols.LBRAK.name))
+        return terminalSymbols.LBRAK.type;
+    if (token_equalsWithString(token, terminalSymbols.NOT.name))
+        return terminalSymbols.NOT.type;
+    if (token_equalsWithString(token, terminalSymbols.BECOMES.name))
+        return terminalSymbols.BECOMES.type;
+    if (token_equalsWithString(token, terminalSymbols.NUMBER.name))
+        return terminalSymbols.NUMBER.type;
+    if (token_equalsWithString(token, terminalSymbols.IDENT.name))
+        return terminalSymbols.IDENT.type;
+    if (token_equalsWithString(token, terminalSymbols.SEMICOLON.name))
+        return terminalSymbols.SEMICOLON.type;
+    if (token_equalsWithString(token, terminalSymbols.END.name))
+        return terminalSymbols.END.type;
+    if (token_equalsWithString(token, terminalSymbols.ELSE.name))
+        return terminalSymbols.ELSE.type;
+    if (token_equalsWithString(token, terminalSymbols.ELSEIF.name))
+        return terminalSymbols.ELSEIF.type;
+    if (token_equalsWithString(token, terminalSymbols.IF.name))
+        return terminalSymbols.IF.type;
+    if (token_equalsWithString(token, terminalSymbols.WHILE.name))
+        return terminalSymbols.WHILE.type;
+    if (token_equalsWithString(token, terminalSymbols.ARRAY.name))
+        return terminalSymbols.ARRAY.type;
+    if (token_equalsWithString(token, terminalSymbols.RECORD.name))
+        return terminalSymbols.RECORD.type;
+    if (token_equalsWithString(token, terminalSymbols.CONSTT.name))
+        return terminalSymbols.CONSTT.type;
+    if (token_equalsWithString(token, terminalSymbols.INTEGER.name))
+        return terminalSymbols.INTEGER.type;
+    if (token_equalsWithString(token, terminalSymbols.BOOLEAN.name))
+        return terminalSymbols.BOOLEAN.type;
+    if (token_equalsWithString(token, terminalSymbols.VAR.name))
+        return terminalSymbols.VAR.type;
+    if (token_equalsWithString(token, terminalSymbols.PROCEDURE.name))
+        return terminalSymbols.PROCEDURE.type;
+    if (token_equalsWithString(token, terminalSymbols.BEGIN.name))
+        return terminalSymbols.BEGIN.type;
+    if (token_equalsWithString(token, terminalSymbols.MODULE.name))
+        return terminalSymbols.MODULE.type;
+    if (token_equalsWithString(token, terminalSymbols.EOFF.name))
+        return terminalSymbols.EOFF.type;
+
+    int sum = 0;
+    for (int k = 0; k < token.size; ++k)
+        if (charIsDigit(token.symbols[k]))
+            sum++;
+        else break;
+
+    if (sum == token.size)
+        return terminalSymbols.NUMBER.type;
+
+
+    return terminalSymbols.IDENT.type;
+
+}
+
 //__________________________________________________________________________________________________
+const int V_MAX_NAMELENGTH = 20;
 
 
-//TODO struct Value
+void v_setName(struct Variable *variable, char name[], int nameLength) {
+    if (variable->nameLength > V_MAX_NAMELENGTH) {
+        printf("MAXLENGTH = %d, length of var%s = %d", V_MAX_NAMELENGTH, name, nameLength);
+        return;
+    }
+    for (int i = 0; i < nameLength; ++i)
+        variable->name[i] = name[i];
+    variable->nameLength = nameLength;
+
+}
+
+//TODO just awful signature, think where we can store global variable terminalSymbols?
+void v_createFromToken(struct Variable *variable, struct Token *token, struct TerminalSymbols terminalSymbols) {
+    v_setName(variable, token->symbols, token->size);
+    if (token->type == terminalSymbols.BOOLEAN.type)
+        variable->type = BOOLE;
+    if (token->type == terminalSymbols.INTEGER.type)
+        variable->type = INTEG;
+
+}
+
 
 //__________________________________________________________________________________________________
 
@@ -85,29 +210,46 @@ const int DV_INIT_MAXSIZE = 20;
 void dv_allocatedMemory(struct DeclaredVariables *declaredVariables) {
     declaredVariables->maxSize = declaredVariables->maxSize * 2;
     declaredVariables->variables = realloc(declaredVariables->variables,
-                                           sizeof(struct Token) * declaredVariables->maxSize);
+                                           sizeof(struct Variable) * declaredVariables->maxSize);
 }
 
 void dv_initialize(struct DeclaredVariables *declaredVariables) {
     declaredVariables->size = 0;
     declaredVariables->maxSize = DV_INIT_MAXSIZE;
-    declaredVariables->variables = malloc(sizeof(struct Token) * DV_INIT_MAXSIZE);
+    declaredVariables->variables = malloc(sizeof(struct Variable) * DV_INIT_MAXSIZE);
 }
 
-void dv_addVarialbe(struct DeclaredVariables *declaredVariables, struct Token *variable) {
+//TODO just awful signature, think where we can store global variable terminalSymbols?
+void dv_addVarialbe(struct DeclaredVariables *declaredVariables, struct Token *token,
+                    struct TerminalSymbols terminalSymbols) {
     if (declaredVariables->maxSize == 0)
         dv_initialize(declaredVariables);
     if (declaredVariables->size == declaredVariables->maxSize - 1)
         dv_allocatedMemory(declaredVariables);
-    declaredVariables->variables[declaredVariables->size] = *variable;
+    struct Variable variable;
+    v_createFromToken(&variable, token, terminalSymbols);
+    declaredVariables->variables[declaredVariables->size] = variable;
     declaredVariables->size++;
+}
+
+int dv_equals(struct DeclaredVariables declaredVariablesOne, struct DeclaredVariables declaredVariablesTwo) {
+    if (declaredVariablesOne.size != declaredVariablesTwo.size)
+        return 0;
+    for (int i = 0; i < declaredVariablesTwo.size; ++i) {
+        if (declaredVariablesOne.variables[i].type != declaredVariablesTwo.variables[i].type)
+            return 0;
+        for (int j = 0; j < declaredVariablesOne.variables[i].nameLength++;j)
+            if (declaredVariablesOne.variables[i].name[j] != declaredVariablesTwo.variables[i].name[j])
+                return 0;
+
+    }
+    return 1;
 }
 
 //__________________________________________________________________________________________________
 const int TF_INIT_MAXSIZE = 16;
 
 void tf_initialize(struct TokensFlow *tokensFlow) {
-    dv_initialize(&tokensFlow->declaredVariables);
     tokensFlow->maxSize = TF_INIT_MAXSIZE;
     tokensFlow->tokens = malloc(sizeof(struct Token) * TF_INIT_MAXSIZE);
     tokensFlow->size = 0;
@@ -124,8 +266,6 @@ void tf_addToken(struct TokensFlow *tokensFlow, struct Token *token) {
         tf_initialize(tokensFlow);
     if (tokensFlow->size == tokensFlow->maxSize - 1)
         tf_allocatedMemory(tokensFlow);
-    if (token->type == 37)
-        dv_addVarialbe(&tokensFlow->declaredVariables, token);
     tokensFlow->tokens[tokensFlow->size] = *token;
     tokensFlow->size++;
 }

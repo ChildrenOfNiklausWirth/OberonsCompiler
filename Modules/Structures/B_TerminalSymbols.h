@@ -1,8 +1,6 @@
 #ifndef OBERONSCOMPILER_B_TERMINALSYMBOLS_H
 #define OBERONSCOMPILER_B_TERMINALSYMBOLS_H
 
-#include "A_Tokens_And_DV.h"
-
 struct TerminalSymbol {
     char *name;
     int size;
@@ -63,8 +61,6 @@ struct TerminalSymbols {
 void tss_initialize(struct TerminalSymbols *terminalSymbols);
 
 int charIsDigit(char c);
-
-int tss_defineType(struct TerminalSymbols terminalSymbols, struct Token token);
 
 int bothCharIsDigit(char c1, char c2);
 

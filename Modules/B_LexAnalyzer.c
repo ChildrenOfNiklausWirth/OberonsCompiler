@@ -35,7 +35,7 @@ struct Token readNextToken(FILE *file, char currentSymbol) {
         }
     }
 
-    int type = tss_defineType(terminalSymbols, token);
+    int type = token_defineType(token, terminalSymbols);
     token.type = type;
 
     return token;
@@ -43,19 +43,23 @@ struct Token readNextToken(FILE *file, char currentSymbol) {
 
 }
 
-void lexAnalysis(char *fileName, struct TokensFlow *tokensFlow) {
+void lexAnalysis(char *fileName, struct TokensFlow *tokensFlow, struct DeclaredVariables declaredVariables) {
     tf_initialize(tokensFlow);
     tss_initialize(&terminalSymbols);
+    dv_initialize(&declaredVariables);
     FILE *file = fopen(fileName, "r");
     char c;
     while (fscanf(file, "%c", &c) != EOF) {
 
         struct Token token = readNextToken(file, c);
         tf_addToken(tokensFlow, &token);
+        if (token.type == terminalSymbols.IDENT.type)
+            dv_addVarialbe(&declaredVariables, &token, terminalSymbols);
 
     }
 
-    if(tokensFlow->size==0)
+
+    if (tokensFlow->size == 0)
         printf("Probably wrong path");
 
 }
