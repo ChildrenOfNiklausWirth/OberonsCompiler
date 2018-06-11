@@ -55,4 +55,7 @@ void lexAnalysis(char *fileName, struct TokensFlow *tokensFlow) {
 
     }
 
+    if(tokensFlow->size==0)
+        printf("Probably wrong path");
+
 }
