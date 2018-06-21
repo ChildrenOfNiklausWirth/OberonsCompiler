@@ -54,6 +54,8 @@ void v_setName(struct Variable *variable, char name[], int nameLength);
 
 void v_createFromToken(struct Variable *variable, struct Token *token, struct TerminalSymbols terminalSymbols);
 
+int v_equals(struct Variable variableOne,struct Variable variableTwo);
+
 //__________________________________________________________________________________________________
 
 const int DV_INIT_MAXSIZE;
@@ -71,7 +73,11 @@ void dv_initialize(struct DeclaredVariables *declaredVariables);
 void dv_addVarialbe(struct DeclaredVariables *declaredVariables, struct Token *token,
                     struct TerminalSymbols terminalSymbols);
 
+int dv_containsVariable(struct DeclaredVariables declaredVariables,struct Variable);
+
 int dv_equals(struct DeclaredVariables declaredVariablesOne, struct DeclaredVariables declaredVariablesTwo);
+
+void dv_printWithType(struct DeclaredVariables declaredVariables);
 
 //__________________________________________________________________________________________________
 

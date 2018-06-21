@@ -9,7 +9,7 @@ struct TokensFlow rightTokensFlow;
 struct DeclaredVariables declaredVariables;
 struct DeclaredVariables rightDeclaredVariables;
 
-void createRightResultForFirstTest(struct TokensFlow *tokensflow, struct DeclaredVariables declaredVariables) {
+void createRightResultForFirstTest(struct TokensFlow *tokensflow, struct DeclaredVariables *rightDeclaredVariables) {
     struct Token token[50];
     int tokenSize = 42;
 
@@ -75,8 +75,11 @@ void createRightResultForFirstTest(struct TokensFlow *tokensflow, struct Declare
     token[41] = token_newTokenWithType(";", 1, 38);
 
 
-    for (int i = 0; i < tokenSize; ++i)
+    for (int i = 0; i < tokenSize; ++i) {
         tf_addToken(tokensflow, &token[i]);
+        if (token[i].type == terminalSymbols.IDENT.type)
+            dv_addVarialbe(rightDeclaredVariables, &token[i], terminalSymbols);
+    }
 
 
 }
@@ -139,20 +142,41 @@ void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct Token
     }
 }
 
+void dv_printWithTypeTwoDV(struct DeclaredVariables declaredVariablesOne, struct DeclaredVariables declaredVariablesTwo){
+    for (int i = 0; i < declaredVariablesOne.size; ++i) {
+        for (int j = 0; j < declaredVariablesOne.variables[i].nameLength; ++j) {
+            printf("%c", declaredVariablesOne.variables[i].name[j]);
+        }
+        printf("\t\t\ttype : %d\t\t", declaredVariablesTwo.variables[i].type);
+
+        for (int j = 0; j < declaredVariablesTwo.variables[i].nameLength; ++j) {
+            printf("%c", declaredVariablesTwo.variables[i].name[j]);
+        }
+        printf("\t\t\t\ttype : %d\n", declaredVariablesTwo.variables[i].type);
+
+    }
+}
+
 int main() {
     tf_initialize(&rightTokensFlow);
     dv_initialize(&declaredVariables);
+    tss_initialize(&terminalSymbols);
 
-    createRightResultForFirstTest(&rightTokensFlow, rightDeclaredVariables);
+    createRightResultForFirstTest(&rightTokensFlow, &rightDeclaredVariables);
 
-    lexAnalysis(adress, &tokensFlow, declaredVariables);
+    lexAnalysis(adress, &tokensFlow, &declaredVariables);
 
+
+    printf("\nDV1\t\t\t\t\t\tDV2\t\n\n");
+    dv_printWithTypeTwoDV(declaredVariables,rightDeclaredVariables);
+
+    printf("\nTF1\t\t\t\t\t\tTF2\t\n\n");
     tf_printWithTypeTwoTokensFlow(tokensFlow, rightTokensFlow);
     printf("\n2 Test Result:\n");
 
     printf("Compare TokensFlows\n");
     tf_assertEquals(tokensFlow, rightTokensFlow);
-    printf("Compare DeclaredVariables\n");
+    printf("\nCompare DeclaredVariables\n");
     dv_assertEqauls(declaredVariables, rightDeclaredVariables);
 }
 

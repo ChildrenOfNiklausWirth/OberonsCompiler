@@ -195,13 +195,27 @@ void v_setName(struct Variable *variable, char name[], int nameLength) {
 //TODO just awful signature, think where we can store global variable terminalSymbols?
 void v_createFromToken(struct Variable *variable, struct Token *token, struct TerminalSymbols terminalSymbols) {
     v_setName(variable, token->symbols, token->size);
-    if (token->type == terminalSymbols.BOOLEAN.type)
-        variable->type = BOOLE;
-    if (token->type == terminalSymbols.INTEGER.type)
-        variable->type = INTEG;
+    variable->type = INTEG;
+
+    //if (token->type == terminalSymbols.BOOLEAN.type)
+    //    variable->type = BOOLE;
+    //if (token->type == terminalSymbols.INTEGER.type)
+    //    variable->type = INTEG;
 
 }
 
+int v_equals(struct Variable variableOne, struct Variable variableTwo) {
+    if (variableOne.nameLength != variableTwo.nameLength)
+        return 0;
+    if (variableOne.type != variableTwo.type)
+        return 0;
+    for (int i = 0; i < variableOne.nameLength; ++i)
+        if (variableOne.name[i] != variableTwo.name[i])
+            return 0;
+    return 1;
+
+
+}
 
 //__________________________________________________________________________________________________
 
@@ -228,8 +242,11 @@ void dv_addVarialbe(struct DeclaredVariables *declaredVariables, struct Token *t
         dv_allocatedMemory(declaredVariables);
     struct Variable variable;
     v_createFromToken(&variable, token, terminalSymbols);
-    declaredVariables->variables[declaredVariables->size] = variable;
-    declaredVariables->size++;
+    if (dv_containsVariable(*declaredVariables, variable) == 0) {
+        declaredVariables->variables[declaredVariables->size] = variable;
+        declaredVariables->size++;
+    }
+
 }
 
 int dv_equals(struct DeclaredVariables declaredVariablesOne, struct DeclaredVariables declaredVariablesTwo) {
@@ -238,12 +255,31 @@ int dv_equals(struct DeclaredVariables declaredVariablesOne, struct DeclaredVari
     for (int i = 0; i < declaredVariablesTwo.size; ++i) {
         if (declaredVariablesOne.variables[i].type != declaredVariablesTwo.variables[i].type)
             return 0;
-        for (int j = 0; j < declaredVariablesOne.variables[i].nameLength++;j)
+        for (int j = 0; j < declaredVariablesOne.variables[i].nameLength; j++)
             if (declaredVariablesOne.variables[i].name[j] != declaredVariablesTwo.variables[i].name[j])
                 return 0;
 
     }
     return 1;
+}
+
+
+int dv_containsVariable(struct DeclaredVariables declaredVariables, struct Variable variable) {
+    for (int i = 0; i < declaredVariables.size; ++i)
+        if (v_equals(variable, declaredVariables.variables[i]) == 1)
+            return 1;
+
+    return 0;
+
+}
+
+void dv_printWithType(struct DeclaredVariables declaredVariables) {
+    for (int i = 0; i < declaredVariables.size; ++i) {
+        for (int j = 0; j < declaredVariables.variables[i].nameLength; ++j) {
+            printf("%c", declaredVariables.variables[i].name[j]);
+        }
+        printf("\t%d\n", declaredVariables.variables[i].type);
+    }
 }
 
 //__________________________________________________________________________________________________

@@ -10,6 +10,6 @@ struct TerminalSymbols terminalSymbols;
 
 struct Token readNextToken(FILE *file, char currentSymbol);
 
-void lexAnalysis(char *fileName, struct TokensFlow *tokensFlow, struct DeclaredVariables declaredVariables);
+void lexAnalysis(char *fileName, struct TokensFlow *tokensFlow, struct DeclaredVariables *declaredVariables);
 
 #endif //OBERONSCOMPILER_B_LEKSANALYZER_H
