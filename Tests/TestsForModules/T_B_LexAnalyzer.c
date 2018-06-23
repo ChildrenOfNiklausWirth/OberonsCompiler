@@ -1,8 +1,6 @@
-#include "../../../Modules/B_LexAnalyzer.h"
+#include "../../Modules/B_LexAnalyzer.h"
 
-//TODO How to specify the correct local path?
-//char adress[] = "C:\\Users\\Danila Eremenko\\CLionProjects\\OberonsCompiler\\Tests\\ProgrammsOnOberon\\1_Test.txt";
-char adress[] = "C:\\Users\\danil\\CLionProjects\\OberonsCompiler\\Tests\\ProgrammsOnOberon\\1_Test.txt";
+char adress[] = "..\\Tests\\ProgrammsOnOberon\\1_Test.txt";
 
 struct TokensFlow tokensFlow;
 struct TokensFlow rightTokensFlow;

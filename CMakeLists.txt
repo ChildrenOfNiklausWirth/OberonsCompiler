@@ -9,9 +9,9 @@ add_library(lib STATIC ${LIBRARIES})
 
 
 set(MAIN main.c)
-set(TEST_TOKENS Tests/TestsForStructures/T_A_Tokens/T_Tokens.c)
-set(TEST_DV Tests/TestsForStructures/T_C_DeclaredVariables/T_DeclaredVariables.c)
-set(TEST_LEX Tests/TestsForModules/T_B_LeksAnalyzer/T_B_LexAnalyzer.c)
+set(TEST_TOKENS Tests/TestsForStructures/T_A_Tokens_and_DV/T_Tokens.c)
+set(TEST_DV Tests/TestsForStructures/T_A_Tokens_and_DV/T_DeclaredVariables.c)
+set(TEST_LEX Tests/TestsForModules/T_B_LexAnalyzer.c)
 
 
 add_executable(main ${MAIN})
