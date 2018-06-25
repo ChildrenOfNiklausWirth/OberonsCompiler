@@ -2,6 +2,8 @@
 #include "Structures/Object.h"
 #include "Structures/Set.h"
 #include "SimpleFunctions/SimpleFunctions.h"
+#include "Structures/B_TerminalSymbols.h"
+#include "B_LexAnalyzer.h"
 
 int const maxCode = 1000, maxRel = 200, NofCom = 16, Head = 0, Var = 1, Par = 2, Const = 3, Fld = 4, Typ = 5, Proc = 6,
         SProc = 7, Reg = 10, Cond = 11, Boolean = 0, Integer = 1, Array = 2, Record = 3, MOV = 0, MVN = 1, ADD = 2,
@@ -214,11 +216,139 @@ void Op1(int op, struct Item x) {
                 load(x);
             Put(MVN, x.r, 0, x.r);
         }
-    else if(op==OSS.not){
-        if(x.mode!=Cond ){
+    else if (op == OSS.not) {
+        if (x.mode != Cond) {
             loadBool(x);
         }
-        x.c=negated(x.c);
-        t=x.a;
+        x.c = negated(x.c);
+        t = x.a;
+        x.a = x.b;
+        x.b = t;
+    } else if (op == OSS.and) {
+        if (x.mode != Cond)
+            loadBool(x);
+        PutBR(BEQ + negated(x.c, x.a));
+        set_EXCL(&regs, x.r);
+        x.a = pc - 1;
+        FixLink(x.b);
+        x.b = 0;
+    } else if (op == OSS.or) {
+        if (x.mode != Cond)
+            loadBool(x);
+        PutBR(BEQ + x.c, x.b);
+        set_EXCL(&regs, x.r);
+        x.b = pc - 1;
+        FixLink(x.a);
+        x.a = 0;
     }
+}
+
+void Op2(int op, struct Item x, struct Item y) {
+    if (x.type.form == Integer && y.type.form == Integer) {
+        if (x.mode == Const && y.mode == Const) {
+            if (op == terminalSymbols.PLUS.type) {
+                x.a += y.a;
+            } else if (op == terminalSymbols.MINUS.type) {
+                x.a -= y.a;
+            } else if (op == terminalSymbols.TIMES.type) {
+                x.a *= y.a;
+            } else if (op == terminalSymbols.DIV.type) {
+                x.a /= y.a;
+            } else if (op == terminalSymbols.MOD.type) {
+                x.a %= y.a;
+            }
+        } else {
+            if (op == terminalSymbols.PLUS.type) {
+                PutOp(ADD, x, y);
+            } else if (op == terminalSymbols.MINUS.type) {
+                PutOp(SUB, x, y);
+            } else if (op == terminalSymbols.TIMES.type) {
+                PutOp(MUL, x, y);
+            } else if (op == terminalSymbols.DIV.type) {
+                PutOp(Div, x, y);
+            } else if (op == terminalSymbols.MOD.type) {
+                PutOp(Mod, x, y);
+            } else
+                OSS.Mark("неверный тип");
+        }
+    } else if (x.type.form == Boolean && y.type.form == Boolean) {
+        if (y.mode != Cond)
+            loadBool(y);
+        if (op == terminalSymbols.OR.type) {
+            x.a = y.a;
+            x.b = merged(y.b, x.b);
+            x.c = y.c;
+        }
+    } else OSS.Mark("неверный тип");
+}
+
+void Relation(int op, struct Item x, struct Item y) {
+    if (x.type.form != Integer || y.type.form != Integer) {
+        OSS.Mark("неверный тип");
+
+    } else {
+        PutOp(CMP, x, y);
+        x.c = op - terminalSymbols.EQL.type;
+        set_EXCL(&regs, y.r);
+    }
+    x.mode = Cond;
+    x.type = boolType;
+    x.a = 0;
+    x.b = 0;
+}
+
+void Store(struct Item x, struct Item y) {
+    long r;
+    if ((x.type.form == Boolean || x.type.form == Integer) && (x.type.form == y.type.form)) {
+        if (y.mode == Cond) {
+            Put(BEQ + negated(y.c), y.r, 0, y.a);
+            set_EXCL(&regs, y.r);
+            y.a = pc - 1;
+            FixLink(y.b);
+            GetReg(y.r);
+            Put(MOVI, y.r, 0, 1);
+            PutBR(BR, 2);
+            FixLink(y.a);
+            Put(MOVI, y.r, 0, 0);
+            //127
+        } else if (y.mode != Reg)
+            load(y);
+        if (x.mode == Var) {
+            if (x.level == 0)
+                x.a = x.a - pc * 4;
+            Put(STW, y.r, x.r, x.a);
+
+        } else
+            OSS.Mark("неправильное присваивание");
+        set_EXCL(&regs, x.r);
+        set_EXCL(&regs, y.r);
+    } else
+        OSS.Mark("невсоместимое присваивание");
+
+
+}
+
+void Parameter(struct Item x, struct Type ftyp, int class) {
+    long r;
+    if (x.type == ftyp) {
+        if (class == Par) {
+            if (x.mode == Var)
+                if (x.a != 0) {
+                    GetReg(r);
+                    Put(ADDI, r, x.r, x.a);
+                } else
+                    r = x.r;
+            else
+                OSS.Mark("неправильный режим параметра");
+            Put(PSH, r, SP, 4);
+            set_EXCL(&regs, r);
+
+        } else {
+            if (x.mode != Reg)
+                load(x);
+            Put(PSH, x.r, SP, 4);
+            set_EXCL(&regs, x.r);
+        }
+    } else OSS.Mark("неверный тип параметра");
+
 }
