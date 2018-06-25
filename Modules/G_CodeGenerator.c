@@ -184,9 +184,41 @@ void Field(struct Item x, struct Object y) {
     x.type = y.type;
 }
 
-void Index(struct Item x,struct Item y){
-    if(y.type!=intType){
+void Index(struct Item x, struct Item y) {
+    if (y.type != intType)
         OSS.Mark("индекс не целое");
+    if (y.mode == Const) {
+        if ((y.a < 0) || (y.a >= x.type.len))
+            OSS.Mark("неверный индекс");
+    } else {
+        if (y.mode != Reg)
+            load(y);
+        Put(CHKI, y.r, 0, x.type.len);
+        Put(MULI, y.r, y.r, x.type.base.size);
+        Put(ADD, y.r, x.r, y.r);
+        set_EXCL(&regs, x.r);
+        x.r = y.r;
     }
+    x.type = x.type.base;
+}
 
+void Op1(int op, struct Item x) {
+    long t;
+    if (op == OSS.minus)
+        if (x.type.form != Integer) {
+            OSS.Mark("неверный тип");
+        } else if (x.mode == Const) {
+            x.a = -x.a;
+        } else {
+            if (x.mode == Var)
+                load(x);
+            Put(MVN, x.r, 0, x.r);
+        }
+    else if(op==OSS.not){
+        if(x.mode!=Cond ){
+            loadBool(x);
+        }
+        x.c=negated(x.c);
+        t=x.a;
+    }
 }
