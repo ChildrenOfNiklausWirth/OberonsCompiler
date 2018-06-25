@@ -1,8 +1,0 @@
-//
-// Created by danil on 06.06.2018.
-//
-
-#ifndef OBERONSCOMPILER_C_EXPRESION_H
-#define OBERONSCOMPILER_C_EXPRESION_H
-
-#endif //OBERONSCOMPILER_C_EXPRESION_H
