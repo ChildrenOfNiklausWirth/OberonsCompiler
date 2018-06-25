@@ -1,17 +1,16 @@
 #ifndef OBERONSCOMPILER_C_OBJECT_H
 #define OBERONSCOMPILER_C_OBJECT_H
 
-struct Type;
+struct Item;
 struct Object;
+struct Type;
 
 
-struct Type {
-    int form;
-    struct Object fields;
-    struct Type base;
-    int size;
-    int len;
-
+struct Item {
+    int mode;
+    int level;
+    struct Type type;
+    long a, b, c, r;
 };
 
 struct Object {
@@ -25,5 +24,14 @@ struct Object {
 
 
 };
+struct Type {
+    int form;
+    struct Object fields;
+    struct Type base;
+    int size;
+    int len;
+
+};
+
 
 #endif //OBERONSCOMPILER_C_OBJECT_H
