@@ -30,6 +30,16 @@ void set_addDigit(struct Set *set, int digit) {
 
 }
 
+void set_INCL(struct Set *set, int digit) {
+    for (int i = 0; i < set->size; ++i)
+        set->digit[i] += digit;
+}
+
+void set_EXCL(struct Set *set, int digit) {
+    for (int i = 0; i < set->size; ++i)
+        set->digit[i] -= digit;
+}
+
 int set_contains(struct Set set, int digit) {
     for (int i = 0; i < set.size; ++i)
         if (set.digit[i] == digit)

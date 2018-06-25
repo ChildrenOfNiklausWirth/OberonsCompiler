@@ -16,6 +16,10 @@ void set_allocatedMemory(struct Set *set);
 
 void set_addDigit(struct Set *set, int digit);
 
+void set_INCL(struct Set *set, int digit);
+
+void set_EXCL(struct Set *set,int digit);
+
 int set_contains(struct Set set, int digit);
 
 #endif //OBERONSCOMPILER_C_SET_H
