@@ -352,3 +352,97 @@ void Parameter(struct Item x, struct Type ftyp, int class) {
     } else OSS.Mark("неверный тип параметра");
 
 }
+
+void CJump(struct Item x) {
+    if (x.type.form == Boolean) {
+        if (x.mode != Cond)
+            loadBool(x);
+        PutBR(BEQ + negated(x.c), x.a);
+        set_EXCL(&regs, x.r);
+        FixLink(x.b);
+        x.a = pc - 1;
+    } else {
+        printf("Boolean?");
+        x.a = pc;
+    }
+}
+
+
+void BJump(long L) {
+    PutBR(BR, L - pc);
+}
+
+void FJump(long L) {
+    PutBR(BR, L);
+    L = pc = 1;
+}
+
+void Call(struct Item x) {
+    PutBR(BSR, x.a - pc);
+}
+
+void IOCall(struct Item x, struct Item y) {
+    struct Item z;
+    if (x.a < 4) {
+        if (y.type.form != Integer)
+            printf("Intege?");
+
+    }
+    if (x.a == 1) {
+        GetReg(z.r);
+        z.mode = Reg;
+        z.type = intType;
+        Put(RD, z.r, 0, 0);
+        Store(y, z);
+    } else if (x.a == 2) {
+        load(y);
+        Put(WRD, 0, 0, y.r);
+        set_EXCL(&regs, y.r);
+    } else if (x.a == 3) {
+        load(y);
+        Put(WRH, 0, 0, y.r);
+        set_EXCL(&regs, y.r);
+    } else {
+        Put(WRL, 0, 0, 0);
+    }
+
+}
+
+void Header(long size) {
+    entry = pc;
+    Put(MOVI, SP, 0, RISC.MemSize - size);
+    Put(PSH, LNK, SP, 4);
+
+}
+
+void Enter(long size) {
+    Put(PSH, LNK, SP, 4);
+    Put(PSH, FP, SP, 4);
+    Put(MOV, FP, 0, SP);
+    Put(SUBI, SP, SP, size);
+}
+
+void Return(long size) {
+    Put(MOV, SP, 0, FP);
+    Put(POP, FP, SP, 4);
+    Put(POP, LNK, SP, size + 4);
+    PutBR(RET, LNK);
+}
+
+void Open() {
+    curlev = 0;
+    pc = 0;
+    cno = 0;
+    regs = set_newSet();
+}
+
+void Close(long globals) {
+    Put(POP, LNK, SP, 4);
+    PutBR(RET, LNK);
+
+}
+
+//TODO
+//void EnterCMD(char name[]){
+//}
+
