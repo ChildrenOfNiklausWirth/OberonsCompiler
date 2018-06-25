@@ -27,7 +27,6 @@ long code[maxCode];
 long comadr[NofCom];
 char mnemo[64, 5];
 
-
 //CALL BEFORE USING FUNCTIONS
 void cg_initialize() {
     regs = set_newSet();
@@ -137,6 +136,7 @@ void fixWith(long L0, long L1) {
     L0 = L2;
 }
 
+//TODO ALL ADD into header
 void FixLink(long L) {
     long L1;
     while (L != 0) {
