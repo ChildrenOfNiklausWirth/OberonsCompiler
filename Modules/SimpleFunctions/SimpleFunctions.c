@@ -1,4 +1,4 @@
-#include "Z_SimpleFunctions.h"
+#include "SimpleFunctions.h"
 
 
 int int_contains(int digit, const int mass[], int massSize) {
