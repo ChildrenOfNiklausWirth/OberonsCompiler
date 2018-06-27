@@ -20,6 +20,7 @@ struct Object {
     struct Object dsc;
     struct Type type;
     char *name;
+    int size;
     long val;
 
 
@@ -33,5 +34,7 @@ struct Type {
 
 };
 
+struct Object object_new();
 
+void object_setName(struct Object obj, char name[], int name_size)
 #endif //OBERONSCOMPILER_C_OBJECT_H
