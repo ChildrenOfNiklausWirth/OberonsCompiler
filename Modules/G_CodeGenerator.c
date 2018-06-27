@@ -28,7 +28,7 @@ void PutBR(long op, long disp) {
 
 void TestRange(long x) {
     if ((x >= int_hexToDecimal(20000)) || (x < int_hexToDecimal(-20000)))
-        OSS.Mark("Значение слишком большое");//TODO
+        Mark("Значение слишком большое");//TODO
 
 }
 
@@ -52,7 +52,7 @@ void load(struct Item x) {
 
 void loadBool(struct Item x) {
     if (x.type.form != Boolean)
-        OSS.Mark("Boolean?");
+        Mark("Boolean?");
     load(x);
     x.mode = Cond;
     x.a = 0;
@@ -75,7 +75,7 @@ void PutOp(long cd, struct Item x, struct Item y) {
 }
 
 long negated(long cond) {
-    if (ODD(cond))
+    if (cond % 2 == 1)
         return cond - 1;
     else
         return cond + 1;
@@ -110,7 +110,6 @@ void fixWith(long L0, long L1) {
     L0 = L2;
 }
 
-//TODO ALL ADD into header
 void FixLink(long L) {
     long L1;
     while (L != 0) {
@@ -142,7 +141,7 @@ void MakeItem(struct Item x, struct Object y) {
     } else if (y.level == curlev)
         x.r = FP;
     else {
-        OSS.Mark("уровень!");
+        Mark("уровень!");
         x.r = 0;
     }
     if (y.class == Par) {
@@ -161,11 +160,11 @@ void Field(struct Item x, struct Object y) {
 }
 
 void Index(struct Item x, struct Item y) {
-    if (y.type != intType)
-        OSS.Mark("индекс не целое");
+    if (type_equals(y.type, intType) == 0)
+        Mark("индекс не целое");
     if (y.mode == Const) {
         if ((y.a < 0) || (y.a >= x.type.len))
-            OSS.Mark("неверный индекс");
+            Mark("неверный индекс");
     } else {
         if (y.mode != Reg)
             load(y);
@@ -180,9 +179,9 @@ void Index(struct Item x, struct Item y) {
 
 void Op1(int op, struct Item x) {
     long t;
-    if (op == OSS.minus)
+    if (op == terminalSymbols.MINUS.type)
         if (x.type.form != Integer) {
-            OSS.Mark("неверный тип");
+            Mark("неверный тип");
         } else if (x.mode == Const) {
             x.a = -x.a;
         } else {
@@ -190,7 +189,7 @@ void Op1(int op, struct Item x) {
                 load(x);
             Put(MVN, x.r, 0, x.r);
         }
-    else if (op == OSS.not) {
+    else if (op == terminalSymbols.NOT.type) {
         if (x.mode != Cond) {
             loadBool(x);
         }
@@ -198,15 +197,15 @@ void Op1(int op, struct Item x) {
         t = x.a;
         x.a = x.b;
         x.b = t;
-    } else if (op == OSS.and) {
+    } else if (op == terminalSymbols.AND.type) {
         if (x.mode != Cond)
             loadBool(x);
-        PutBR(BEQ + negated(x.c, x.a));
+        PutBR(BEQ + negated(x.c), x.a);
         set_EXCL(&regs, x.r);
         x.a = pc - 1;
         FixLink(x.b);
         x.b = 0;
-    } else if (op == OSS.or) {
+    } else if (op == terminalSymbols.OR.type) {
         if (x.mode != Cond)
             loadBool(x);
         PutBR(BEQ + x.c, x.b);
@@ -243,7 +242,7 @@ void Op2(int op, struct Item x, struct Item y) {
             } else if (op == terminalSymbols.MOD.type) {
                 PutOp(Mod, x, y);
             } else
-                OSS.Mark("неверный тип");
+                Mark("неверный тип");
         }
     } else if (x.type.form == Boolean && y.type.form == Boolean) {
         if (y.mode != Cond)
@@ -253,12 +252,12 @@ void Op2(int op, struct Item x, struct Item y) {
             x.b = merged(y.b, x.b);
             x.c = y.c;
         }
-    } else OSS.Mark("неверный тип");
+    } else Mark("неверный тип");
 }
 
 void Relation(int op, struct Item x, struct Item y) {
     if (x.type.form != Integer || y.type.form != Integer) {
-        OSS.Mark("неверный тип");
+        Mark("неверный тип");
 
     } else {
         PutOp(CMP, x, y);
@@ -293,18 +292,18 @@ void Store(struct Item x, struct Item y) {
             Put(STW, y.r, x.r, x.a);
 
         } else
-            OSS.Mark("неправильное присваивание");
+            Mark("неправильное присваивание");
         set_EXCL(&regs, x.r);
         set_EXCL(&regs, y.r);
     } else
-        OSS.Mark("невсоместимое присваивание");
+        Mark("невсоместимое присваивание");
 
 
 }
 
 void Parameter(struct Item x, struct Type ftyp, int class) {
     long r;
-    if (x.type == ftyp) {
+    if (type_equals(x.type, ftyp) == 1) {
         if (class == Par) {
             if (x.mode == Var)
                 if (x.a != 0) {
@@ -313,7 +312,7 @@ void Parameter(struct Item x, struct Type ftyp, int class) {
                 } else
                     r = x.r;
             else
-                OSS.Mark("неправильный режим параметра");
+                Mark("неправильный режим параметра");
             Put(PSH, r, SP, 4);
             set_EXCL(&regs, r);
 
@@ -323,7 +322,7 @@ void Parameter(struct Item x, struct Type ftyp, int class) {
             Put(PSH, x.r, SP, 4);
             set_EXCL(&regs, x.r);
         }
-    } else OSS.Mark("неверный тип параметра");
+    } else Mark("неверный тип параметра");
 
 }
 

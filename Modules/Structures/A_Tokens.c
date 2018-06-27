@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "A_Tokens_And_DV.h"
+#include "A_Tokens.h"
 
 //__________________________________________________________________________________________________
 const int TOKEN_INIT_MAXSIZE = 8;
@@ -14,12 +14,11 @@ void token_initialize(struct Token *token) {
     token->maxSize = TOKEN_INIT_MAXSIZE;
     token->symbols = malloc(sizeof(char) * TOKEN_INIT_MAXSIZE);
     token->size = 0;
+    token->type = 0;
+    token->numberOfLine = 0;
 }
 
 void token_addSymbol(struct Token *token, char symbol) {
-    //TODO so interesting
-    if (token->maxSize == 0 || token->size < 0)
-        token_initialize(token);
     if (token->size == token->maxSize - 1)
         token_allocatedMemory(token);
     token->symbols[token->size] = symbol;
@@ -27,18 +26,19 @@ void token_addSymbol(struct Token *token, char symbol) {
 
 }
 
-struct Token token_newToken(char symbols[], int size) {
+struct Token token_newToken(char symbols[], int size, int numberOfLine) {
     struct Token token;
     token.symbols = malloc(sizeof(char) * TOKEN_INIT_MAXSIZE);
     token.size = 0;
     token.maxSize = TOKEN_INIT_MAXSIZE;
+    token.numberOfLine = numberOfLine;
     for (int i = 0; i < size; ++i)
         token_addSymbol(&token, symbols[i]);
     return token;
 }
 
-struct Token token_newTokenWithType(char symbols[], int size, int type) {
-    struct Token token = token_newToken(symbols, size);
+struct Token token_newTokenWithType(char symbols[], int size, int type, int numberOfLine) {
+    struct Token token = token_newToken(symbols, size, type);
     token.type = type;
     return token;
 }
@@ -178,111 +178,7 @@ int token_defineType(struct Token token, struct TerminalSymbols terminalSymbols)
 }
 
 //__________________________________________________________________________________________________
-const int V_MAX_NAMELENGTH = 20;
 
-
-void v_setName(struct Variable *variable, char name[], int nameLength) {
-    if (variable->nameLength > V_MAX_NAMELENGTH) {
-        printf("MAXLENGTH = %d, length of var%s = %d", V_MAX_NAMELENGTH, name, nameLength);
-        return;
-    }
-    for (int i = 0; i < nameLength; ++i)
-        variable->name[i] = name[i];
-    variable->nameLength = nameLength;
-
-}
-
-//TODO just awful signature, think where we can store global variable terminalSymbols?
-void v_createFromToken(struct Variable *variable, struct Token *token, struct TerminalSymbols terminalSymbols) {
-    v_setName(variable, token->symbols, token->size);
-    variable->type = INTEG;
-
-    //if (token->type == terminalSymbols.BOOLEAN.type)
-    //    variable->type = BOOLE;
-    //if (token->type == terminalSymbols.INTEGER.type)
-    //    variable->type = INTEG;
-
-}
-
-int v_equals(struct Variable variableOne, struct Variable variableTwo) {
-    if (variableOne.nameLength != variableTwo.nameLength)
-        return 0;
-    if (variableOne.type != variableTwo.type)
-        return 0;
-    for (int i = 0; i < variableOne.nameLength; ++i)
-        if (variableOne.name[i] != variableTwo.name[i])
-            return 0;
-    return 1;
-
-
-}
-
-//__________________________________________________________________________________________________
-
-const int DV_INIT_MAXSIZE = 20;
-
-void dv_allocatedMemory(struct DeclaredVariables *declaredVariables) {
-    declaredVariables->maxSize = declaredVariables->maxSize * 2;
-    declaredVariables->variables = realloc(declaredVariables->variables,
-                                           sizeof(struct Variable) * declaredVariables->maxSize);
-}
-
-void dv_initialize(struct DeclaredVariables *declaredVariables) {
-    declaredVariables->size = 0;
-    declaredVariables->maxSize = DV_INIT_MAXSIZE;
-    declaredVariables->variables = malloc(sizeof(struct Variable) * DV_INIT_MAXSIZE);
-}
-
-//TODO just awful signature, think where we can store global variable terminalSymbols?
-void dv_addVarialbe(struct DeclaredVariables *declaredVariables, struct Token *token,
-                    struct TerminalSymbols terminalSymbols) {
-    if (declaredVariables->maxSize == 0)
-        dv_initialize(declaredVariables);
-    if (declaredVariables->size == declaredVariables->maxSize - 1)
-        dv_allocatedMemory(declaredVariables);
-    struct Variable variable;
-    v_createFromToken(&variable, token, terminalSymbols);
-    if (dv_containsVariable(*declaredVariables, variable) == 0) {
-        declaredVariables->variables[declaredVariables->size] = variable;
-        declaredVariables->size++;
-    }
-
-}
-
-int dv_equals(struct DeclaredVariables declaredVariablesOne, struct DeclaredVariables declaredVariablesTwo) {
-    if (declaredVariablesOne.size != declaredVariablesTwo.size)
-        return 0;
-    for (int i = 0; i < declaredVariablesTwo.size; ++i) {
-        if (declaredVariablesOne.variables[i].type != declaredVariablesTwo.variables[i].type)
-            return 0;
-        for (int j = 0; j < declaredVariablesOne.variables[i].nameLength; j++)
-            if (declaredVariablesOne.variables[i].name[j] != declaredVariablesTwo.variables[i].name[j])
-                return 0;
-
-    }
-    return 1;
-}
-
-
-int dv_containsVariable(struct DeclaredVariables declaredVariables, struct Variable variable) {
-    for (int i = 0; i < declaredVariables.size; ++i)
-        if (v_equals(variable, declaredVariables.variables[i]) == 1)
-            return 1;
-
-    return 0;
-
-}
-
-void dv_printWithType(struct DeclaredVariables declaredVariables) {
-    for (int i = 0; i < declaredVariables.size; ++i) {
-        for (int j = 0; j < declaredVariables.variables[i].nameLength; ++j) {
-            printf("%c", declaredVariables.variables[i].name[j]);
-        }
-        printf("\t%d\n", declaredVariables.variables[i].type);
-    }
-}
-
-//__________________________________________________________________________________________________
 const int TF_INIT_MAXSIZE = 16;
 
 void tf_initialize(struct TokensFlow *tokensFlow) {

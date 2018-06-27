@@ -1,9 +1,10 @@
-#include "../../../Modules/Structures/A_Tokens_And_DV.c"
+#include "../../../Modules/Structures/A_Tokens.c"
 
 //TOKEN
 int test_token_allocatedMemory() {
     struct Token token;
-    token = token_newToken("TOKEN", 5);
+    token_initialize(&token);
+    token = token_newToken("TOKEN", 5, 1);
     token_allocatedMemory(&token);
     if (token.maxSize == TOKEN_INIT_MAXSIZE * 2)
         return 1;
@@ -13,6 +14,7 @@ int test_token_allocatedMemory() {
 
 int test_token_addSymbol() {
     struct Token token;
+    token_initialize(&token);
     for (int i = 0; i < TOKEN_INIT_MAXSIZE; ++i)
         if (i % 2 == 0)
             token_addSymbol(&token, 'M');
@@ -24,7 +26,7 @@ int test_token_addSymbol() {
             return 0;
         j += 2;
     }
-    if (!(token.size == TOKEN_INIT_MAXSIZE && token.maxSize == TOKEN_INIT_MAXSIZE * 2))
+    if (!(token.size == TOKEN_INIT_MAXSIZE && token.maxSize == TOKEN_INIT_MAXSIZE*2))
         return 0;
 
 
@@ -33,9 +35,9 @@ int test_token_addSymbol() {
 
 int test_token_newToken() {
     struct Token token;
-
+    token_initialize(&token);
     char symbols[] = "TOKEN";
-    token = token_newToken("TOKEN", 5);
+    token = token_newToken("TOKEN", 5, 1);
 
     int checkSum = 0;
     for (int i = 0; i < token.size; ++i)
@@ -49,9 +51,9 @@ int test_token_newToken() {
 
 int test_token_newTokenWithType() {
     struct Token token;
-
+    token_initialize(&token);
     char symbols[] = "TOKEN";
-    token = token_newTokenWithType("TOKEN", 5, 10);
+    token = token_newTokenWithType("TOKEN", 5, 10, 1);
 
     int checkSum = 0;
     for (int i = 0; i < token.size; ++i)
@@ -64,7 +66,8 @@ int test_token_newTokenWithType() {
 }
 
 int test_token_equalsWithChar() {
-    struct Token token = token_newTokenWithType("MOD", 3, 10);
+    struct Token token = token_newTokenWithType("MOD", 3, 10, 1);
+    token_initialize(&token);
     if (!token_equalsWithString(token, "MOD"))
         return 0;
     return 1;
@@ -100,7 +103,7 @@ int test_tf_addToken() {
 
 
     struct Token token0;
-    token0 = token_newTokenWithType("MOD", 3, 10);
+    token0 = token_newTokenWithType("MOD", 3, 10, 1);
     tf_addToken(&tokensFlow, &token0);
     if (!token_equals(tokensFlow.tokens[0], token0))
         return 0;
@@ -128,7 +131,7 @@ int test_tf_equals() {
 
     for (int i = 0; i < 10; ++i) {
         struct Token token;
-        token = token_newTokenWithType("MOD", 3, 10);
+        token = token_newTokenWithType("MOD", 3, 10, 1);
         tf_addToken(&tokensFlow1, &token);
         tf_addToken(&tokensFlow2, &token);
     }
