@@ -7,6 +7,8 @@
 #include "Structures/Object.h"
 #include "G_CodeGenerator.h"
 
+const int WordSize = 4;
+
 struct Object objectsStart;
 struct Object universe;
 struct Object end;
@@ -399,7 +401,7 @@ void type() {
 long declarations() {
 
     struct Object obj, first;
-    struct Item
+    struct Item item;
 
     long varsize = 0;
 
@@ -418,8 +420,7 @@ long declarations() {
         if (tokensFlow.current.type == terminalSymbols.CONSTT.type) {
             tf_next(&tokensFlow);
             while (tokensFlow.current.type == terminalSymbols.IDENT.type) {
-
-                object_new()
+                obj = object_new();
 
                 tf_next(&tokensFlow);
 
@@ -428,12 +429,11 @@ long declarations() {
                 else
                     printf("=?");
 
+                expression(item);
 
-                expression(tokensFlow, exp);
-
-                if (exp.mode == CONST) {
-                    variable.value = exp.value;
-                    variable.type = exp.type;
+                if (item.mode == CONST) {
+                    obj.val = item.a;
+                    obj.type = item.type;
                 } else {
                     printf("not const");
                 }
@@ -450,15 +450,16 @@ long declarations() {
 
             while (tokensFlow.current.type == terminalSymbols.IDENT.type) {
 
-                variable = *dv_find(declaredVariables, tokensFlow.current.symbols, tokensFlow.current.size);
-                variable.type = TYP;
-
+                obj = object_new();
                 tf_next(&tokensFlow);
+
                 if (tokensFlow.current.type == terminalSymbols.EQL.type)
                     tf_next(&tokensFlow);
                 else
                     printf("=?");
+
                 type();
+
                 if (tokensFlow.current.type == terminalSymbols.EQL.type)
                     tf_next(&tokensFlow);
                 else printf(";?");
@@ -470,14 +471,21 @@ long declarations() {
 
             while (tokensFlow.current.type == terminalSymbols.IDENT.type) {
                 identList();
-                type();
+                struct Type tp = type();
+                obj = first;
+                while (&obj != &end) {
+                    obj.type = tp;
+                    obj.level = curlev;
+                    varsize = varsize + obj.type.size;
+                    obj.val = -varsize;
+                    obj = obj.next;
+                }
             }
 
             if (tokensFlow.current.type == terminalSymbols.SEMICOLON.type)
                 tf_next(&tokensFlow);
             else
                 printf(";?");
-
         }
 
         if ((tokensFlow.current.type >= terminalSymbols.CONSTT.type) &&
@@ -486,12 +494,96 @@ long declarations() {
         else
             break;
     }
+}
 
+void FPSection(long* locblksize, long* parblksize) {
+    struct Object obj, first;
+    struct Type tp;
+    long parsize;
+
+    if (tokensFlow.current.type == terminalSymbols.VAR.type) {
+        tf_next(&tokensFlow);
+        identList();
+    } else
+        identList();
+
+    if (tokensFlow.current.type == terminalSymbols.IDENT.type) {
+        obj = find();
+        tf_next(&tokensFlow);
+        if (obj.class == Typ)
+            tp = obj.type;
+        else {
+            Mark("ident?");
+            tp = intType;
+        }
+    } else {
+        Mark("ident?");
+        tp = intType;
+    }
+
+    if (first.class == Var) {
+        parsize = tp.size;
+        if (tp.form >= Array) {
+            Mark("not parameter");
+        } else {
+            parsize = WordSize;
+        }
+        obj = first;
+
+        while (&obj != &end) {
+            obj.type = tp;
+            parblksize++;
+            parsize++;
+            obj = obj.next;
+        }
+    }
 }
 
 void procedureDeclaration() {
+    int const marksize = 8;
+    struct Object proc, obj;
+    char* procid;
+    long locblksize, parblksize;
 
-}
+    tf_next(&tokensFlow);
+
+    if (tokensFlow.current.type == terminalSymbols.IDENT.type) {
+        procid = tokensFlow.current.symbols;
+        proc = object_new();
+        tf_next(&tokensFlow);
+        parblksize = marksize;
+        IncLevel(1);
+        openScope();
+        proc.val = -1;
+        if (tokensFlow.current.type == terminalSymbols.LPAREN.type) {
+            tf_next(&tokensFlow);
+            if (tokensFlow.current.type == terminalSymbols.RPAREN.type)
+                tf_next(&tokensFlow);
+            else {
+                FPSection(&locblksize, &parblksize);
+
+                while  (tokensFlow.current.type == terminalSymbols.SEMICOLON.type) {
+                    tf_next(&tokensFlow);
+                    FPSection(&locblksize, &parblksize);
+                }
+
+                if (tokensFlow.current.type == terminalSymbols.RPAREN.type)
+                    tf_next(&tokensFlow);
+                else
+                    Mark(")?");
+            }
+        } else if (curlev == 1) {
+            //ENTERCMD
+        }
+        obj = objectsStart.next;
+        locblksize = parblksize;
+        while (&obj != &end) {
+            obj.level = curlev;
+
+        }
+    }
+};
+
 
 void module(struct TokensFlow tokensFlow, struct DeclaredVariables declaredVariables,
             struct TerminalSymbols terminalSymbols) {
