@@ -2,14 +2,17 @@
 #define OBERONSCOMPILER_B_LEKSANALYZER_H
 
 #include <stdio.h>
-#include "Structures/A_Tokens_And_DV.h"
+#include "Structures/A_Tokens.h"
 #include "Structures/B_TerminalSymbols.h"
 
 
 struct TerminalSymbols terminalSymbols;
+struct TokensFlow tokensFlow;
 
 struct Token readNextToken(FILE *file, char currentSymbol);
 
-void lexAnalysis(char *fileName, struct TokensFlow *tokensFlow, struct DeclaredVariables *declaredVariables);
+void lexAnalysis(char *fileName);
+
+void Mark(char msg[]);
 
 #endif //OBERONSCOMPILER_B_LEKSANALYZER_H
