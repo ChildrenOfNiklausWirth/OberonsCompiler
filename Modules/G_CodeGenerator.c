@@ -110,7 +110,6 @@ void fixWith(long L0, long L1) {
     L0 = L2;
 }
 
-//TODO ALL ADD into header
 void FixLink(long L) {
     long L1;
     while (L != 0) {
@@ -161,7 +160,7 @@ void Field(struct Item x, struct Object y) {
 }
 
 void Index(struct Item x, struct Item y) {
-    if (y.type != intType)
+    if (type_equals(y.type, intType) == 0)
         OSS.Mark("индекс не целое");
     if (y.mode == Const) {
         if ((y.a < 0) || (y.a >= x.type.len))
@@ -201,7 +200,7 @@ void Op1(int op, struct Item x) {
     } else if (op == OSS.and) {
         if (x.mode != Cond)
             loadBool(x);
-        PutBR(BEQ + negated(x.c, x.a));
+        PutBR(BEQ + negated(x.c), x.a);
         set_EXCL(&regs, x.r);
         x.a = pc - 1;
         FixLink(x.b);
@@ -304,7 +303,7 @@ void Store(struct Item x, struct Item y) {
 
 void Parameter(struct Item x, struct Type ftyp, int class) {
     long r;
-    if (x.type == ftyp) {
+    if (type_equals(x.type, ftyp) == 1) {
         if (class == Par) {
             if (x.mode == Var)
                 if (x.a != 0) {

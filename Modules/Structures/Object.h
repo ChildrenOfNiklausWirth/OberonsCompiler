@@ -1,6 +1,7 @@
 #ifndef OBERONSCOMPILER_C_OBJECT_H
 #define OBERONSCOMPILER_C_OBJECT_H
 
+#include <malloc.h>
 struct Item;
 struct Object;
 struct Type;
@@ -12,6 +13,8 @@ struct Item {
     struct Type type;
     long a, b, c, r;
 };
+
+int item_equals(struct Item item1, struct Item item2);
 
 struct Object {
     int class;
@@ -25,6 +28,14 @@ struct Object {
 
 
 };
+
+
+struct Object object_new();
+
+void object_setName(struct Object obj, char name[], int name_size);
+
+int object_equals(struct Object object1, struct Object object2);
+
 struct Type {
     int form;
     struct Object fields;
@@ -34,7 +45,7 @@ struct Type {
 
 };
 
-struct Object object_new();
+int type_equals(struct Type type1, struct Type type2);
 
-void object_setName(struct Object obj, char name[], int name_size)
+
 #endif //OBERONSCOMPILER_C_OBJECT_H
