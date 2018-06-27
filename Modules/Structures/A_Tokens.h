@@ -41,7 +41,7 @@ struct TokensFlow {
     struct Token *tokens;
     int maxSize;
     int size;
-    struct Token currentToken;
+    struct Token current;
     int pointer;
 };
 

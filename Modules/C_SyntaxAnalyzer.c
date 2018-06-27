@@ -1,18 +1,10 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <malloc.h>
-#include "Structures/B_TerminalSymbols.h"
-#include "Structures/A_Tokens.h"
-#include "B_LexAnalyzer.h"
-#include "Structures/Object.h"
-#include "G_CodeGenerator.h"
+#include "C_SyntaxAnalyzer.h"
 
 const int WordSize = 4;
 
 struct Object objectsStart;
 struct Object universe;
 struct Object end;
-struct TokensFlow tokensFlow;
 
 long toInt(char *val) {
 
@@ -390,13 +382,99 @@ void param(struct Item item) {
         printf(")?");
 }
 
-void identList() {
+void identList(int class, struct Object first) {
+    struct Object obj = object_new();
+    if (tokensFlow.current.type == terminalSymbols.IDENT.type) {
 
+        first.class = class;
+        while (tokensFlow.current.type == terminalSymbols.COMMA.type) {
+            tf_next(&tokensFlow);
+            if (tokensFlow.current.type == terminalSymbols.IDENT.type) {
+                obj.class = class;
+                tf_next(&tokensFlow);
+            } else Mark("идентификатор?");
+
+        }
+        if (tokensFlow.current.type == terminalSymbols.COLON.type) {
+            tf_next(&tokensFlow);
+        } else
+            Mark("?");
+    }
 }
 
-void type() {
+void type(struct Type typ) {
+    struct Object obj;
+    struct Object first;
+    struct Item x;
+    struct Type tp;
 
+    typ = intType;
+    if (tokensFlow.current.type != terminalSymbols.IDENT.type && tokensFlow.current.type < terminalSymbols.ARRAY.type) {
+        Mark("тип?");
+    }
+    do {
+        tf_next(&tokensFlow);
+    } while (!(tokensFlow.current.type == terminalSymbols.IDENT.type &&
+               tokensFlow.current.type >= terminalSymbols.ARRAY.type));
+    if (tokensFlow.current.type == terminalSymbols.IDENT.type) {
+        obj = find();
+        tf_next(&tokensFlow);
+    } else if (tokensFlow.current.type == terminalSymbols.ARRAY.type) {
+        tf_next(&tokensFlow);
+        expression(x);
+        if ((x.mode != Const) && (x.a < 0))
+            Mark("неверный индекс");
+        if (tokensFlow.current.type == terminalSymbols.OF.type) {
+            tf_next(&tokensFlow);
+
+        } else Mark("OF?");
+
+        type(tp);
+        //TODO newType
+        //type=
+        typ.form = terminalSymbols.ARRAY.type;
+        typ.base = tp;
+        //TODO
+        //typ.len=SHOR(x.a);
+        typ.size = typ.len & tp.size;
+    } else if (tokensFlow.current.type == terminalSymbols.RECORD.type) {
+
+        tf_next(&tokensFlow);
+        //TODO typ=NEw
+        typ.form = Record;
+        typ.size = 0;
+        openScope();
+        while (1) {
+            if (tokensFlow.current.type == terminalSymbols.IDENT.type) {
+                identList(Fld, first);
+                type(tp);
+                obj = first;
+                while (object_equals(obj, end) != 1) {
+                    obj.type = tp;
+                    obj.val = typ.size;
+                    typ.size += obj.type.size;
+                    obj = obj.next;
+                }
+            }
+            if (tokensFlow.current.type == terminalSymbols.SEMICOLON.type)
+                tf_next(&tokensFlow);
+            else if (tokensFlow.current.type == terminalSymbols.IDENT.type)
+                Mark(";?");
+            else
+                break;
+        }
+        typ.fields = objectsStart.next;
+        closeScope();
+        if (tokensFlow.current.type == terminalSymbols.END.type) {
+            tf_next(&tokensFlow);
+
+        } else
+            Mark("END?");
+
+    } else
+        Mark("идентификатор?");
 }
+
 
 long declarations() {
 
@@ -493,10 +571,11 @@ long declarations() {
             printf("Объявление?");
         else
             break;
+
     }
 }
 
-void FPSection(long* locblksize, long* parblksize) {
+void FPSection(long *locblksize, long *parblksize) {
     struct Object obj, first;
     struct Type tp;
     long parsize;
@@ -542,7 +621,7 @@ void FPSection(long* locblksize, long* parblksize) {
 void procedureDeclaration() {
     int const marksize = 8;
     struct Object proc, obj;
-    char* procid;
+    char *procid;
     long locblksize, parblksize;
 
     tf_next(&tokensFlow);
@@ -562,7 +641,7 @@ void procedureDeclaration() {
             else {
                 FPSection(&locblksize, &parblksize);
 
-                while  (tokensFlow.current.type == terminalSymbols.SEMICOLON.type) {
+                while (tokensFlow.current.type == terminalSymbols.SEMICOLON.type) {
                     tf_next(&tokensFlow);
                     FPSection(&locblksize, &parblksize);
                 }
@@ -579,40 +658,114 @@ void procedureDeclaration() {
         locblksize = parblksize;
         while (&obj != &end) {
             obj.level = curlev;
+            if (obj.class == Par)
+                locblksize -= WordSize;
+            else {
+                obj.val = locblksize;
+                obj = obj.next;
+            }
+        }
+        proc.dsc = objectsStart.next;
+        if (tokensFlow.current.type == terminalSymbols.SEMICOLON.type) {
+            tf_next(&tokensFlow);
+
+        } else {
+            Mark(";?");
+        }
+
+        locblksize = 0;
+        declarations();
+        while (tokensFlow.current.type == terminalSymbols.PROCEDURE.type) {
+            procedureDeclaration();
+            if (tokensFlow.current.type == terminalSymbols.SEMICOLON.type)
+                tf_next(&tokensFlow);
+            else
+                Mark(";?");
+
+        }
+        proc.val = pc;
+        Enter(locblksize);
+        if (tokensFlow.current.type == terminalSymbols.BEGIN.type) {
+            tf_next(&tokensFlow);
+            StatSequence();
+
+        }
+        if (tokensFlow.current.type == terminalSymbols.END.type) {
+            tf_next(&tokensFlow);
+        } else
+            Mark("end ?");
+        if (tokensFlow.current.type == terminalSymbols.IDENT.type) {
+            //TODO
+            if (procid != tokensFlow.current.symbols) {
+                Mark("не подходит");
+                tf_next(&tokensFlow);
+            }
+            Return(parblksize - marksize);
+            closeScope();
+            IncLevel(-1);
 
         }
     }
+
 };
 
 
-void module(struct TokensFlow tokensFlow, struct DeclaredVariables declaredVariables,
-            struct TerminalSymbols terminalSymbols) {
-
+void module() {
+    char *modid;
     if (tf_next(&tokensFlow).type == terminalSymbols.MODULE.type) {
-        if (tf_next(&tokensFlow).type == terminalSymbols.IDENT.type) {
-            if (tf_next(&tokensFlow).type == terminalSymbols.SEMICOLON.type) {
-                tf_next(&tokensFlow);
-            }
+        tf_next(&tokensFlow);
+        Open();
+        openScope();
+        long varsize = 0;
+        if (tokensFlow.current.type == terminalSymbols.IDENT.type) {
+            modid = tokensFlow.current.symbols;
+            tf_next(&tokensFlow);
         } else {
             printf("ident?");
         }
 
-        declarations(tokensFlow, declaredVariables);
+        if (tf_next(&tokensFlow).type == terminalSymbols.SEMICOLON.type) {
+            tf_next(&tokensFlow);
+        } else {
+            Mark(";?");
+        }
+
+        varsize += declarations();
 
         while (tokensFlow.current.type == terminalSymbols.PROCEDURE.type) {
             procedureDeclaration();
             if (tokensFlow.current.type == terminalSymbols.SEMICOLON.type)
                 tf_next(&tokensFlow);
             else
-                printf(";?");
+                Mark(";?");
         }
 
+        Header(varsize);
+        if (tokensFlow.current.type == terminalSymbols.BEGIN.type) {
+            tf_next(&tokensFlow);
+            StatSequence();
+        }
+        if (tokensFlow.current.type == terminalSymbols.END.type) {
+            tf_next(&tokensFlow);
 
-    }
+        } else
+            Mark("End?");
+        if (tokensFlow.current.type == terminalSymbols.IDENT.type) {
+            //TODO
+            if (modid != tokensFlow.current.symbols) {
+                Mark("не подходит");
+            }
+            tf_next(&tokensFlow);
 
+        } else
+            Mark("идентефикатор");
+        if (tokensFlow.current.type != terminalSymbols.PERIOD.type) {
+            Mark(".?");
+        }
+        closeScope();
 
-}
+    } else
+        Mark("Модуль?");
 
-void compile() {
 
 }
