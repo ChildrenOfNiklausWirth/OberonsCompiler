@@ -1,4 +1,5 @@
 #include "G_CodeGenerator.h"
+int MemSize = 100;
 
 
 //CALL BEFORE USING FUNCTIONS
@@ -28,7 +29,7 @@ void PutBR(long op, long disp) {
 
 void TestRange(long x) {
     if ((x >= int_hexToDecimal(20000)) || (x < int_hexToDecimal(-20000)))
-        Mark("Значение слишком большое");//TODO
+        Mark("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");//TODO
 
 }
 
@@ -51,7 +52,7 @@ void load(struct Item x) {
 }
 
 void loadBool(struct Item x) {
-    if (x.type.form != Boolean)
+    if (x.type->form != Boolean)
         Mark("Boolean?");
     load(x);
     x.mode = Cond;
@@ -123,16 +124,16 @@ void IncLevel(int n) {
     curlev += n;
 }
 
-void MakeConstltem(struct Item x, struct Type typ, long val) {
+void MakeConstltem(struct Item x, Type typ, long val) {
     x.mode = Const;
-    x.type = typ;
+    x.type = &typ;
     x.a = val;
 }
 
-void MakeItem(struct Item x, struct Object y) {
+void MakeItem(struct Item x, struct Node y) {
     long r;
     x.mode = y.class;
-    x.type = y.type;
+    x.type = &y.type;
     x.level = y.level;
     x.a = y.val;
     x.b = 0;
@@ -141,7 +142,7 @@ void MakeItem(struct Item x, struct Object y) {
     } else if (y.level == curlev)
         x.r = FP;
     else {
-        Mark("уровень!");
+        Mark("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ!");
         x.r = 0;
     }
     if (y.class == Par) {
@@ -154,34 +155,34 @@ void MakeItem(struct Item x, struct Object y) {
     }
 }
 
-void Field(struct Item x, struct Object y) {
+void Field(struct Item x, Node y) {
     x.a += y.val;
-    x.type = y.type;
+    *x.type = y.type;
 }
 
 void Index(struct Item x, struct Item y) {
-    if (type_equals(y.type, intType) == 0)
-        Mark("индекс не целое");
+    if (type_equals(*y.type, intType) == 0)
+        Mark("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ");
     if (y.mode == Const) {
-        if ((y.a < 0) || (y.a >= x.type.len))
-            Mark("неверный индекс");
+        if ((y.a < 0) || (y.a >= x.type->len))
+            Mark("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
     } else {
         if (y.mode != Reg)
             load(y);
-        Put(CHKI, y.r, 0, x.type.len);
-        Put(MULI, y.r, y.r, x.type.base.size);
+        Put(CHKI, y.r, 0, x.type->len);
+        Put(MULI, y.r, y.r, x.type->base->size);
         Put(ADD, y.r, x.r, y.r);
         set_EXCL(&regs, x.r);
         x.r = y.r;
     }
-    x.type = x.type.base;
+    x.type = x.type->base;
 }
 
 void Op1(int op, struct Item x) {
     long t;
     if (op == terminalSymbols.MINUS.type)
-        if (x.type.form != Integer) {
-            Mark("неверный тип");
+        if (x.type->form != Integer) {
+            Mark("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ");
         } else if (x.mode == Const) {
             x.a = -x.a;
         } else {
@@ -217,7 +218,7 @@ void Op1(int op, struct Item x) {
 }
 
 void Op2(int op, struct Item x, struct Item y) {
-    if (x.type.form == Integer && y.type.form == Integer) {
+    if (x.type->form == Integer && y.type->form == Integer) {
         if (x.mode == Const && y.mode == Const) {
             if (op == terminalSymbols.PLUS.type) {
                 x.a += y.a;
@@ -242,9 +243,9 @@ void Op2(int op, struct Item x, struct Item y) {
             } else if (op == terminalSymbols.MOD.type) {
                 PutOp(Mod, x, y);
             } else
-                Mark("неверный тип");
+                Mark("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ");
         }
-    } else if (x.type.form == Boolean && y.type.form == Boolean) {
+    } else if (x.type->form == Boolean && y.type->form == Boolean) {
         if (y.mode != Cond)
             loadBool(y);
         if (op == terminalSymbols.OR.type) {
@@ -252,12 +253,12 @@ void Op2(int op, struct Item x, struct Item y) {
             x.b = merged(y.b, x.b);
             x.c = y.c;
         }
-    } else Mark("неверный тип");
+    } else Mark("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ");
 }
 
 void Relation(int op, struct Item x, struct Item y) {
-    if (x.type.form != Integer || y.type.form != Integer) {
-        Mark("неверный тип");
+    if (x.type->form != Integer || y.type->form != Integer) {
+        Mark("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ");
 
     } else {
         PutOp(CMP, x, y);
@@ -265,14 +266,14 @@ void Relation(int op, struct Item x, struct Item y) {
         set_EXCL(&regs, y.r);
     }
     x.mode = Cond;
-    x.type = boolType;
+    *x.type = boolType;
     x.a = 0;
     x.b = 0;
 }
 
 void Store(struct Item x, struct Item y) {
     long r;
-    if ((x.type.form == Boolean || x.type.form == Integer) && (x.type.form == y.type.form)) {
+    if ((x.type->form == Boolean || x.type->form == Integer) && (x.type->form == y.type->form)) {
         if (y.mode == Cond) {
             Put(BEQ + negated(y.c), y.r, 0, y.a);
             set_EXCL(&regs, y.r);
@@ -292,18 +293,18 @@ void Store(struct Item x, struct Item y) {
             Put(STW, y.r, x.r, x.a);
 
         } else
-            Mark("неправильное присваивание");
+            Mark("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
         set_EXCL(&regs, x.r);
         set_EXCL(&regs, y.r);
     } else
-        Mark("невсоместимое присваивание");
+        Mark("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 
 
 }
 
-void Parameter(struct Item x, struct Type ftyp, int class) {
+void Parameter(struct Item x, Type ftyp, int class) {
     long r;
-    if (type_equals(x.type, ftyp) == 1) {
+    if (type_equals(*x.type, ftyp) == 1) {
         if (class == Par) {
             if (x.mode == Var)
                 if (x.a != 0) {
@@ -312,7 +313,7 @@ void Parameter(struct Item x, struct Type ftyp, int class) {
                 } else
                     r = x.r;
             else
-                Mark("неправильный режим параметра");
+                Mark("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
             Put(PSH, r, SP, 4);
             set_EXCL(&regs, r);
 
@@ -322,12 +323,12 @@ void Parameter(struct Item x, struct Type ftyp, int class) {
             Put(PSH, x.r, SP, 4);
             set_EXCL(&regs, x.r);
         }
-    } else Mark("неверный тип параметра");
+    } else Mark("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 
 }
 
 void CJump(struct Item x) {
-    if (x.type.form == Boolean) {
+    if (x.type->form == Boolean) {
         if (x.mode != Cond)
             loadBool(x);
         PutBR(BEQ + negated(x.c), x.a);
@@ -357,14 +358,14 @@ void Call(struct Item x) {
 void IOCall(struct Item x, struct Item y) {
     struct Item z;
     if (x.a < 4) {
-        if (y.type.form != Integer)
+        if (y.type->form != Integer)
             printf("Intege?");
 
     }
     if (x.a == 1) {
         GetReg(z.r);
         z.mode = Reg;
-        z.type = intType;
+        *z.type = intType;
         Put(RD, z.r, 0, 0);
         Store(y, z);
     } else if (x.a == 2) {
@@ -383,7 +384,7 @@ void IOCall(struct Item x, struct Item y) {
 
 void Header(long size) {
     entry = pc;
-    Put(MOVI, SP, 0, RISC.MemSize - size);
+    Put(MOVI, SP, 0, MemSize - size);
     Put(PSH, LNK, SP, 4);
 
 }

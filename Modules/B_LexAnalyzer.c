@@ -1,16 +1,19 @@
 #include "B_LexAnalyzer.h"
 
 int numberOfLine = 1;
+struct TokensFlow tokensFlow;
 
-struct Token readNextToken(FILE *file, char currentSymbol) {
+Token readNextToken(FILE *file, char currentSymbol) {
+
+    Token token;
+    token_initialize(&token);
+    token.line = numberOfLine;
+
     while (currentSymbol == ' ' || currentSymbol == '\n') {
         if (currentSymbol == '\n')
             numberOfLine++;
         currentSymbol = (char) getc(file);
     }
-    struct Token token;
-    token_initialize(&token);
-    token.numberOfLine = numberOfLine;
 
     char nextSymbol = (char) fgetc(file);
 
@@ -51,15 +54,15 @@ struct Token readNextToken(FILE *file, char currentSymbol) {
 }
 
 void lexAnalysis(char *fileName) {
+
     tf_initialize(&tokensFlow);
     tss_initialize(&terminalSymbols);
     FILE *file = fopen(fileName, "r");
     char c;
+
     while (fscanf(file, "%c", &c) != EOF) {
-
-        struct Token token = readNextToken(file, c);
+        Token token = readNextToken(file, c);
         tf_addToken(&tokensFlow, &token);
-
     }
 
 
@@ -69,7 +72,6 @@ void lexAnalysis(char *fileName) {
 }
 
 void Mark(char msg[]) {
-    printf("Error in line number%d\n", tokensFlow.currentToken.numberOfLine);
+    printf("Error in line number%d\n", tokensFlow.current->line);
     printf("%s", msg);
-
 }

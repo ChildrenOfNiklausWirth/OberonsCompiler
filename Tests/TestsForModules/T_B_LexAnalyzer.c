@@ -1,12 +1,12 @@
 #include "../../Modules/B_LexAnalyzer.h"
 
-char adress[] = "..\\Tests\\ProgrammsOnOberon\\1_Test.txt";
+char adress[] = "../Tests/ProgrammsOnOberon/1_Test.txt";
 
 
 struct TokensFlow rightTokensFlow;
 
 void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
-    struct Token token[50];
+    Token token[50];
     int tokenSize = 42;
 
     // /MODULE TEST;
@@ -69,9 +69,9 @@ void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
     token[39] = token_newTokenWithType("END", 3, 40, 9);
     token[40] = token_newTokenWithType("TEST", 4, 37, 9);
     token[41] = token_newTokenWithType(";", 1, 38, 9);
+
     for (int i = 0; i < tokenSize; ++i) {
         tf_addToken(&rightTokensFlow, &token[i]);
-
     }
 
 }
@@ -115,8 +115,8 @@ void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct Token
 }
 
 int main() {
+
     tf_initialize(&rightTokensFlow);
-    tss_initialize(&terminalSymbols);
 
     createRightResultForFirstTest(&rightTokensFlow);
 
@@ -125,8 +125,8 @@ int main() {
 
     printf("TF1\t\t\t\t\t\tTF2\t\n\n");
     tf_printWithTypeTwoTokensFlow(tokensFlow, rightTokensFlow);
-    printf("\n2 Test Result:\n");
 
+    printf("\n2 Test Result:\n");
     printf("Compare TokensFlows\n");
     tf_assertEquals(tokensFlow, rightTokensFlow);
 

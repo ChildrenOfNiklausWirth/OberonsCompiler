@@ -6,10 +6,10 @@
 #include "Structures/B_TerminalSymbols.h"
 
 
-struct TerminalSymbols terminalSymbols;
-struct TokensFlow tokensFlow;
+extern struct TerminalSymbols terminalSymbols; //need to be initialised with ts_initialise
+extern struct TokensFlow tokensFlow; //need to be created with lexAnalysis
 
-struct Token readNextToken(FILE *file, char currentSymbol);
+Token readNextToken(FILE *file, char currentSymbol);
 
 void lexAnalysis(char *fileName);
 

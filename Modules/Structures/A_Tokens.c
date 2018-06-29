@@ -5,20 +5,20 @@
 //__________________________________________________________________________________________________
 const int TOKEN_INIT_MAXSIZE = 8;
 
-void token_allocatedMemory(struct Token *token) {
+void token_allocatedMemory(Token *token) {
     token->maxSize = token->maxSize * 2;
-    token->symbols = realloc(token->symbols, sizeof(struct Token) * token->maxSize);
+    token->symbols = realloc(token->symbols, sizeof(Token) * token->maxSize);
 }
 
-void token_initialize(struct Token *token) {
+void token_initialize(Token *token) {
     token->maxSize = TOKEN_INIT_MAXSIZE;
     token->symbols = malloc(sizeof(char) * TOKEN_INIT_MAXSIZE);
     token->size = 0;
     token->type = 0;
-    token->numberOfLine = 0;
+    token->line = 0;
 }
 
-void token_addSymbol(struct Token *token, char symbol) {
+void token_addSymbol(Token *token, char symbol) {
     if (token->size == token->maxSize - 1)
         token_allocatedMemory(token);
     token->symbols[token->size] = symbol;
@@ -26,24 +26,24 @@ void token_addSymbol(struct Token *token, char symbol) {
 
 }
 
-struct Token token_newToken(char symbols[], int size, int numberOfLine) {
-    struct Token token;
+Token token_newToken(char symbols[], int size, int numberOfLine) {
+    Token token;
     token.symbols = malloc(sizeof(char) * TOKEN_INIT_MAXSIZE);
     token.size = 0;
     token.maxSize = TOKEN_INIT_MAXSIZE;
-    token.numberOfLine = numberOfLine;
+    token.line = numberOfLine;
     for (int i = 0; i < size; ++i)
         token_addSymbol(&token, symbols[i]);
     return token;
 }
 
-struct Token token_newTokenWithType(char symbols[], int size, int type, int numberOfLine) {
-    struct Token token = token_newToken(symbols, size, type);
+Token token_newTokenWithType(char symbols[], int size, int type) {
+    Token token = token_newToken(symbols, size, type);
     token.type = type;
     return token;
 }
 
-int token_equals(struct Token token1, struct Token token2) {
+int token_equals(Token token1, Token token2) {
     int equalDigit = 0;
     int paramsDigit = 4;
     if (token1.symbols == token2.symbols)
@@ -61,19 +61,19 @@ int token_equals(struct Token token1, struct Token token2) {
 
 }
 
-int token_equalsWithString(struct Token token, const char *name) {
+int token_equalsWithString(Token token, const char *name) {
     for (int i = 0; i < token.size; ++i)
         if (token.symbols[i] != name[i])
             return 0;
     return 1;
 }
 
-void token_print(struct Token token) {
+void token_print(Token token) {
     for (int i = 0; i < token.size; ++i)
         printf("%c", token.symbols[i]);
 }
 
-int token_defineType(struct Token token, struct TerminalSymbols terminalSymbols) {
+int token_defineType(Token token, struct TerminalSymbols terminalSymbols) {
     if (token_equalsWithString(token, terminalSymbols.NULLL.name))
         return terminalSymbols.NULLL.type;
     if (token_equalsWithString(token, terminalSymbols.TIMES.name))
@@ -183,17 +183,17 @@ const int TF_INIT_MAXSIZE = 16;
 
 void tf_initialize(struct TokensFlow *tokensFlow) {
     tokensFlow->maxSize = TF_INIT_MAXSIZE;
-    tokensFlow->tokens = malloc(sizeof(struct Token) * TF_INIT_MAXSIZE);
+    tokensFlow->tokens = malloc(sizeof(Token) * TF_INIT_MAXSIZE);
     tokensFlow->size = 0;
     tokensFlow->pointer = 0;
 }
 
 void tf_allocatedMemory(struct TokensFlow *tokensFlow) {
     tokensFlow->maxSize = tokensFlow->maxSize * 2;
-    tokensFlow->tokens = realloc(tokensFlow->tokens, sizeof(struct Token) * tokensFlow->maxSize);
+    tokensFlow->tokens = realloc(tokensFlow->tokens, sizeof(Token) * tokensFlow->maxSize);
 }
 
-void tf_addToken(struct TokensFlow *tokensFlow, struct Token *token) {
+void tf_addToken(struct TokensFlow *tokensFlow, Token *token) {
     if (tokensFlow->maxSize == 0)
         tf_initialize(tokensFlow);
     if (tokensFlow->size == tokensFlow->maxSize - 1)
@@ -202,10 +202,10 @@ void tf_addToken(struct TokensFlow *tokensFlow, struct Token *token) {
     tokensFlow->size++;
 }
 
-struct Token tf_next(struct TokensFlow *tokensFlow) {
-    tokensFlow->currentToken = tokensFlow->tokens[tokensFlow->pointer];
+Token *tf_next(struct TokensFlow *tokensFlow) {
+    tokensFlow->current = &tokensFlow->tokens[tokensFlow->pointer];
     tokensFlow->pointer++;
-    return tokensFlow->currentToken;
+    return tokensFlow->current;
 }
 
 void tf_print(struct TokensFlow tokensFlow) {

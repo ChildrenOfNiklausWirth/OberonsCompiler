@@ -9,7 +9,6 @@ struct TerminalSymbol ts_newTerminalSymbol(char name[], int size, int type) {
     terminalSymbol.size = size;
     terminalSymbol.type = type;
     return terminalSymbol;
-
 }
 
 //__________________________________________________________________________________________________

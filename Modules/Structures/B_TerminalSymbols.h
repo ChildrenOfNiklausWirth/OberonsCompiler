@@ -56,7 +56,7 @@ struct TerminalSymbols {
     struct TerminalSymbol BEGIN;
     struct TerminalSymbol MODULE;
     struct TerminalSymbol EOFF;
-};
+} terminalSymbols;
 
 void tss_initialize(struct TerminalSymbols *terminalSymbols);
 

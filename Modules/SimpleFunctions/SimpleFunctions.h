@@ -1,10 +1,7 @@
 #ifndef OBERONSCOMPILER_C_Z_SIMPLEFUNCTIONS_H
 #define OBERONSCOMPILER_C_Z_SIMPLEFUNCTIONS_H
 
-#include <math.h>
-
 int int_contains(int digit, const int mass[], int massSize);
-
 
 int ASH(int x, int n);
 

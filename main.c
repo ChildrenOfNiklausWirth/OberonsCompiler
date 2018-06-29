@@ -1,22 +1,13 @@
 #include "Modules/B_LexAnalyzer.h"
-#include "Modules/C_SyntaxAnalyzer.h"
+#include "Modules/C_SyntaxAnalyzer.c"
 
-int loaded = 0;
-
-
-char adress[] = "C:\\Users\\danil\\CLionProjects\\OberonsCompiler\\Tests\\ProgrammsOnOberon\\1_Test.txt";
-
-void compile() {
-    long begin, end, time;
+char adress[] = "/Tests/ProgrammsOnOberon/1_Test.txt";
 
 
-}
 
 int main() {
-
     lexAnalysis(adress);
+    module();
     return 0;
 }
-
-
 

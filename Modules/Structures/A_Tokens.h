@@ -7,41 +7,41 @@
 const int TOKEN_INIT_MAXSIZE;
 
 
-struct Token {
-    int numberOfLine;
-    int type;
-    int maxSize;
+typedef struct token {
+    int line; // line in source code
+    int type; // probably deprecated
+    int maxSize; //
     int size;
     char *symbols;
-};
+} Token;
 
-void token_allocatedMemory(struct Token *token);
+void token_allocatedMemory(Token *token);
 
-void token_initialize(struct Token *token);
+void token_initialize(Token *token);
 
-void token_addSymbol(struct Token *token, char symbol);
+void token_addSymbol(Token *token, char symbol);
 
-struct Token token_newToken(char symbols[], int size, int numberOfLine);
+Token token_newToken(char symbols[], int size, int numberOfLine);
 
-struct Token token_newTokenWithType(char symbols[], int size, int type, int numberOfLine);
+Token token_newTokenWithType(char symbols[], int size, int type);
 
-int token_equals(struct Token token1, struct Token token2);
+int token_equals(Token token1, Token token2);
 
-int token_equalsWithString(struct Token token, const char *name);
+int token_equalsWithString(Token token, const char *name);
 
-char token_getName(struct Token token);
+char token_getName(Token token);
 
-int token_defineType(struct Token token, struct TerminalSymbols terminalSymbols);
+int token_defineType(Token token, struct TerminalSymbols terminalSymbols);
 
 //__________________________________________________________________________________________________
 
 const int TF_INIT_MAXSIZE;
 
 struct TokensFlow {
-    struct Token *tokens;
+    Token *tokens;
     int maxSize;
     int size;
-    struct Token current;
+    Token *current;
     int pointer;
 };
 
@@ -49,9 +49,9 @@ void tf_initialize(struct TokensFlow *tokensFlow);
 
 void tf_allocatedMemory(struct TokensFlow *tokensFlow);
 
-void tf_addToken(struct TokensFlow *tokensFlow, struct Token *token);
+void tf_addToken(struct TokensFlow *tokensFlow, Token *token);
 
-struct Token tf_next(struct TokensFlow *tokensFlow);
+Token* tf_next(struct TokensFlow *tokensFlow);
 
 void tf_print(struct TokensFlow tokensFlow);
 
