@@ -36,39 +36,39 @@ void TestRange(long x) {
 void load(struct Item x) {
     long r;
     //124//TODO
-    if (x.mode == Var) {
+    if (x.mode == VARIABLE) {
         if (x.level == 0)
             x.a = x.a - pc * 4;
         GetReg(r);
         Put(LDW, r, x.r, x.a);
         set_EXCL(&regs, x.r);
         x.r = r;
-    } else if (x.mode == Const) {
+    } else if (x.mode == CONST) {
         TestRange(x.a);
         GetReg(x.r);
         Put(MOVI, x.r, 0, x.a);
     }
-    x.mode = Reg;
+    x.mode = REG;
 }
 
 void loadBool(struct Item x) {
-    if (x.type->form != Boolean)
+    if (x.type->form != BOOLEAN)
         Mark("Boolean?");
     load(x);
-    x.mode = Cond;
+    x.mode = COND;
     x.a = 0;
     x.b = 0;
     x.c = 1;
 }
 
 void PutOp(long cd, struct Item x, struct Item y) {
-    if (x.mode != Reg)
+    if (x.mode != REG)
         load(x);
-    if (y.mode == Const) {
+    if (y.mode == CONST) {
         TestRange(y.a);
         Put(cd + 16, x.r, x.r, y.a);
     } else {
-        if (y.mode != Reg)
+        if (y.mode != REG)
             load(y);
         Put(cd, x.r, x.r, y.r);
         set_EXCL(&regs, y.r);
@@ -125,7 +125,7 @@ void IncLevel(int n) {
 }
 
 void MakeConstltem(struct Item x, Type typ, long val) {
-    x.mode = Const;
+    x.mode = CONST;
     x.type = &typ;
     x.a = val;
 }
@@ -145,10 +145,10 @@ void MakeItem(struct Item x, struct Node y) {
         Mark("�������!");
         x.r = 0;
     }
-    if (y.class == Par) {
+    if (y.class == PAR) {
         GetReg(r);
         Put(LDW, r, x.r, x.a);
-        x.mode = Var;
+        x.mode = VARIABLE;
         x.r = r;
         x.a = 0;
 
@@ -163,11 +163,11 @@ void Field(struct Item x, Node y) {
 void Index(struct Item x, struct Item y) {
     if (type_equals(*y.type, intType) == 0)
         Mark("������ �� �����");
-    if (y.mode == Const) {
+    if (y.mode == CONST) {
         if ((y.a < 0) || (y.a >= x.type->len))
             Mark("�������� ������");
     } else {
-        if (y.mode != Reg)
+        if (y.mode != REG)
             load(y);
         Put(CHKI, y.r, 0, x.type->len);
         Put(MULI, y.r, y.r, x.type->base->size);
@@ -181,17 +181,17 @@ void Index(struct Item x, struct Item y) {
 void Op1(int op, struct Item x) {
     long t;
     if (op == terminalSymbols.MINUS.type)
-        if (x.type->form != Integer) {
+        if (x.type->form != INTEGER) {
             Mark("�������� ���");
-        } else if (x.mode == Const) {
+        } else if (x.mode == CONST) {
             x.a = -x.a;
         } else {
-            if (x.mode == Var)
+            if (x.mode == VARIABLE)
                 load(x);
             Put(MVN, x.r, 0, x.r);
         }
     else if (op == terminalSymbols.NOT.type) {
-        if (x.mode != Cond) {
+        if (x.mode != COND) {
             loadBool(x);
         }
         x.c = negated(x.c);
@@ -199,7 +199,7 @@ void Op1(int op, struct Item x) {
         x.a = x.b;
         x.b = t;
     } else if (op == terminalSymbols.AND.type) {
-        if (x.mode != Cond)
+        if (x.mode != COND)
             loadBool(x);
         PutBR(BEQ + negated(x.c), x.a);
         set_EXCL(&regs, x.r);
@@ -207,7 +207,7 @@ void Op1(int op, struct Item x) {
         FixLink(x.b);
         x.b = 0;
     } else if (op == terminalSymbols.OR.type) {
-        if (x.mode != Cond)
+        if (x.mode != COND)
             loadBool(x);
         PutBR(BEQ + x.c, x.b);
         set_EXCL(&regs, x.r);
@@ -218,15 +218,15 @@ void Op1(int op, struct Item x) {
 }
 
 void Op2(int op, struct Item x, struct Item y) {
-    if (x.type->form == Integer && y.type->form == Integer) {
-        if (x.mode == Const && y.mode == Const) {
+    if (x.type->form == INTEGER && y.type->form == INTEGER) {
+        if (x.mode == CONST && y.mode == CONST) {
             if (op == terminalSymbols.PLUS.type) {
                 x.a += y.a;
             } else if (op == terminalSymbols.MINUS.type) {
                 x.a -= y.a;
             } else if (op == terminalSymbols.TIMES.type) {
                 x.a *= y.a;
-            } else if (op == terminalSymbols.DIV.type) {
+            } else if (op == terminalSymbols.DIV) {
                 x.a /= y.a;
             } else if (op == terminalSymbols.MOD.type) {
                 x.a %= y.a;

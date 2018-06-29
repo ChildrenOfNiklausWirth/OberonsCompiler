@@ -11,14 +11,14 @@
 #define NUMBER_OF_COMMANDS 16
 #define MAXREL 200
 #define HEAD 0
-#define VAR 1
+#define VARIABLE 1
 #define PAR 2
 #define CONST 3
 #define FLD 4
 #define TYP 5
 #define PROC 6
 #define S_PROC 7
-#define REG
+#define REG 10
 #define COND 11
 #define BOOLEAN 0
 #define INTEGER 1
@@ -35,13 +35,42 @@
 #define MOVI 16
 #define MVNI 17
 #define ADDI 18
+#define SUBI 19
+#define MULI 20
+#define DIVI 21
+#define MODI 22
+#define CMPI 23
+#define CHKI 24
+#define LDW 32
+#define LDB 33
+#define POP 34
+#define STW 36
+#define STB 37
+#define PSH 38
+#define RD 40
+#define WRD 41
+#define WRH 42
+#define WRL 43
+#define BEQ 48
+#define BNE 49
+#define BLT 50
+#define BGE 51
+#define BLE 42
+#define BGT 53
+#define BR 56
+#define BSR 57
+#define RET 58
+#define FP 12
+#define SP 13
+#define LNK 14
+#define PC 15
 
-int const maxRel = 200, Head = 0, Var = 1, Par = 2, Const = 3, Fld = 4, Typ = 5, Proc = 6,
-        SProc = 7, Reg = 10, Cond = 11, Boolean = 0, Integer = 1, Array = 2, Record = 3, MOV = 0, MVN = 1, ADD = 2,
-        SUB = 3, MUL = 4, Div = 5, Mod = 6, CMP = 7, MOVI = 16, MVNI = 17, ADDI = 18, SUBI = 19, MULI = 20, DIVI = 21,
-        MODI = 22, CMPI = 23, CHKI = 24, LDW = 32, LDB = 33, POP = 34, STW = 36, STB = 37, PSH = 38, RD = 40, WRD = 41,
-        WRH = 42, WRL = 43, BEQ = 48, BNE = 49, BLT = 50, BGE = 51, BLE = 52, BGT = 53, BR = 56, BSR = 57, RET = 58,
-        FP = 12, SP = 13, LNK, PC = 15;
+//int const maxRel = 200, Head = 0, Var = 1, Par = 2, Const = 3, Fld = 4, Typ = 5, Proc = 6,
+//        SProc = 7, Reg = 10, Cond = 11, Boolean = 0, Integer = 1, Array = 2, Record = 3, MOV = 0, MVN = 1, ADD = 2,
+//        SUB = 3, MUL = 4, Div = 5, Mod = 6, CMP = 7, MOVI = 16, MVNI = 17, ADDI = 18, SUBI = 19, MULI = 20, DIVI = 21,
+//        MODI = 22, CMPI = 23, CHKI = 24, LDW = 32, LDB = 33, POP = 34, STW = 36, STB = 37, PSH = 38, RD = 40, WRD = 41,
+//        WRH = 42, WRL = 43, BEQ = 48, BNE = 49, BLT = 50, BGE = 51, BLE = 52, BGT = 53, BR = 56, BSR = 57, RET = 58,
+//        FP = 12, SP = 13, LNK, PC = 15;
 
 
 Type intType;
