@@ -29,8 +29,8 @@
 #define ADD 2
 #define SUB 3
 #define MUL 4
-#define DIV 5
-#define MOD 6
+#define DIVIDE 5
+#define MODULUS 6
 #define CMP 7
 #define MOVI 16
 #define MVNI 17
@@ -69,7 +69,7 @@
 //        SProc = 7, Reg = 10, Cond = 11, Boolean = 0, Integer = 1, Array = 2, Record = 3, MOV = 0, MVN = 1, ADD = 2,
 //        SUB = 3, MUL = 4, Div = 5, Mod = 6, CMP = 7, MOVI = 16, MVNI = 17, ADDI = 18, SUBI = 19, MULI = 20, DIVI = 21,
 //        MODI = 22, CMPI = 23, CHKI = 24, LDW = 32, LDB = 33, POP = 34, STW = 36, STB = 37, PSH = 38, RD = 40, WRD = 41,
-//        WRH = 42, WRL = 43, BEQ = 48, BNE = 49, BLT = 50, BGE = 51, BLE = 52, BGT = 53, BR = 56, BSR = 57, RET = 58,
+//       WRH = 42, WRL = 43, BEQ = 48, BNE = 49, BLT = 50, BGE = 51, BLE = 52, BGT = 53, BR = 56, BSR = 57, RET = 58,
 //        FP = 12, SP = 13, LNK, PC = 15;
 
 

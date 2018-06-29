@@ -46,10 +46,10 @@ struct TerminalSymbols {
     struct TerminalSymbol ELSEIF;
     struct TerminalSymbol IF;
     struct TerminalSymbol WHILE;
-    struct TerminalSymbol ARRAY;
-    struct TerminalSymbol RECORD;
+    struct TerminalSymbol ARR;
+    struct TerminalSymbol REC;
     struct TerminalSymbol CONSTT;
-    struct TerminalSymbol INTEGER;
+    struct TerminalSymbol INT;
     struct TerminalSymbol BOOLEAN;
     struct TerminalSymbol VAR;
     struct TerminalSymbol PROCEDURE;

@@ -226,7 +226,7 @@ void Op2(int op, struct Item x, struct Item y) {
                 x.a -= y.a;
             } else if (op == terminalSymbols.TIMES.type) {
                 x.a *= y.a;
-            } else if (op == terminalSymbols.DIV) {
+            } else if (op == terminalSymbols.DIV.type) {
                 x.a /= y.a;
             } else if (op == terminalSymbols.MOD.type) {
                 x.a %= y.a;
@@ -239,14 +239,14 @@ void Op2(int op, struct Item x, struct Item y) {
             } else if (op == terminalSymbols.TIMES.type) {
                 PutOp(MUL, x, y);
             } else if (op == terminalSymbols.DIV.type) {
-                PutOp(Div, x, y);
+                PutOp(DIVIDE, x, y);
             } else if (op == terminalSymbols.MOD.type) {
-                PutOp(Mod, x, y);
+                PutOp(MODULUS, x, y);
             } else
                 Mark("�������� ���");
         }
-    } else if (x.type->form == Boolean && y.type->form == Boolean) {
-        if (y.mode != Cond)
+    } else if (x.type->form == BOOLEAN && y.type->form == BOOLEAN) {
+        if (y.mode != COND)
             loadBool(y);
         if (op == terminalSymbols.OR.type) {
             x.a = y.a;
@@ -257,7 +257,7 @@ void Op2(int op, struct Item x, struct Item y) {
 }
 
 void Relation(int op, struct Item x, struct Item y) {
-    if (x.type->form != Integer || y.type->form != Integer) {
+    if (x.type->form != INTEGER || y.type->form != INTEGER) {
         Mark("�������� ���");
 
     } else {
@@ -265,7 +265,7 @@ void Relation(int op, struct Item x, struct Item y) {
         x.c = op - terminalSymbols.EQL.type;
         set_EXCL(&regs, y.r);
     }
-    x.mode = Cond;
+    x.mode = COND;
     *x.type = boolType;
     x.a = 0;
     x.b = 0;
@@ -273,8 +273,8 @@ void Relation(int op, struct Item x, struct Item y) {
 
 void Store(struct Item x, struct Item y) {
     long r;
-    if ((x.type->form == Boolean || x.type->form == Integer) && (x.type->form == y.type->form)) {
-        if (y.mode == Cond) {
+    if ((x.type->form == BOOLEAN || x.type->form == INTEGER) && (x.type->form == y.type->form)) {
+        if (y.mode == COND) {
             Put(BEQ + negated(y.c), y.r, 0, y.a);
             set_EXCL(&regs, y.r);
             y.a = pc - 1;
@@ -285,9 +285,9 @@ void Store(struct Item x, struct Item y) {
             FixLink(y.a);
             Put(MOVI, y.r, 0, 0);
             //127
-        } else if (y.mode != Reg)
+        } else if (y.mode != REG)
             load(y);
-        if (x.mode == Var) {
+        if (x.mode == VARIABLE) {
             if (x.level == 0)
                 x.a = x.a - pc * 4;
             Put(STW, y.r, x.r, x.a);
@@ -305,8 +305,8 @@ void Store(struct Item x, struct Item y) {
 void Parameter(struct Item x, Type ftyp, int class) {
     long r;
     if (type_equals(*x.type, ftyp) == 1) {
-        if (class == Par) {
-            if (x.mode == Var)
+        if (class == PAR) {
+            if (x.mode == VARIABLE)
                 if (x.a != 0) {
                     GetReg(r);
                     Put(ADDI, r, x.r, x.a);
@@ -318,7 +318,7 @@ void Parameter(struct Item x, Type ftyp, int class) {
             set_EXCL(&regs, r);
 
         } else {
-            if (x.mode != Reg)
+            if (x.mode != REG)
                 load(x);
             Put(PSH, x.r, SP, 4);
             set_EXCL(&regs, x.r);
@@ -328,8 +328,8 @@ void Parameter(struct Item x, Type ftyp, int class) {
 }
 
 void CJump(struct Item x) {
-    if (x.type->form == Boolean) {
-        if (x.mode != Cond)
+    if (x.type->form == BOOLEAN) {
+        if (x.mode != COND)
             loadBool(x);
         PutBR(BEQ + negated(x.c), x.a);
         set_EXCL(&regs, x.r);
@@ -358,13 +358,13 @@ void Call(struct Item x) {
 void IOCall(struct Item x, struct Item y) {
     struct Item z;
     if (x.a < 4) {
-        if (y.type->form != Integer)
+        if (y.type->form != INTEGER)
             printf("Intege?");
 
     }
     if (x.a == 1) {
         GetReg(z.r);
-        z.mode = Reg;
+        z.mode = REG;
         *z.type = intType;
         Put(RD, z.r, 0, 0);
         Store(y, z);
