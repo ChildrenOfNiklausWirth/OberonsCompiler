@@ -34,17 +34,17 @@ int namesEquals(char *name1, int size1, char *name2, int size2) {
 
 struct Node addObject(struct Node object, int class) {
 
-    end.name = tokensFlow.current->symbols;
-    end.size = tokensFlow.current->length;
+    end.name = syntaxTokensFlow.current->symbols;
+    end.size = syntaxTokensFlow.current->length;
 
     Node objects = objectsStart;
 
-    while (namesEquals(tokensFlow.current->symbols, tokensFlow.current->length, objects.name, objects.size) != 1)
+    while (namesEquals(syntaxTokensFlow.current->symbols, syntaxTokensFlow.current->length, objects.name, objects.size) != 1)
         objects = *objects.next;
 
     if (object.next == &end) {
         Node newObject = object_new();
-        object_setName(newObject, tokensFlow.current->symbols, tokensFlow.current->length);
+        object_setName(newObject, syntaxTokensFlow.current->symbols, syntaxTokensFlow.current->length);
         newObject.class = class;
         newObject.next = &end;
         objects.next = &newObject;
@@ -62,12 +62,12 @@ struct Node find() {
     Node objects = objectsStart;
     Node object;
 
-    object_setName(end, tokensFlow.current->symbols, tokensFlow.current->length);
+    object_setName(end, syntaxTokensFlow.current->symbols, syntaxTokensFlow.current->length);
     while (true) {
 
         object = *objects.next;
 
-        while (namesEquals(object.name, object.size, tokensFlow.current->symbols, tokensFlow.current->length) != 1) {
+        while (namesEquals(object.name, object.size, syntaxTokensFlow.current->symbols, syntaxTokensFlow.current->length) != 1) {
             object = *object.next;
         }
 
@@ -85,8 +85,8 @@ struct Node find() {
 }
 
 Node findField(struct Node list) {
-    object_setName(end, tokensFlow.current->symbols, tokensFlow.size);
-    while (namesEquals(list.name, list.size, tokensFlow.current->symbols, tokensFlow.current->length) != 1) {
+    object_setName(end, syntaxTokensFlow.current->symbols, syntaxTokensFlow.size);
+    while (namesEquals(list.name, list.size, syntaxTokensFlow.current->symbols, syntaxTokensFlow.current->length) != 1) {
         list = *list.next;
     }
     return list;
@@ -112,10 +112,10 @@ void closeScope() {
 struct Item expression(struct Item item1);
 
 struct Item selector(struct Item item) {
-    while ((tokensFlow.current->type == terminalSymbols.LBRAK.type) &&
-           (tokensFlow.current->type == terminalSymbols.PERIOD.type)) {
-        if (tokensFlow.current->type == terminalSymbols.LBRAK.type) {
-            tf_next(&tokensFlow);
+    while ((syntaxTokensFlow.current->type == terminalSymbols.LBRAK.type) &&
+           (syntaxTokensFlow.current->type == terminalSymbols.PERIOD.type)) {
+        if (syntaxTokensFlow.current->type == terminalSymbols.LBRAK.type) {
+            tf_next(&syntaxTokensFlow);
             struct Item exp = expression(item);
 
             if (exp.type->form == Array)
@@ -123,17 +123,17 @@ struct Item selector(struct Item item) {
             else
                 printf("NOT ARRAY");
 
-            if (tokensFlow.current->type == terminalSymbols.RBRAK.type)
-                tf_next(&tokensFlow);
+            if (syntaxTokensFlow.current->type == terminalSymbols.RBRAK.type)
+                tf_next(&syntaxTokensFlow);
             else
                 printf("]");
         } else {
-            tf_next(&tokensFlow);
+            tf_next(&syntaxTokensFlow);
 
-            if (tokensFlow.current->type != terminalSymbols.IDENT.type) {
+            if (syntaxTokensFlow.current->type != terminalSymbols.IDENT.type) {
                 if (item.type->form == Record) {
                     struct Node obj = findField(*item.type->fields);
-                    tf_next(&tokensFlow);
+                    tf_next(&syntaxTokensFlow);
                     if (&obj != &end) {
                         Field(item, obj);
                     } else {
@@ -152,30 +152,30 @@ void factor(struct Item item) {
 
     struct Node object;
 
-    if (tokensFlow.current->type < terminalSymbols.LPAREN.type) {
+    if (syntaxTokensFlow.current->type < terminalSymbols.LPAREN.type) {
         printf("ident?");
 
-        while (tokensFlow.current->type >= terminalSymbols.LPAREN.type)
-            tf_next(&tokensFlow);
+        while (syntaxTokensFlow.current->type >= terminalSymbols.LPAREN.type)
+            tf_next(&syntaxTokensFlow);
     }
 
-    if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+    if (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
         object = find();
-        tf_next(&tokensFlow);
+        tf_next(&syntaxTokensFlow);
         MakeItem(item, object);
         selector(item);
-    } else if (tokensFlow.current->type == terminalSymbols.NUMBER.type) {
-        MakeConstltem(item, intType, toInt(tokensFlow.current->symbols));
-        tf_next(&tokensFlow);
-    } else if (tokensFlow.current->type == terminalSymbols.LPAREN.type) {
-        tf_next(&tokensFlow);
+    } else if (syntaxTokensFlow.current->type == terminalSymbols.NUMBER.type) {
+        MakeConstltem(item, intType, toInt(syntaxTokensFlow.current->symbols));
+        tf_next(&syntaxTokensFlow);
+    } else if (syntaxTokensFlow.current->type == terminalSymbols.LPAREN.type) {
+        tf_next(&syntaxTokensFlow);
         item = expression(item);
-        if (tokensFlow.current->type == terminalSymbols.RPAREN.type)
-            tf_next(&tokensFlow);
+        if (syntaxTokensFlow.current->type == terminalSymbols.RPAREN.type)
+            tf_next(&syntaxTokensFlow);
         else
             printf(")?");
-    } else if (tokensFlow.current->type == terminalSymbols.NOT.type) {
-        tf_next(&tokensFlow);
+    } else if (syntaxTokensFlow.current->type == terminalSymbols.NOT.type) {
+        tf_next(&syntaxTokensFlow);
         factor(item);
         Op1(terminalSymbols.NOT.type, item);
     } else {
@@ -190,11 +190,11 @@ void term(struct Item item) {
 
     struct Item item1;
 
-    while ((tokensFlow.current->type >= terminalSymbols.TIMES.type) &&
-           (tokensFlow.current->type <= terminalSymbols.AND.type)) {
+    while ((syntaxTokensFlow.current->type >= terminalSymbols.TIMES.type) &&
+           (syntaxTokensFlow.current->type <= terminalSymbols.AND.type)) {
 
-        operator = tokensFlow.current->type;
-        tf_next(&tokensFlow);
+        operator = syntaxTokensFlow.current->type;
+        tf_next(&syntaxTokensFlow);
         if (operator == terminalSymbols.AND.type)
             Op1(operator, item);
         factor(item1);
@@ -208,21 +208,21 @@ void simpleExpression(struct Item item1) {
 
     int operator;
 
-    if (tokensFlow.current->type == terminalSymbols.PLUS.type) {
-        tf_next(&tokensFlow);
+    if (syntaxTokensFlow.current->type == terminalSymbols.PLUS.type) {
+        tf_next(&syntaxTokensFlow);
         term(item1);
-    } else if (tokensFlow.current->type == terminalSymbols.MINUS.type) {
-        tf_next(&tokensFlow);
+    } else if (syntaxTokensFlow.current->type == terminalSymbols.MINUS.type) {
+        tf_next(&syntaxTokensFlow);
         term(item1);
         Op1(terminalSymbols.MINUS.type, item1);
     } else {
         term(item1);
     }
 
-    while ((tokensFlow.current->type >= terminalSymbols.PLUS.type) &&
-           (tokensFlow.current->type >= terminalSymbols.OR.type)) {
-        operator = tokensFlow.current->type;
-        tf_next(&tokensFlow);
+    while ((syntaxTokensFlow.current->type >= terminalSymbols.PLUS.type) &&
+           (syntaxTokensFlow.current->type >= terminalSymbols.OR.type)) {
+        operator = syntaxTokensFlow.current->type;
+        tf_next(&syntaxTokensFlow);
 
         if (operator == terminalSymbols.OR.type) {
 
@@ -238,11 +238,11 @@ struct Item expression(struct Item item1) {
     int operator;
     simpleExpression(item1);
 
-    if ((tokensFlow.current->type >= terminalSymbols.EQL.type) &&
-        (tokensFlow.current->type <= terminalSymbols.GTR.type)) {
+    if ((syntaxTokensFlow.current->type >= terminalSymbols.EQL.type) &&
+        (syntaxTokensFlow.current->type <= terminalSymbols.GTR.type)) {
 
-        operator = tokensFlow.current->type;
-        tf_next(&tokensFlow);
+        operator = syntaxTokensFlow.current->type;
+        tf_next(&syntaxTokensFlow);
         simpleExpression(item2);
         Relation(operator, item1, item2);
 
@@ -269,40 +269,40 @@ void StatSequence() {
     while (true) {
         obj = end;
 
-        if (tokensFlow.current->type < terminalSymbols.IDENT.type) {
+        if (syntaxTokensFlow.current->type < terminalSymbols.IDENT.type) {
             printf("operator?");
-            while (tokensFlow.current->type < terminalSymbols.IDENT.type) {
-                tf_next(&tokensFlow);
+            while (syntaxTokensFlow.current->type < terminalSymbols.IDENT.type) {
+                tf_next(&syntaxTokensFlow);
             }
         }
 
-        if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+        if (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
             obj = find();
-            tf_next(&tokensFlow);
+            tf_next(&syntaxTokensFlow);
             MakeItem(item1, obj);
             selector(item1);
-            if (tokensFlow.current->type == terminalSymbols.BECOMES.type) {
-                tf_next(&tokensFlow);
+            if (syntaxTokensFlow.current->type == terminalSymbols.BECOMES.type) {
+                tf_next(&syntaxTokensFlow);
                 expression(item2);
                 Store(item1, item2);
-            } else if (tokensFlow.current->type == terminalSymbols.EQL.type) {
+            } else if (syntaxTokensFlow.current->type == terminalSymbols.EQL.type) {
                 printf(":=?");
-                tf_next(&tokensFlow);
+                tf_next(&syntaxTokensFlow);
                 expression(item2);
             } else if (item1.mode == Proc) {
                 parameter = *obj.dsc;
-                if (tokensFlow.current->type == terminalSymbols.LPAREN.type) {
-                    tf_next(&tokensFlow);
-                    if (tokensFlow.current->type == terminalSymbols.RPAREN.type)
-                        tf_next(&tokensFlow);
+                if (syntaxTokensFlow.current->type == terminalSymbols.LPAREN.type) {
+                    tf_next(&syntaxTokensFlow);
+                    if (syntaxTokensFlow.current->type == terminalSymbols.RPAREN.type)
+                        tf_next(&syntaxTokensFlow);
                     else {
                         while (true) {
-                            if (tokensFlow.current->type == terminalSymbols.COMMA.type)
-                                tf_next(&tokensFlow);
-                            else if (tokensFlow.current->type == terminalSymbols.RPAREN.type) {
-                                tf_next(&tokensFlow);
+                            if (syntaxTokensFlow.current->type == terminalSymbols.COMMA.type)
+                                tf_next(&syntaxTokensFlow);
+                            else if (syntaxTokensFlow.current->type == terminalSymbols.RPAREN.type) {
+                                tf_next(&syntaxTokensFlow);
                                 break;
-                            } else if (tokensFlow.current->type >= terminalSymbols.SEMICOLON.type)
+                            } else if (syntaxTokensFlow.current->type >= terminalSymbols.SEMICOLON.type)
                                 break;
                             else
                                 printf(") or ,?");
@@ -325,30 +325,30 @@ void StatSequence() {
             } else {
                 printf("operator");
             }
-        } else if (tokensFlow.current->type == terminalSymbols.IF.type) {
-            tf_next(&tokensFlow);
+        } else if (syntaxTokensFlow.current->type == terminalSymbols.IF.type) {
+            tf_next(&syntaxTokensFlow);
             expression(item1);
             CJump(item1);
-            if (tokensFlow.current->type == terminalSymbols.THEN.type)
-                tf_next(&tokensFlow);
+            if (syntaxTokensFlow.current->type == terminalSymbols.THEN.type)
+                tf_next(&syntaxTokensFlow);
             else
                 printf("THEN?");
             StatSequence();
             l = 0;
-            while (tokensFlow.current->type == terminalSymbols.ELSEIF.type) {
-                tf_next(&tokensFlow);
+            while (syntaxTokensFlow.current->type == terminalSymbols.ELSEIF.type) {
+                tf_next(&syntaxTokensFlow);
                 FJump(l);
                 FixLink(l);
                 expression(item1);
                 CJump(item1);
-                if (tokensFlow.current->type == terminalSymbols.THEN.type)
-                    tf_next(&tokensFlow);
+                if (syntaxTokensFlow.current->type == terminalSymbols.THEN.type)
+                    tf_next(&syntaxTokensFlow);
                 else
                     printf("THEN?");
                 StatSequence();
             }
-            if (tokensFlow.current->type == terminalSymbols.ELSE.type) {
-                tf_next(&tokensFlow);
+            if (syntaxTokensFlow.current->type == terminalSymbols.ELSE.type) {
+                tf_next(&syntaxTokensFlow);
                 FJump(l);
                 FixLink(item1.a);
                 StatSequence();
@@ -356,27 +356,27 @@ void StatSequence() {
                 FixLink(item1.a);
             }
             FixLink(l);
-            if (tokensFlow.current->type == terminalSymbols.END.type)
-                tf_next(&tokensFlow);
+            if (syntaxTokensFlow.current->type == terminalSymbols.END.type)
+                tf_next(&syntaxTokensFlow);
             else
                 printf("END?");
-        } else if (tokensFlow.current->type == terminalSymbols.WHILE.type) {
-            tf_next(&tokensFlow);
+        } else if (syntaxTokensFlow.current->type == terminalSymbols.WHILE.type) {
+            tf_next(&syntaxTokensFlow);
             l = pc;
             expression(item1);
             CJump(item1);
-            if (tokensFlow.current->type == terminalSymbols.DO.type)
-                tf_next(&tokensFlow);
+            if (syntaxTokensFlow.current->type == terminalSymbols.DO.type)
+                tf_next(&syntaxTokensFlow);
             else
                 printf("DO?");
             StatSequence();
             BJump(l);
             FixLink(item1.a);
         }
-        if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type)
-            tf_next(&tokensFlow);
-        else if ((tokensFlow.current->type >= terminalSymbols.SEMICOLON.type) && (tokensFlow.current->type)
-                 || (tokensFlow.current->type >= terminalSymbols.ARRAY.type))
+        if (syntaxTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
+            tf_next(&syntaxTokensFlow);
+        else if ((syntaxTokensFlow.current->type >= terminalSymbols.SEMICOLON.type) && (syntaxTokensFlow.current->type)
+                 || (syntaxTokensFlow.current->type >= terminalSymbols.ARRAY.type))
             break;
         else
             printf(";?");
@@ -384,10 +384,10 @@ void StatSequence() {
 };
 
 void param(struct Item item) {
-    if (tokensFlow.current->type == terminalSymbols.LPAREN.type)
+    if (syntaxTokensFlow.current->type == terminalSymbols.LPAREN.type)
         printf(")?");
     expression(item);
-    if (tokensFlow.current->type == terminalSymbols.RPAREN.type)
+    if (syntaxTokensFlow.current->type == terminalSymbols.RPAREN.type)
         printf(")?");
 }
 
@@ -395,19 +395,19 @@ void identList(int class, Node first) {
 
     Node obj = object_new();
 
-    if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+    if (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
 
         first.class = class;
-        while (tokensFlow.current->type == terminalSymbols.COMMA.type) {
-            tf_next(&tokensFlow);
-            if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+        while (syntaxTokensFlow.current->type == terminalSymbols.COMMA.type) {
+            tf_next(&syntaxTokensFlow);
+            if (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
                 obj.class = class;
-                tf_next(&tokensFlow);
+                tf_next(&syntaxTokensFlow);
             } else Mark("идентификатор?");
 
         }
-        if (tokensFlow.current->type == terminalSymbols.COLON.type) {
-            tf_next(&tokensFlow);
+        if (syntaxTokensFlow.current->type == terminalSymbols.COLON.type) {
+            tf_next(&syntaxTokensFlow);
         } else
             Mark("?");
     }
@@ -421,24 +421,24 @@ Type type() {
 
     Type typ = intType;
 
-    if (tokensFlow.current->type != terminalSymbols.IDENT.type &&
-        tokensFlow.current->type < terminalSymbols.ARRAY.type) {
+    if (syntaxTokensFlow.current->type != terminalSymbols.IDENT.type &&
+        syntaxTokensFlow.current->type < terminalSymbols.ARRAY.type) {
         Mark("тип?");
     }
     do {
-        tf_next(&tokensFlow);
-    } while (!(tokensFlow.current->type == terminalSymbols.IDENT.type &&
-               tokensFlow.current->type >= terminalSymbols.ARRAY.type));
-    if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+        tf_next(&syntaxTokensFlow);
+    } while (!(syntaxTokensFlow.current->type == terminalSymbols.IDENT.type &&
+               syntaxTokensFlow.current->type >= terminalSymbols.ARRAY.type));
+    if (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
         obj = find();
-        tf_next(&tokensFlow);
-    } else if (tokensFlow.current->type == terminalSymbols.ARRAY.type) {
-        tf_next(&tokensFlow);
+        tf_next(&syntaxTokensFlow);
+    } else if (syntaxTokensFlow.current->type == terminalSymbols.ARRAY.type) {
+        tf_next(&syntaxTokensFlow);
         expression(x);
         if ((x.mode != Const) && (x.a < 0))
             Mark("неверный индекс");
-        if (tokensFlow.current->type == terminalSymbols.OF.type) {
-            tf_next(&tokensFlow);
+        if (syntaxTokensFlow.current->type == terminalSymbols.OF.type) {
+            tf_next(&syntaxTokensFlow);
 
         } else Mark("OF?");
 
@@ -450,15 +450,15 @@ Type type() {
         //TODO
         //typ.len=SHOR(x.a);
         typ.size = typ.len & tp.size;
-    } else if (tokensFlow.current->type == terminalSymbols.RECORD.type) {
+    } else if (syntaxTokensFlow.current->type == terminalSymbols.RECORD.type) {
 
-        tf_next(&tokensFlow);
+        tf_next(&syntaxTokensFlow);
         //TODO typ=NEw
         typ.form = Record;
         typ.size = 0;
         openScope();
         while (1) {
-            if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+            if (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
                 identList(Fld, first);
                 type(tp);
                 obj = first;
@@ -469,17 +469,17 @@ Type type() {
                     obj = *obj.next;
                 }
             }
-            if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type)
-                tf_next(&tokensFlow);
-            else if (tokensFlow.current->type == terminalSymbols.IDENT.type)
+            if (syntaxTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
+                tf_next(&syntaxTokensFlow);
+            else if (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type)
                 Mark(";?");
             else
                 break;
         }
         typ.fields = objectsStart.next;
         closeScope();
-        if (tokensFlow.current->type == terminalSymbols.END.type) {
-            tf_next(&tokensFlow);
+        if (syntaxTokensFlow.current->type == terminalSymbols.END.type) {
+            tf_next(&syntaxTokensFlow);
 
         } else
             Mark("END?");
@@ -496,27 +496,27 @@ long declarations() {
 
     long varsize = 0;
 
-    if ((tokensFlow.current->type < terminalSymbols.CONSTT.type) &&
-        (tokensFlow.current->type != terminalSymbols.END.type)) {
+    if ((syntaxTokensFlow.current->type < terminalSymbols.CONSTT.type) &&
+        (syntaxTokensFlow.current->type != terminalSymbols.END.type)) {
 
         printf("Declarations?"); // REPLACE
 
-        while ((tokensFlow.current->type < terminalSymbols.CONSTT.type) ||
-               (tokensFlow.current->type != terminalSymbols.END.type))
-            tf_next(&tokensFlow);
+        while ((syntaxTokensFlow.current->type < terminalSymbols.CONSTT.type) ||
+               (syntaxTokensFlow.current->type != terminalSymbols.END.type))
+            tf_next(&syntaxTokensFlow);
     }
 
     while (true) {
 
-        if (tokensFlow.current->type == terminalSymbols.CONSTT.type) {
-            tf_next(&tokensFlow);
-            while (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+        if (syntaxTokensFlow.current->type == terminalSymbols.CONSTT.type) {
+            tf_next(&syntaxTokensFlow);
+            while (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
                 obj = object_new();
 
-                tf_next(&tokensFlow);
+                tf_next(&syntaxTokensFlow);
 
-                if (tokensFlow.current->type == terminalSymbols.EQL.type)
-                    tf_next(&tokensFlow);
+                if (syntaxTokensFlow.current->type == terminalSymbols.EQL.type)
+                    tf_next(&syntaxTokensFlow);
                 else
                     printf("=?");
 
@@ -529,38 +529,38 @@ long declarations() {
                     printf("not const");
                 }
 
-                if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type)
-                    tf_next(&tokensFlow);
+                if (syntaxTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
+                    tf_next(&syntaxTokensFlow);
                 else
                     printf(";");
             }
         }
 
-        if (tokensFlow.current->type == terminalSymbols.INTEGER.type) {
-            tf_next(&tokensFlow);
+        if (syntaxTokensFlow.current->type == terminalSymbols.INTEGER.type) {
+            tf_next(&syntaxTokensFlow);
 
-            while (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+            while (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
 
                 obj = object_new();
-                tf_next(&tokensFlow);
+                tf_next(&syntaxTokensFlow);
 
-                if (tokensFlow.current->type == terminalSymbols.EQL.type)
-                    tf_next(&tokensFlow);
+                if (syntaxTokensFlow.current->type == terminalSymbols.EQL.type)
+                    tf_next(&syntaxTokensFlow);
                 else
                     printf("=?");
 
                 type();
 
-                if (tokensFlow.current->type == terminalSymbols.EQL.type)
-                    tf_next(&tokensFlow);
+                if (syntaxTokensFlow.current->type == terminalSymbols.EQL.type)
+                    tf_next(&syntaxTokensFlow);
                 else printf(";?");
             }
         }
 
-        if (tokensFlow.current->type == terminalSymbols.VAR.type) {
-            tf_next(&tokensFlow);
+        if (syntaxTokensFlow.current->type == terminalSymbols.VAR.type) {
+            tf_next(&syntaxTokensFlow);
 
-            while (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+            while (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
                 identList(Var, first);
                 Type tp = type();
                 obj = first;
@@ -573,14 +573,14 @@ long declarations() {
                 }
             }
 
-            if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type)
-                tf_next(&tokensFlow);
+            if (syntaxTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
+                tf_next(&syntaxTokensFlow);
             else
                 printf(";?");
         }
 
-        if ((tokensFlow.current->type >= terminalSymbols.CONSTT.type) &&
-            (tokensFlow.current->type <= terminalSymbols.VAR.type))
+        if ((syntaxTokensFlow.current->type >= terminalSymbols.CONSTT.type) &&
+            (syntaxTokensFlow.current->type <= terminalSymbols.VAR.type))
             printf("Объявление?");
         else
             break;
@@ -593,15 +593,15 @@ void FPSection(long *locblksize, long *parblksize) {
     Type tp;
     long parsize;
 
-    if (tokensFlow.current->type == terminalSymbols.VAR.type) {
-        tf_next(&tokensFlow);
+    if (syntaxTokensFlow.current->type == terminalSymbols.VAR.type) {
+        tf_next(&syntaxTokensFlow);
         identList(Par, first);
     } else
         identList(Var, first);
 
-    if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+    if (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
         obj = find();
-        tf_next(&tokensFlow);
+        tf_next(&syntaxTokensFlow);
         if (obj.class == Typ)
             tp = obj.type;
         else {
@@ -637,30 +637,30 @@ void procedureDeclaration() {
     char *procid;
     long locblksize, parblksize;
 
-    tf_next(&tokensFlow);
+    tf_next(&syntaxTokensFlow);
 
-    if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
-        procid = tokensFlow.current->symbols;
+    if (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
+        procid = syntaxTokensFlow.current->symbols;
         proc = object_new();
-        tf_next(&tokensFlow);
+        tf_next(&syntaxTokensFlow);
         parblksize = marksize;
         IncLevel(1);
         openScope();
         proc.val = -1;
-        if (tokensFlow.current->type == terminalSymbols.LPAREN.type) {
-            tf_next(&tokensFlow);
-            if (tokensFlow.current->type == terminalSymbols.RPAREN.type)
-                tf_next(&tokensFlow);
+        if (syntaxTokensFlow.current->type == terminalSymbols.LPAREN.type) {
+            tf_next(&syntaxTokensFlow);
+            if (syntaxTokensFlow.current->type == terminalSymbols.RPAREN.type)
+                tf_next(&syntaxTokensFlow);
             else {
                 FPSection(&locblksize, &parblksize);
 
-                while (tokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
-                    tf_next(&tokensFlow);
+                while (syntaxTokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
+                    tf_next(&syntaxTokensFlow);
                     FPSection(&locblksize, &parblksize);
                 }
 
-                if (tokensFlow.current->type == terminalSymbols.RPAREN.type)
-                    tf_next(&tokensFlow);
+                if (syntaxTokensFlow.current->type == terminalSymbols.RPAREN.type)
+                    tf_next(&syntaxTokensFlow);
                 else
                     Mark(")?");
             }
@@ -679,8 +679,8 @@ void procedureDeclaration() {
             }
         }
         proc.dsc = objectsStart.next;
-        if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
-            tf_next(&tokensFlow);
+        if (syntaxTokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
+            tf_next(&syntaxTokensFlow);
 
         } else {
             Mark(";?");
@@ -688,30 +688,30 @@ void procedureDeclaration() {
 
         locblksize = 0;
         declarations();
-        while (tokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
+        while (syntaxTokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
             procedureDeclaration();
-            if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type)
-                tf_next(&tokensFlow);
+            if (syntaxTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
+                tf_next(&syntaxTokensFlow);
             else
                 Mark(";?");
 
         }
         proc.val = pc;
         Enter(locblksize);
-        if (tokensFlow.current->type == terminalSymbols.BEGIN.type) {
-            tf_next(&tokensFlow);
+        if (syntaxTokensFlow.current->type == terminalSymbols.BEGIN.type) {
+            tf_next(&syntaxTokensFlow);
             StatSequence();
 
         }
-        if (tokensFlow.current->type == terminalSymbols.END.type) {
-            tf_next(&tokensFlow);
+        if (syntaxTokensFlow.current->type == terminalSymbols.END.type) {
+            tf_next(&syntaxTokensFlow);
         } else
             Mark("end ?");
-        if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+        if (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
             //TODO
-            if (procid != tokensFlow.current->symbols) {
+            if (procid != syntaxTokensFlow.current->symbols) {
                 Mark("не подходит");
-                tf_next(&tokensFlow);
+                tf_next(&syntaxTokensFlow);
             }
             Return(parblksize - marksize);
             closeScope();
@@ -726,14 +726,14 @@ void module() {
 
     char *moduleIdentifier;
 
-    if (tf_next(&tokensFlow)->type == terminalSymbols.MODULE.type) {
+    if (tf_next(&syntaxTokensFlow)->type == terminalSymbols.MODULE.type) {
         Open();
         openScope();
-        if (tf_next(&tokensFlow)->type == terminalSymbols.IDENT.type) {
-            moduleIdentifier = tokensFlow.current->symbols;
+        if (tf_next(&syntaxTokensFlow)->type == terminalSymbols.IDENT.type) {
+            moduleIdentifier = syntaxTokensFlow.current->symbols;
 
-            if (tf_next(&tokensFlow)->type == terminalSymbols.SEMICOLON.type) {
-                tf_next(&tokensFlow);
+            if (tf_next(&syntaxTokensFlow)->type == terminalSymbols.SEMICOLON.type) {
+                tf_next(&syntaxTokensFlow);
             }
         } else {
             Mark(";?");
@@ -741,35 +741,35 @@ void module() {
 
         varsize += declarations();
 
-        while (tokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
+        while (syntaxTokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
             procedureDeclaration();
-            if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
-                tf_next(&tokensFlow);
+            if (syntaxTokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
+                tf_next(&syntaxTokensFlow);
                 StatSequence();
             } else
                 Mark(";?");
         }
 
         Header(varsize);
-        if (tokensFlow.current->type == terminalSymbols.BEGIN.type) {
-            tf_next(&tokensFlow);
+        if (syntaxTokensFlow.current->type == terminalSymbols.BEGIN.type) {
+            tf_next(&syntaxTokensFlow);
             StatSequence();
         }
-        if (tokensFlow.current->type == terminalSymbols.END.type) {
-            tf_next(&tokensFlow);
+        if (syntaxTokensFlow.current->type == terminalSymbols.END.type) {
+            tf_next(&syntaxTokensFlow);
 
         } else
             Mark("End?");
-        if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+        if (syntaxTokensFlow.current->type == terminalSymbols.IDENT.type) {
             //TODO
-            if (moduleIdentifier != tokensFlow.current->symbols) {
+            if (moduleIdentifier != syntaxTokensFlow.current->symbols) {
                 Mark("не подходит");
             }
-            tf_next(&tokensFlow);
+            tf_next(&syntaxTokensFlow);
 
         } else
             Mark("идентефикатор");
-        if (tokensFlow.current->type != terminalSymbols.PERIOD.type) {
+        if (syntaxTokensFlow.current->type != terminalSymbols.PERIOD.type) {
             Mark(".?");
         }
         closeScope();

@@ -131,4 +131,7 @@ void Open();
 
 void Close(long globals);
 
+void EnterCMD(char name[], int nameLength);
+
+
 #endif //OBERONSCOMPILER_C_G_CODEGENERATOR_H
