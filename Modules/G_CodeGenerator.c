@@ -1,4 +1,5 @@
 #include "G_CodeGenerator.h"
+
 int MemSize = 100;
 
 
@@ -18,7 +19,7 @@ void GetReg(long r) {
 void Put(long op, long a, long b, long c) {
     if (op <= 32)
         op -= 64;
-    code[pc] = ASH(ASH(ASH(op, 4) + a, 4) + b, 18) + (c % int_hexToDecimal(40000));//TODO
+    code[pc] = ASH(ASH(ASH(op, 4) + a, 4) + b, 18) + (c % int_hexToDecimal(40000));
     pc++;
 }
 
@@ -416,7 +417,11 @@ void Close(long globals) {
 
 }
 
-//TODO
-//void EnterCMD(char name[]){
-//}
+void EnterCMD(char name[], int nameLength) {
+    comname[cno] = ident_new(name, nameLength);
+    comadr[cno] = pc * 4;
+    cno++;
+}
+
+
 

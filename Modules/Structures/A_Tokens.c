@@ -2,6 +2,14 @@
 #include <stdlib.h>
 #include "A_Tokens.h"
 
+Ident ident_new(char name[], int nameLength) {
+    Ident ident;
+    ident.name = malloc(sizeof(char) * nameLength);
+    for (int i = 0; i < nameLength; ++i)
+        ident.name[i] = name[i];
+    return ident;
+}
+
 //__________________________________________________________________________________________________
 void token_initialize(Token *token, int nameLength) {
     token->symbols = malloc(sizeof(char) * nameLength);

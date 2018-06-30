@@ -3,10 +3,15 @@
 
 #include "B_TerminalSymbols.h"
 
+
+typedef struct {
+    int nameLength;
+    char *name;
+} Ident;
+
+Ident ident_new(char name[], int nameLength);
+
 //__________________________________________________________________________________________________
-const int TOKEN_INIT_MAXSIZE;
-
-
 typedef struct {
     int line; // line in source code
     int type; // probably deprecated
