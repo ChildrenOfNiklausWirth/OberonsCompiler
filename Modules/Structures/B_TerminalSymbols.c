@@ -32,7 +32,7 @@ void tss_initialize(struct TerminalSymbols *terminalSymbols) {
     terminalSymbols->COLON = ts_newTerminalSymbol(":", 1, 20);
     terminalSymbols->RPAREN = ts_newTerminalSymbol(")", 1, 22);
     terminalSymbols->RBRAK = ts_newTerminalSymbol("]", 1, 23);
-    terminalSymbols->OF = ts_newTerminalSymbol("DO", 2, 25);
+    terminalSymbols->OF = ts_newTerminalSymbol("OF", 2, 25);
     terminalSymbols->THEN = ts_newTerminalSymbol("THEN", 4, 26);
     terminalSymbols->DO = ts_newTerminalSymbol("DO", 2, 27);
     terminalSymbols->LPAREN = ts_newTerminalSymbol("(", 1, 29);

@@ -59,6 +59,7 @@ int token_equalsWithString(Token token, const char str[], int strLength) {
 void token_print(Token token) {
     for (int i = 0; i < token.length; ++i)
         printf("%c", token.symbols[i]);
+    printf("\n");
 }
 
 int token_defineType(Token token, struct TerminalSymbols terminalSymbols) {
@@ -194,6 +195,13 @@ Token *tf_next(struct TokensFlow *tokensFlow) {
     tokensFlow->current = &tokensFlow->tokens[tokensFlow->pointer];
     tokensFlow->pointer++;
     return tokensFlow->current;
+}
+
+void tf_clear(struct TokensFlow *tokensFlow) {
+    free(tokensFlow->tokens);
+    tokensFlow->size = 0;
+    tokensFlow->maxSize = 0;
+    tokensFlow->pointer = 0;
 }
 
 void tf_print(struct TokensFlow tokensFlow) {

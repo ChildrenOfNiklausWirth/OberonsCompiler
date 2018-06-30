@@ -54,6 +54,8 @@ void tf_addToken(struct TokensFlow *tokensFlow, Token *token);
 
 Token *tf_next(struct TokensFlow *tokensFlow);
 
+void tf_clear(struct TokensFlow *tokensFlow);
+
 void tf_print(struct TokensFlow tokensFlow);
 
 void tf_printWithType(struct TokensFlow tokensFlow);
