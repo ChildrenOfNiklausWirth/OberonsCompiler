@@ -85,10 +85,10 @@ void tf_assertEquals(struct TokensFlow tokensFlow, struct TokensFlow rightTokens
         if (tokensFlow.size != rightTokensFlow.size)
             printf("Not equal size of TokensFlow\n");
         for (int i = 0; i < rightTokensFlow.size; ++i) {
-            if (tokensFlow.tokens[i].size != rightTokensFlow.tokens[i].size ||
+            if (tokensFlow.tokens[i].length != rightTokensFlow.tokens[i].length ||
                 tokensFlow.tokens[i].type != rightTokensFlow.tokens[i].type)
                 printf("Not equal type (number %d)\n", i);
-            for (int j = 0; j < tokensFlow.tokens[i].size; ++j) {
+            for (int j = 0; j < tokensFlow.tokens[i].length; ++j) {
                 if (tokensFlow.tokens[i].symbols[j] != rightTokensFlow.tokens[i].symbols[j])
                     printf("Not equal name(number %d letter %d\n", i, j);
             }
@@ -101,12 +101,12 @@ void tf_assertEquals(struct TokensFlow tokensFlow, struct TokensFlow rightTokens
 
 void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) {
     for (int i = 0; i < tokensFlowOne.size; ++i) {
-        for (int j = 0; j < tokensFlowOne.tokens[i].size; ++j) {
+        for (int j = 0; j < tokensFlowOne.tokens[i].length; ++j) {
             printf("%c", tokensFlowOne.tokens[i].symbols[j]);
         }
         printf("\t\t\ttype : %d\t\t", tokensFlowOne.tokens[i].type);
 
-        for (int j = 0; j < tokensFlowTwo.tokens[i].size; ++j) {
+        for (int j = 0; j < tokensFlowTwo.tokens[i].length; ++j) {
             printf("%c", tokensFlowTwo.tokens[i].symbols[j]);
         }
         printf("\t\t\t\ttype : %d\n", tokensFlowTwo.tokens[i].type);

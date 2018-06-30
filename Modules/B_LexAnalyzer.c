@@ -3,52 +3,78 @@
 int numberOfLine = 1;
 struct TokensFlow tokensFlow;
 
-Token readNextToken(FILE *file, char currentSymbol) {
+int readNextToken(FILE *file, Token *token) {
+    int tokenLength = 0;
+    char firstSymbol, lastSymbol;
 
-    Token token;
-    token_initialize(&token);
-    token.line = numberOfLine;
+    token->line = numberOfLine;
 
-    while (currentSymbol == ' ' || currentSymbol == '\n') {
-        if (currentSymbol == '\n')
+    if (fscanf(file, "%c", &firstSymbol) == EOF)
+        return 0;
+
+    while (firstSymbol == ' ' || firstSymbol == '\n') {
+        if (firstSymbol == '\n')
             numberOfLine++;
-        currentSymbol = (char) getc(file);
+        if (fscanf(file, "%c", &firstSymbol) == EOF)
+            return 0;
+
     }
 
-    char nextSymbol = (char) fgetc(file);
 
-    if (bothCharIsMathSymbol(currentSymbol, nextSymbol)) {
-        token_addSymbol(&token, currentSymbol);
-        token_addSymbol(&token, nextSymbol);
-    } else if (bothCharIsDigit(currentSymbol, nextSymbol)) {
-        ungetc(nextSymbol, file);
-        while (charIsDigit(currentSymbol)) {
-            token_addSymbol(&token, currentSymbol);
-            if ((fscanf(file, "%c", &currentSymbol)) == EOF)
-                break;
+    if (fscanf(file, "%c", &lastSymbol) == EOF) {
+        token_initialize(token, 1);
+        token->length = 1;
+        token->symbols[0] = firstSymbol;
+        token->type = token_defineType(*token, terminalSymbols);
+
+        return 0;
+
+    } else if (bothCharIsMathSymbol(firstSymbol, lastSymbol)) {
+
+        tokenLength = 2;
+        fseek(file, 1, SEEK_CUR);
+
+
+    } else if (bothCharIsDigit(firstSymbol, lastSymbol)) {
+
+        tokenLength = 1;
+        while (charIsDigit(lastSymbol)) {
+            fscanf(file, "%c", &lastSymbol);
+            tokenLength++;
         }
-        ungetc(currentSymbol, file);
-    } else if (charIsASeparatingTerminalSymbol(terminalSymbols, currentSymbol)) {
-        token_addSymbol(&token, currentSymbol);
-        ungetc(nextSymbol, file);
+
+    } else if (charIsASeparatingTerminalSymbol(terminalSymbols, firstSymbol)) {
+
+        tokenLength = 1;
+
     } else {
-        ungetc(nextSymbol, file);
-        while (currentSymbol != ' ' && currentSymbol != '\n' &&
-               !charIsASeparatingTerminalSymbol(terminalSymbols, currentSymbol)) {
-            token_addSymbol(&token, currentSymbol);
-            if ((fscanf(file, "%c", &currentSymbol)) == EOF)
-                break;
-            if (charIsASeparatingTerminalSymbol(terminalSymbols, currentSymbol)) {
-                ungetc(currentSymbol, file);
-                break;
-            }
+
+        tokenLength = 1;
+        while (lastSymbol != '\n' && lastSymbol != ' ' &&
+               !charIsASeparatingTerminalSymbol(terminalSymbols, lastSymbol)) {
+            tokenLength++;
+            fscanf(file, "%c", &lastSymbol);
         }
+
     }
 
-    int type = token_defineType(token, terminalSymbols);
-    token.type = type;
+    token_initialize(token, tokenLength);
 
-    return token;
+
+    if (lastSymbol == '\n')
+        fseek(file, -1, SEEK_CUR);
+
+    fseek(file, -tokenLength - 1, SEEK_CUR);
+
+
+    for (int i = 0; i < tokenLength; ++i)
+        token->symbols[i] = (char) getc(file);
+
+
+    token->type = token_defineType(*token, terminalSymbols);
+
+
+    return 1;
 
 
 }
@@ -58,10 +84,11 @@ void lexAnalysis(char *fileName) {
     tf_initialize(&tokensFlow);
     tss_initialize(&terminalSymbols);
     FILE *file = fopen(fileName, "r");
-    char c;
 
-    while (fscanf(file, "%c", &c) != EOF) {
-        Token token = readNextToken(file, c);
+    Token token;
+    int result = 1;
+    while (result == 1) {
+        result = readNextToken(file, &token);
         tf_addToken(&tokensFlow, &token);
     }
 

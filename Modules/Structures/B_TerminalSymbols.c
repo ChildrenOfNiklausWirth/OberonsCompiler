@@ -3,10 +3,10 @@
 //__________________________________________________________________________________________________
 
 
-struct TerminalSymbol ts_newTerminalSymbol(char name[], int size, int type) {
+struct TerminalSymbol ts_newTerminalSymbol(char name[], int nameLength, int type) {
     struct TerminalSymbol terminalSymbol;
     terminalSymbol.name = name;
-    terminalSymbol.size = size;
+    terminalSymbol.nameLength = nameLength;
     terminalSymbol.type = type;
     return terminalSymbol;
 }
@@ -47,12 +47,12 @@ void tss_initialize(struct TerminalSymbols *terminalSymbols) {
     terminalSymbols->ELSEIF = ts_newTerminalSymbol("ELSEIF", 6, 42);
     terminalSymbols->IF = ts_newTerminalSymbol("IF", 2, 44);
     terminalSymbols->WHILE = ts_newTerminalSymbol("WHILE", 5, 46);
-    terminalSymbols->ARR = ts_newTerminalSymbol("ARR", 5, 54);
-    terminalSymbols->REC = ts_newTerminalSymbol("REC", 6, 55);
+    terminalSymbols->ARRAY = ts_newTerminalSymbol("ARRAY", 5, 54);
+    terminalSymbols->RECORD = ts_newTerminalSymbol("RECORD", 6, 55);
     terminalSymbols->CONSTT = ts_newTerminalSymbol("CONST", 5, 57);
-    terminalSymbols->INT = ts_newTerminalSymbol("INT", 7, 58);
+    terminalSymbols->INTEGER = ts_newTerminalSymbol("INTEGER", 7, 58);
     terminalSymbols->BOOLEAN = ts_newTerminalSymbol("BOOLEAN", 7, 58);
-    terminalSymbols->VAR = ts_newTerminalSymbol("VARIABLE", 3, 59);
+    terminalSymbols->VAR = ts_newTerminalSymbol("VAR", 3, 59);
     terminalSymbols->PROCEDURE = ts_newTerminalSymbol("PROCEDURE", 9, 60);
     terminalSymbols->BEGIN = ts_newTerminalSymbol("BEGIN", 5, 61);
     terminalSymbols->MODULE = ts_newTerminalSymbol("MODULE", 6, 63);

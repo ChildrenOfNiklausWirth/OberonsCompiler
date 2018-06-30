@@ -7,29 +7,25 @@
 const int TOKEN_INIT_MAXSIZE;
 
 
-typedef struct token {
+typedef struct {
     int line; // line in source code
     int type; // probably deprecated
-    int maxSize; //
-    int size;
+    int length;
     char *symbols;
 } Token;
 
-void token_allocatedMemory(Token *token);
 
-void token_initialize(Token *token);
+void token_initialize(Token *token, int nameLength);
 
-void token_addSymbol(Token *token, char symbol);
+Token token_newToken(char symbols[], int nameLength, int numberOfLine);
 
-Token token_newToken(char symbols[], int size, int numberOfLine);
-
-Token token_newTokenWithType(char symbols[], int size, int type);
+Token token_newTokenWithType(char symbols[], int nameLength, int type, int numberOfLine);
 
 int token_equals(Token token1, Token token2);
 
-int token_equalsWithString(Token token, const char *name);
+int token_equalsWithString(Token token, const char str[], int strLength);
 
-char token_getName(Token token);
+void token_print(Token token);
 
 int token_defineType(Token token, struct TerminalSymbols terminalSymbols);
 
@@ -51,7 +47,7 @@ void tf_allocatedMemory(struct TokensFlow *tokensFlow);
 
 void tf_addToken(struct TokensFlow *tokensFlow, Token *token);
 
-Token* tf_next(struct TokensFlow *tokensFlow);
+Token *tf_next(struct TokensFlow *tokensFlow);
 
 void tf_print(struct TokensFlow tokensFlow);
 

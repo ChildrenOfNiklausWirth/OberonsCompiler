@@ -3,11 +3,11 @@
 
 struct TerminalSymbol {
     char *name;
-    int size;
+    int nameLength;
     int type;
 };
 
-struct TerminalSymbol ts_newTerminalSymbol(char name[], int size, int type);
+struct TerminalSymbol ts_newTerminalSymbol(char name[], int nameLength, int type);
 
 //__________________________________________________________________________________________________
 
@@ -46,10 +46,10 @@ struct TerminalSymbols {
     struct TerminalSymbol ELSEIF;
     struct TerminalSymbol IF;
     struct TerminalSymbol WHILE;
-    struct TerminalSymbol ARR;
-    struct TerminalSymbol REC;
+    struct TerminalSymbol ARRAY;
+    struct TerminalSymbol RECORD;
     struct TerminalSymbol CONSTT;
-    struct TerminalSymbol INT;
+    struct TerminalSymbol INTEGER;
     struct TerminalSymbol BOOLEAN;
     struct TerminalSymbol VAR;
     struct TerminalSymbol PROCEDURE;

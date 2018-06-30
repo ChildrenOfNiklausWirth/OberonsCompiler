@@ -9,7 +9,7 @@
 extern struct TerminalSymbols terminalSymbols; //need to be initialised with ts_initialise
 extern struct TokensFlow tokensFlow; //need to be created with lexAnalysis
 
-Token readNextToken(FILE *file, char currentSymbol);
+int readNextToken(FILE *file, Token *token);
 
 void lexAnalysis(char *fileName);
 
