@@ -35,16 +35,16 @@ int namesEquals(char *name1, int size1, char *name2, int size2) {
 struct Node addObject(struct Node object, int class) {
 
     end.name = tokensFlow.current->symbols;
-    end.size = tokensFlow.current->size;
+    end.size = tokensFlow.current->length;
 
     Node objects = objectsStart;
 
-    while (namesEquals(tokensFlow.current->symbols, tokensFlow.current->size, objects.name, objects.size) != 1)
+    while (namesEquals(tokensFlow.current->symbols, tokensFlow.current->length, objects.name, objects.size) != 1)
         objects = *objects.next;
 
     if (object.next == &end) {
         Node newObject = object_new();
-        object_setName(newObject, tokensFlow.current->symbols, tokensFlow.current->size);
+        object_setName(newObject, tokensFlow.current->symbols, tokensFlow.current->length);
         newObject.class = class;
         newObject.next = &end;
         objects.next = &newObject;
@@ -62,12 +62,12 @@ struct Node find() {
     Node objects = objectsStart;
     Node object;
 
-    object_setName(end, tokensFlow.current->symbols, tokensFlow.current->size);
+    object_setName(end, tokensFlow.current->symbols, tokensFlow.current->length);
     while (true) {
 
         object = *objects.next;
 
-        while (namesEquals(object.name, object.size, tokensFlow.current->symbols, tokensFlow.current->size) != 1) {
+        while (namesEquals(object.name, object.size, tokensFlow.current->symbols, tokensFlow.current->length) != 1) {
             object = *object.next;
         }
 
@@ -86,7 +86,7 @@ struct Node find() {
 
 Node findField(struct Node list) {
     object_setName(end, tokensFlow.current->symbols, tokensFlow.size);
-    while (namesEquals(list.name, list.size, tokensFlow.current->symbols, tokensFlow.current->size) != 1) {
+    while (namesEquals(list.name, list.size, tokensFlow.current->symbols, tokensFlow.current->length) != 1) {
         list = *list.next;
     }
     return list;
