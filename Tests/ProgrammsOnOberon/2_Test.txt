@@ -1,5 +1,44 @@
-MODULE Main;
-VAR a=2,c=0;
-WHILE c<10 DO
-    a=a*a;
-END;
+NULL
+*
+/
+MOD
+AND
++
+-
+&
+=
+#
+<
+>=
+<=
+>
+.
+,
+:
+)
+]
+OF
+THEN
+DO
+(
+[
+`
+:=
+2134
+ident
+;
+END
+ELSE
+ELSEIF
+IF
+WHILE
+ARRAY
+RECORD
+CONST
+INTEGER
+BOOLEAN
+VAR
+PROCEDURE
+BEGIN
+MODULE
+EOF
