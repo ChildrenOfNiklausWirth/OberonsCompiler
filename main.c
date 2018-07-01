@@ -1,7 +1,7 @@
 #include "Modules/B_LexAnalyzer.h"
 #include "Modules/C_SyntaxAnalyzer.c"
 
-char firstAdress[] = "/Tests/ProgrammsOnOberon/1_Test.txt";
+char firstAdress[] = "../Tests/ProgrammsOnOberon/1_Test.txt";
 
 
 

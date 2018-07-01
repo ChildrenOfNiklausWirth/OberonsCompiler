@@ -44,7 +44,7 @@ struct TokensFlow {
     int size;
     Token *current;
     int pointer;
-};
+} tokensFlow;
 
 void tf_initialize(struct TokensFlow *tokensFlow);
 

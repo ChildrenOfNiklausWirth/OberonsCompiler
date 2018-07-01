@@ -32,7 +32,7 @@ Node* node_new() {
     return node;
 }
 
-void object_setName(Node *obj, char name[], int name_size) {
+void node_setName(Node *obj, char *name, int name_size) {
     obj->name = calloc(sizeof(char), (size_t) name_size);
     for (int i = 0; i < name_size; ++i) {
         obj->name[i] = name[i];

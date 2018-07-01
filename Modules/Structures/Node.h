@@ -42,7 +42,7 @@ typedef struct Node {
 
 Node *node_new();
 
-void object_setName(struct Node *obj, char name[], int name_size);
+void node_setName(struct Node *obj, char *name, int name_size);
 
 int object_equals(struct Node object1, struct Node object2);
 

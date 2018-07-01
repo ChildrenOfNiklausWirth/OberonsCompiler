@@ -50,7 +50,7 @@ struct TerminalSymbols {
     struct TerminalSymbol REC;
     struct TerminalSymbol CONSTT;
     struct TerminalSymbol INT;
-    struct TerminalSymbol BOOLEAN;
+    struct TerminalSymbol BOOL;
     struct TerminalSymbol VAR;
     struct TerminalSymbol PROCEDURE;
     struct TerminalSymbol BEGIN;
