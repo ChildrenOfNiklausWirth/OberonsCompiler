@@ -2,7 +2,7 @@
 
 //D
 int numberOfLine = 1;
-struct TokensFlow lexTokensFlow;
+struct TokensFlow tokensFlow;
 
 int readNextToken(FILE *file, Token *token) {
     int tokenLength = 0;
@@ -59,7 +59,7 @@ int readNextToken(FILE *file, Token *token) {
 
     }
 
-    token_initialize(token, tokenLength);
+    token_initialize(token, 1);
 
 
     if (lastSymbol == '\n')
@@ -82,7 +82,7 @@ int readNextToken(FILE *file, Token *token) {
 
 void lexAnalysis(char *fileName) {
 
-    tf_initialize(&lexTokensFlow);
+    tf_initialize(&tokensFlow);
     tss_initialize(&terminalSymbols);
     FILE *file = fopen(fileName, "r");
 
@@ -91,16 +91,16 @@ void lexAnalysis(char *fileName) {
     while (result == 1) {
         result = readNextToken(file, &token);
         if (result != 0)
-            tf_addToken(&lexTokensFlow, &token);
+            tf_addToken(&tokensFlow, &token);
     }
 
 
-    if (lexTokensFlow.size == 0)
+    if (tokensFlow.size == 0)
         printf("Probably wrong path");
 
 }
 
 void Mark(char msg[]) {
-    printf("Error in line number%d\n", lexTokensFlow.current->line);
+    printf("Error in line number%d\n", tokensFlow.current->line);
     printf("%s", msg);
 }
