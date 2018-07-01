@@ -35,7 +35,7 @@ int test_token_newTokenWithType() {
     return 0;
 }
 
-int test_token_equalsWithChar() {
+int test_token_equalsWithString() {
     Token token = token_newTokenWithType("MOD", 3, 10, 1);
     if (!token_equalsWithString(token, "MOD", 3))
         return 0;
@@ -131,7 +131,7 @@ int main() {
     } else printf("False\n\n");
 
     printf("token_equalsWithString...\n");
-    if (test_token_newTokenWithType() == 1) {
+    if (test_token_equalsWithString() == 1) {
         printf("True\n\n");
         rightTestDigit++;
     } else printf("False\n\n");
