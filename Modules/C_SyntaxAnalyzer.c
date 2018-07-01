@@ -49,16 +49,16 @@ Node *addNode(int class) {
     Node *objects = &objectsStart;
 
     end.name = tokensFlow.current->symbols;
-    end.size = tokensFlow.current->length;
+    end.size = tokensFlow.current->size;
 
 
-    while (namesEquals(tokensFlow.current->symbols, tokensFlow.current->length, objects->next->name,
+    while (namesEquals(tokensFlow.current->symbols, tokensFlow.current->size, objects->next->name,
                        objects->next->size) != 1)
         objects = objects->next;
 
     if (objects->next == &end) {
         Node *newObject = node_new();
-        node_setName(newObject, tokensFlow.current->symbols, tokensFlow.current->length);
+        node_setName(newObject, tokensFlow.current->symbols, tokensFlow.current->size);
         newObject->class = class;
         newObject->next = &end;
         objects->next = newObject;
@@ -75,12 +75,13 @@ Node *find() {
     Node *objects = &objectsStart;
     Node *object;
 
-    node_setName(&end, tokensFlow.current->symbols, tokensFlow.current->length);
+    node_setName(&end, tokensFlow.current->symbols, tokensFlow.current->size);
+
     while (true) {
 
         object = objects->next;
 
-        while (namesEquals(object->name, object->size, tokensFlow.current->symbols, tokensFlow.current->length) != 1) {
+        while (namesEquals(object->name, object->size, tokensFlow.current->symbols, tokensFlow.current->size) != 1) {
             object = object->next;
         }
 
@@ -99,7 +100,7 @@ Node *find() {
 
 Node findField(struct Node list) {
     node_setName(&end, tokensFlow.current->symbols, tokensFlow.size);
-    while (namesEquals(list.name, list.size, tokensFlow.current->symbols, tokensFlow.current->length) != 1) {
+    while (namesEquals(list.name, list.size, tokensFlow.current->symbols, tokensFlow.current->size) != 1) {
         list = *list.next;
     }
     return list;
@@ -122,12 +123,12 @@ void closeScope() {
     objectsStart = *objectsStart.dsc;
 }
 
-static enter(int class, long value, char *name, int length, Type *type) {
+static enter(int class, long value, char *name, int size, Type *type) {
     Node *node = node_new();
     node->class = class;
     node->val = value;
     node->type = type;
-    node_setName(node, name, length);
+    node_setName(node, name, size);
     node->next = objectsStart.next;
     objectsStart.next = node;
 }
@@ -205,7 +206,7 @@ struct Item factor() {
         MakeItem(_factor, object);
         selector(_factor);
     } else if (tokensFlow.current->type == terminalSymbols.NUMBER.type) {
-        _factor = MakeConstltem(_factor, intType, toInt(tokensFlow.current->symbols, tokensFlow.current->length));
+        _factor = MakeConstltem(_factor, intType, toInt(tokensFlow.current->symbols, tokensFlow.current->size));
         tf_next(&tokensFlow);
     } else if (tokensFlow.current->type == terminalSymbols.LPAREN.type) {
         tf_next(&tokensFlow);
@@ -600,7 +601,7 @@ long declarations() {
                 if (tokensFlow.current->type == terminalSymbols.EQL.type)
                     tf_next(&tokensFlow);
                 else
-                    printf("=?");
+                    Mark("=?");
 
                 item = expression(item);
 

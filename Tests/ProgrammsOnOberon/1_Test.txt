@@ -1,6 +1,6 @@
 MODULE TEST;
     CONST IntConst = 16;
-    VARIABLE sum: INTEGER;
+    VAR sum: INTEGER;
         BoolVar: BOOLEAN;
     PROCEDURE AddIntegers(a: INT; b: INT);
     BEGIN

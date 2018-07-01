@@ -420,11 +420,11 @@ void Close(long globals) {
 
 }
 
-void EnterCMD(char name[], int nameLength) {
-    comname[cno] = ident_new(name, nameLength);
-    comadr[cno] = pc * 4;
-    cno++;
-}
+//void EnterCMD(char name[], int nameLength) {
+//    comname[cno] = ident_new(name, nameLength);
+//    comadr[cno] = pc * 4;
+//    cno++;
+//}
 
 
 

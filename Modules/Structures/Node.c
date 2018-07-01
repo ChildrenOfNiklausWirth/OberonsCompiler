@@ -28,15 +28,17 @@ int item_equals(struct Item item1, struct Item item2) {
 
 
 Node* node_new() {
-    Node *node = calloc(sizeof(node), 1);
+    Node *node;
+    node = calloc(1, sizeof *node);
     return node;
 }
 
 void node_setName(Node *obj, char *name, int name_size) {
-    obj->name = calloc(sizeof(char), (size_t) name_size);
+    obj->name = calloc((size_t) name_size, sizeof(char));
     for (int i = 0; i < name_size; ++i) {
         obj->name[i] = name[i];
     }
+    obj->size = name_size;
 }
 
 int object_equals(Node object1, struct Node object2) {

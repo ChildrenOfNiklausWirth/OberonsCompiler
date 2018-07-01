@@ -1,6 +1,5 @@
 #ifndef OBERONSCOMPILER_C_G_CODEGENERATOR_H
 #define OBERONSCOMPILER_C_G_CODEGENERATOR_H
-
 #include <stdbool.h>
 #include "Structures/Node.h"
 #include "Structures/Set.h"
@@ -84,7 +83,7 @@ long fixlist;
 struct Set regs;
 //W:TextWriter
 long code[MAXCODE];
-Ident comname[NUMBER_OF_COMMANDS];
+//comname
 long comadr[NUMBER_OF_COMMANDS];
 char mnemo[64][5];
 
@@ -130,8 +129,5 @@ void Return(long size);
 void Open();
 
 void Close(long globals);
-
-void EnterCMD(char name[], int nameLength);
-
 
 #endif //OBERONSCOMPILER_C_G_CODEGENERATOR_H

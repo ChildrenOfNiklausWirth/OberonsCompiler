@@ -2,171 +2,174 @@
 #include <stdlib.h>
 #include "A_Tokens.h"
 
-Ident ident_new(char name[], int nameLength) {
-    Ident ident;
-    ident.name = malloc(sizeof(char) * nameLength);
-    for (int i = 0; i < nameLength; ++i)
-        ident.name[i] = name[i];
-    return ident;
-}
-
 //__________________________________________________________________________________________________
-void token_initialize(Token *token, int nameLength) {
-    token->symbols = malloc(sizeof(char) * nameLength);
-    token->length = nameLength;
-    token->type = 0;
+const int TOKEN_INIT_MAXSIZE = 8;
+
+void token_allocatedMemory(Token *token) {
+    token->maxSize = token->maxSize * 2;
+    token->symbols = realloc(token->symbols, sizeof(Token) * token->maxSize);
 }
 
-Token token_newToken(char symbols[], int nameLength, int numberOfLine) {
+void token_initialize(Token *token) {
+    token->maxSize = TOKEN_INIT_MAXSIZE;
+    token->symbols = malloc(sizeof(char) * TOKEN_INIT_MAXSIZE);
+    token->size = 0;
+    token->type = 0;
+    token->line = 0;
+}
+
+void token_addSymbol(Token *token, char symbol) {
+    if (token->size == token->maxSize - 1)
+        token_allocatedMemory(token);
+    token->symbols[token->size] = symbol;
+    token->size = token->size + 1;
+
+}
+
+Token token_newToken(char symbols[], int size, int numberOfLine) {
     Token token;
-    token.symbols = malloc(sizeof(char) * nameLength);
-    token.length = nameLength;
+    token.symbols = malloc(sizeof(char) * TOKEN_INIT_MAXSIZE);
+    token.size = 0;
+    token.maxSize = TOKEN_INIT_MAXSIZE;
     token.line = numberOfLine;
-    for (int i = 0; i < nameLength; ++i)
-        token.symbols[i] = symbols[i];
+    for (int i = 0; i < size; ++i)
+        token_addSymbol(&token, symbols[i]);
     return token;
 }
 
-Token token_newTokenWithType(char symbols[], int nameLength, int type, int numberOfLine) {
-    Token token = token_newToken(symbols, nameLength, numberOfLine);
+Token token_newTokenWithType(char symbols[], int size, int type) {
+    Token token = token_newToken(symbols, size, type);
     token.type = type;
     return token;
 }
 
 int token_equals(Token token1, Token token2) {
-    if (token1.symbols != token2.symbols)
-        return 0;
-    if (token1.length != token2.length)
-        return 0;
-    if (token1.type != token2.type)
-        return 0;
-    return 1;
+    int equalDigit = 0;
+    int paramsDigit = 4;
+    if (token1.symbols == token2.symbols)
+        equalDigit++;
+    if (token1.size == token2.size)
+        equalDigit++;
+    if (token1.maxSize == token2.maxSize)
+        equalDigit++;
+    if (token1.type == token2.type)
+        equalDigit++;
+    if (equalDigit == paramsDigit)
+        return 1;
+    return 0;
 
 
 }
 
-int token_equalsWithString(Token token, const char str[], int strLength) {
-    if (token.length != strLength)
-        return 0;
-
-    for (int i = 0; i < token.length; ++i)
-        if (token.symbols[i] != str[i])
+int token_equalsWithString(Token token, const char *name) {
+    for (int i = 0; i < token.size; ++i)
+        if (token.symbols[i] != name[i])
             return 0;
-
     return 1;
 }
 
 void token_print(Token token) {
-    for (int i = 0; i < token.length; ++i)
+    for (int i = 0; i < token.size; ++i)
         printf("%c", token.symbols[i]);
-    printf("\n");
 }
 
 int token_defineType(Token token, struct TerminalSymbols terminalSymbols) {
-    if (token_equalsWithString(token, terminalSymbols.NULLL.name, terminalSymbols.NULLL.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.NULLL.name))
         return terminalSymbols.NULLL.type;
-    if (token_equalsWithString(token, terminalSymbols.TIMES.name, terminalSymbols.TIMES.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.TIMES.name))
         return terminalSymbols.TIMES.type;
-    if (token_equalsWithString(token, terminalSymbols.DIV.name, terminalSymbols.DIV.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.DIV.name))
         return terminalSymbols.DIV.type;
-    if (token_equalsWithString(token, terminalSymbols.MOD.name, terminalSymbols.MOD.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.MOD.name))
         return terminalSymbols.MOD.type;
-    if (token_equalsWithString(token, terminalSymbols.AND.name, terminalSymbols.AND.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.AND.name))
         return terminalSymbols.AND.type;
-    if (token_equalsWithString(token, terminalSymbols.PLUS.name, terminalSymbols.PLUS.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.PLUS.name))
         return terminalSymbols.PLUS.type;
-    if (token_equalsWithString(token, terminalSymbols.MINUS.name, terminalSymbols.MINUS.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.MINUS.name))
         return terminalSymbols.MINUS.type;
-    if (token_equalsWithString(token, terminalSymbols.OR.name, terminalSymbols.OR.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.OR.name))
         return terminalSymbols.OR.type;
-    if (token_equalsWithString(token, terminalSymbols.EQL.name, terminalSymbols.EQL.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.EQL.name))
         return terminalSymbols.EQL.type;
-    if (token_equalsWithString(token, terminalSymbols.NEQ.name, terminalSymbols.NEQ.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.NEQ.name))
         return terminalSymbols.NEQ.type;
-    if (token_equalsWithString(token, terminalSymbols.LSS.name, terminalSymbols.LSS.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.LSS.name))
         return terminalSymbols.LSS.type;
-    if (token_equalsWithString(token, terminalSymbols.GEQ.name, terminalSymbols.GEQ.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.GEQ.name))
         return terminalSymbols.GEQ.type;
-    if (token_equalsWithString(token, terminalSymbols.LEQ.name, terminalSymbols.LEQ.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.LEQ.name))
         return terminalSymbols.LEQ.type;
-    if (token_equalsWithString(token, terminalSymbols.GTR.name, terminalSymbols.GTR.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.GTR.name))
         return terminalSymbols.GTR.type;
-    if (token_equalsWithString(token, terminalSymbols.PERIOD.name, terminalSymbols.PERIOD.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.PERIOD.name))
         return terminalSymbols.PERIOD.type;
-    if (token_equalsWithString(token, terminalSymbols.COMMA.name, terminalSymbols.COMMA.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.COMMA.name))
         return terminalSymbols.COMMA.type;
-    if (token_equalsWithString(token, terminalSymbols.COLON.name, terminalSymbols.COLON.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.COLON.name))
         return terminalSymbols.COLON.type;
-    if (token_equalsWithString(token, terminalSymbols.RPAREN.name, terminalSymbols.RPAREN.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.RPAREN.name))
         return terminalSymbols.RPAREN.type;
-    if (token_equalsWithString(token, terminalSymbols.RBRAK.name, terminalSymbols.RBRAK.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.RBRAK.name))
         return terminalSymbols.RBRAK.type;
-    if (token_equalsWithString(token, terminalSymbols.OF.name, terminalSymbols.OF.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.OF.name))
         return terminalSymbols.OF.type;
-    if (token_equalsWithString(token, terminalSymbols.THEN.name, terminalSymbols.THEN.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.THEN.name))
         return terminalSymbols.THEN.type;
-    if (token_equalsWithString(token, terminalSymbols.DO.name, terminalSymbols.DO.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.DO.name))
         return terminalSymbols.DO.type;
-    if (token_equalsWithString(token, terminalSymbols.LPAREN.name, terminalSymbols.LPAREN.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.LPAREN.name))
         return terminalSymbols.LPAREN.type;
-    if (token_equalsWithString(token, terminalSymbols.LBRAK.name, terminalSymbols.LBRAK.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.LBRAK.name))
         return terminalSymbols.LBRAK.type;
-    if (token_equalsWithString(token, terminalSymbols.NOT.name, terminalSymbols.NOT.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.NOT.name))
         return terminalSymbols.NOT.type;
-    if (token_equalsWithString(token, terminalSymbols.BECOMES.name, terminalSymbols.BECOMES.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.BECOMES.name))
         return terminalSymbols.BECOMES.type;
-    if (token_equalsWithString(token, terminalSymbols.NUMBER.name, terminalSymbols.NUMBER.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.NUMBER.name))
         return terminalSymbols.NUMBER.type;
-    if (token_equalsWithString(token, terminalSymbols.IDENT.name, terminalSymbols.IDENT.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.IDENT.name))
         return terminalSymbols.IDENT.type;
-    if (token_equalsWithString(token, terminalSymbols.SEMICOLON.name, terminalSymbols.SEMICOLON.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.SEMICOLON.name))
         return terminalSymbols.SEMICOLON.type;
-    if (token_equalsWithString(token, terminalSymbols.END.name, terminalSymbols.END.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.END.name))
         return terminalSymbols.END.type;
-    if (token_equalsWithString(token, terminalSymbols.ELSE.name, terminalSymbols.ELSE.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.ELSE.name))
         return terminalSymbols.ELSE.type;
-    if (token_equalsWithString(token, terminalSymbols.ELSEIF.name, terminalSymbols.ELSEIF.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.ELSEIF.name))
         return terminalSymbols.ELSEIF.type;
-    if (token_equalsWithString(token, terminalSymbols.IF.name, terminalSymbols.IF.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.IF.name))
         return terminalSymbols.IF.type;
-    if (token_equalsWithString(token, terminalSymbols.WHILE.name, terminalSymbols.WHILE.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.WHILE.name))
         return terminalSymbols.WHILE.type;
-    if (token_equalsWithString(token, terminalSymbols.ARR.name, terminalSymbols.ARR.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.ARR.name))
         return terminalSymbols.ARR.type;
-    if (token_equalsWithString(token, terminalSymbols.REC.name, terminalSymbols.REC.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.REC.name))
         return terminalSymbols.REC.type;
-    if (token_equalsWithString(token, terminalSymbols.CONSTT.name, terminalSymbols.CONSTT.nameLength))
-    if (token_equalsWithString(token, terminalSymbols.ARR.name, terminalSymbols.ARR.nameLength))
-        return terminalSymbols.ARR.type;
-    if (token_equalsWithString(token, terminalSymbols.REC.name, terminalSymbols.REC.nameLength))
-        return terminalSymbols.REC.type;
-    if (token_equalsWithString(token, terminalSymbols.CONSTT.name, terminalSymbols.CONSTT.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.CONSTT.name))
         return terminalSymbols.CONSTT.type;
-    if (token_equalsWithString(token, terminalSymbols.INT.name, terminalSymbols.INT.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.INT.name))
         return terminalSymbols.INT.type;
-    if (token_equalsWithString(token, terminalSymbols.BOOL.name, terminalSymbols.BOOL.nameLength))
-    if (token_equalsWithString(token, terminalSymbols.INT.name, terminalSymbols.INT.nameLength))
-        return terminalSymbols.INT.type;
-    if (token_equalsWithString(token, terminalSymbols.BOOL.name, terminalSymbols.BOOL.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.BOOL.name))
         return terminalSymbols.BOOL.type;
-    if (token_equalsWithString(token, terminalSymbols.VAR.name, terminalSymbols.VAR.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.VAR.name))
         return terminalSymbols.VAR.type;
-    if (token_equalsWithString(token, terminalSymbols.PROCEDURE.name, terminalSymbols.PROCEDURE.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.PROCEDURE.name))
         return terminalSymbols.PROCEDURE.type;
-    if (token_equalsWithString(token, terminalSymbols.BEGIN.name, terminalSymbols.BEGIN.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.BEGIN.name))
         return terminalSymbols.BEGIN.type;
-    if (token_equalsWithString(token, terminalSymbols.MODULE.name, terminalSymbols.MODULE.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.MODULE.name))
         return terminalSymbols.MODULE.type;
-    if (token_equalsWithString(token, terminalSymbols.EOFF.name, terminalSymbols.EOFF.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.EOFF.name))
         return terminalSymbols.EOFF.type;
 
     int sum = 0;
-    for (int k = 0; k < token.length; ++k)
+    for (int k = 0; k < token.size; ++k)
         if (charIsDigit(token.symbols[k]))
             sum++;
         else break;
 
-    if (sum == token.length)
+    if (sum == token.size)
         return terminalSymbols.NUMBER.type;
 
 
@@ -186,7 +189,7 @@ void tf_initialize(struct TokensFlow *tokensFlow) {
 }
 
 void tf_allocatedMemory(struct TokensFlow *tokensFlow) {
-    tokensFlow->maxSize = tokensFlow->maxSize + 10;
+    tokensFlow->maxSize = tokensFlow->maxSize * 2;
     tokensFlow->tokens = realloc(tokensFlow->tokens, sizeof(Token) * tokensFlow->maxSize);
 }
 
@@ -205,16 +208,9 @@ Token *tf_next(struct TokensFlow *tokensFlow) {
     return tokensFlow->current;
 }
 
-void tf_clear(struct TokensFlow *tokensFlow) {
-    free(tokensFlow->tokens);
-    tokensFlow->size = 0;
-    tokensFlow->maxSize = 0;
-    tokensFlow->pointer = 0;
-}
-
 void tf_print(struct TokensFlow tokensFlow) {
     for (int i = 0; i < tokensFlow.size; ++i) {
-        for (int j = 0; j < tokensFlow.tokens[i].length; ++j) {
+        for (int j = 0; j < tokensFlow.tokens[i].size; ++j) {
             printf("%c", tokensFlow.tokens[i].symbols[j]);
         }
         printf("\n");
@@ -225,7 +221,7 @@ void tf_print(struct TokensFlow tokensFlow) {
 
 void tf_printWithType(struct TokensFlow tokensFlow) {
     for (int i = 0; i < tokensFlow.size; ++i) {
-        for (int j = 0; j < tokensFlow.tokens[i].length; ++j) {
+        for (int j = 0; j < tokensFlow.tokens[i].size; ++j) {
             printf("%c", tokensFlow.tokens[i].symbols[j]);
         }
         printf("\t\ttype : %d\n", tokensFlow.tokens[i].type);
@@ -239,7 +235,7 @@ int tf_equals(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) 
         if (tokensFlowOne.tokens[i].type != tokensFlowTwo.tokens[i].type)
             return 0;
 
-        for (int j = 0; j < tokensFlowOne.tokens[i].length; ++j)
+        for (int j = 0; j < tokensFlowOne.tokens[i].size; ++j)
             if (tokensFlowOne.tokens[i].symbols[j] != tokensFlowTwo.tokens[i].symbols[j])
                 return 0;
 
