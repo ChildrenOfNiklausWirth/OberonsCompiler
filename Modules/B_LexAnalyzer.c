@@ -81,7 +81,7 @@ int readNextToken(FILE *file, Token *token) {
 
 void lexAnalysis(char *fileName) {
 
-    tf_initialize(&tokensFlow);
+    tf_initialize(&lexTokensFlow);
     tss_initialize(&terminalSymbols);
     FILE *file = fopen(fileName, "r");
 
@@ -90,16 +90,16 @@ void lexAnalysis(char *fileName) {
     while (result == 1) {
         result = readNextToken(file, &token);
         if (result != 0)
-            tf_addToken(&tokensFlow, &token);
+            tf_addToken(&lexTokensFlow, &token);
     }
 
 
-    if (tokensFlow.size == 0)
+    if (lexTokensFlow.size == 0)
         printf("Probably wrong path");
 
 }
 
 void Mark(char msg[]) {
-    printf("Error in line number%d\n", tokensFlow.current->line);
+    printf("Error in line number%d\n", lexTokensFlow.current->line);
     printf("%s", msg);
 }

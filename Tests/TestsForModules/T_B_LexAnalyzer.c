@@ -197,13 +197,13 @@ void firstTest(enum PrintOfTokensFlow print) {
 
     if (print == PRINT) {
         printf("SYNTAX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
-        tf_printWithTypeTwoTokensFlow(syntaxTokensFlow, rightTokensFlow);
+        tf_printWithTypeTwoTokensFlow(lexTokensFlow, rightTokensFlow);
         printf("\n\n\n");
     }
 
     printf("1 Test Result:\n");
-    tf_assertEqualsTwoTokensFlows(syntaxTokensFlow, rightTokensFlow);
-    tf_clear(&syntaxTokensFlow);
+    tf_assertEqualsTwoTokensFlows(lexTokensFlow, rightTokensFlow);
+    tf_clear(&lexTokensFlow);
 
 }
 
@@ -216,13 +216,13 @@ void secondTest(enum PrintOfTokensFlow print) {
 
     if (print == PRINT) {
         printf("SYNTAX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
-        tf_printWithTypeTwoTokensFlow(syntaxTokensFlow, rightTokensFlow);
+        tf_printWithTypeTwoTokensFlow(lexTokensFlow, rightTokensFlow);
         printf("\n\n\n");
     }
 
     printf("2 Test Result:\n");
-    tf_assertEqualsTwoTokensFlows(syntaxTokensFlow, rightTokensFlow);
-    tf_clear(&syntaxTokensFlow);
+    tf_assertEqualsTwoTokensFlows(lexTokensFlow, rightTokensFlow);
+    tf_clear(&lexTokensFlow);
 
 }
 //__________________________________________________________________________________________________
