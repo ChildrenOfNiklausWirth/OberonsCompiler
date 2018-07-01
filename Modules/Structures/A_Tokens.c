@@ -131,23 +131,23 @@ int token_defineType(Token token, struct TerminalSymbols terminalSymbols) {
         return terminalSymbols.IF.type;
     if (token_equalsWithString(token, terminalSymbols.WHILE.name, terminalSymbols.WHILE.nameLength))
         return terminalSymbols.WHILE.type;
-    if (token_equalsWithString(token, terminalSymbols.ARRAY.name, terminalSymbols.ARRAY.nameLength))
-        return terminalSymbols.ARRAY.type;
-    if (token_equalsWithString(token, terminalSymbols.RECORD.name, terminalSymbols.RECORD.nameLength))
-        return terminalSymbols.RECORD.type;
-    if (token_equalsWithString(token, terminalSymbols.CONSTT.name, terminalSymbols.CONSTT.nameLength))
-    if (token_equalsWithString(token, terminalSymbols.ARR.name))
+    if (token_equalsWithString(token, terminalSymbols.ARR.name, terminalSymbols.ARR.nameLength))
         return terminalSymbols.ARR.type;
-    if (token_equalsWithString(token, terminalSymbols.REC.name))
+    if (token_equalsWithString(token, terminalSymbols.REC.name, terminalSymbols.REC.nameLength))
         return terminalSymbols.REC.type;
-    if (token_equalsWithString(token, terminalSymbols.CONSTT.name))
+    if (token_equalsWithString(token, terminalSymbols.CONSTT.name, terminalSymbols.CONSTT.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.ARR.name, terminalSymbols.ARR.nameLength))
+        return terminalSymbols.ARR.type;
+    if (token_equalsWithString(token, terminalSymbols.REC.name, terminalSymbols.REC.nameLength))
+        return terminalSymbols.REC.type;
+    if (token_equalsWithString(token, terminalSymbols.CONSTT.name, terminalSymbols.CONSTT.nameLength))
         return terminalSymbols.CONSTT.type;
-    if (token_equalsWithString(token, terminalSymbols.INTEGER.name, terminalSymbols.INTEGER.nameLength))
-        return terminalSymbols.INTEGER.type;
-    if (token_equalsWithString(token, terminalSymbols.BOOLEAN.name, terminalSymbols.BOOLEAN.nameLength))
-    if (token_equalsWithString(token, terminalSymbols.INT.name))
+    if (token_equalsWithString(token, terminalSymbols.INT.name, terminalSymbols.INT.nameLength))
         return terminalSymbols.INT.type;
-    if (token_equalsWithString(token, terminalSymbols.BOOLEAN.name))
+    if (token_equalsWithString(token, terminalSymbols.BOOLEAN.name, terminalSymbols.BOOLEAN.nameLength))
+    if (token_equalsWithString(token, terminalSymbols.INT.name, terminalSymbols.INT.nameLength))
+        return terminalSymbols.INT.type;
+    if (token_equalsWithString(token, terminalSymbols.BOOLEAN.name, terminalSymbols.BOOLEAN.nameLength))
         return terminalSymbols.BOOLEAN.type;
     if (token_equalsWithString(token, terminalSymbols.VAR.name, terminalSymbols.VAR.nameLength))
         return terminalSymbols.VAR.type;

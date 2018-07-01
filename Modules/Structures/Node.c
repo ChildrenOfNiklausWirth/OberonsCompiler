@@ -32,14 +32,14 @@ Node* node_new() {
     return node;
 }
 
-void object_setName(struct Node *obj, char name[], int name_size) {
+void object_setName(Node *obj, char name[], int name_size) {
     obj->name = calloc(sizeof(char), (size_t) name_size);
     for (int i = 0; i < name_size; ++i) {
         obj->name[i] = name[i];
     }
 }
 
-int object_equals(struct Node object1, struct Node object2) {
+int object_equals(Node object1, struct Node object2) {
     if (object1.size != object2.size)
         return 0;
     if (object1.level != object2.level)
