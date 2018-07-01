@@ -1,5 +1,4 @@
 #include "../../Modules/B_LexAnalyzer.h"
-#include "../../Modules/Structures/A_Tokens.h"
 
 enum PrintOfTokensFlow {
     PRINT, NO_PRINT
