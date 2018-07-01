@@ -1,7 +1,8 @@
 #include "G_CodeGenerator.h"
 
 int MemSize = 100;
-
+Type intType = {INTEGER, 0, 0, 4, 0};
+Type boolType = {INTEGER, 0, 0, 4, 0};
 
 //CALL BEFORE USING FUNCTIONS
 void cg_initialize() {
@@ -125,10 +126,12 @@ void IncLevel(int n) {
     curlev += n;
 }
 
-void MakeConstltem(struct Item x, Type typ, long val) {
+struct Item MakeConstltem(struct Item x, Type typ, long val) {
     x.mode = CONST;
     x.type = &typ;
     x.a = val;
+
+    return x;
 }
 
 void MakeItem(struct Item x, struct Node y) {
@@ -158,7 +161,7 @@ void MakeItem(struct Item x, struct Node y) {
 
 void Field(struct Item x, Node y) {
     x.a += y.val;
-    *x.type = y.type;
+    x.type = y.type;
 }
 
 void Index(struct Item x, struct Item y) {

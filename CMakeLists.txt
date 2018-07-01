@@ -4,7 +4,7 @@ project(OberonsCompiler_C)
 set(CMAKE_C_STANDARD 11)
 
 set(LIBRARIES Modules/Structures/B_TerminalSymbols.c Modules/Structures/A_Tokens.c Modules/B_LexAnalyzer.c Modules/G_CodeGenerator.c
-        Modules/SimpleFunctions/SimpleFunctions.c Modules/Structures/Node.c Modules/Structures/Set.c)
+        Modules/SimpleFunctions/SimpleFunctions.c Modules/Structures/Node.c Modules/Structures/Set.c )
 
 add_library(lib STATIC ${LIBRARIES})
 
@@ -23,3 +23,4 @@ target_link_libraries(main lib)
 target_link_libraries(test_struct_tokens lib)
 target_link_libraries(test_module_lex lib)
 target_link_libraries(test_test lib)
+target_link_libraries(main m)

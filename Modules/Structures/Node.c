@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include "Node.h"
+#include "../B_LexAnalyzer.h"
 
 int item_equals(struct Item item1, struct Item item2) {
     if (item1.level != item2.level)
@@ -25,15 +27,15 @@ int item_equals(struct Item item1, struct Item item2) {
 
 
 
-struct Node object_new() {
-    struct Node obj;
-    obj.name = calloc(16, sizeof(char));
-    return obj;
+Node* node_new() {
+    Node *node = calloc(sizeof(node), 1);
+    return node;
 }
 
-void object_setName(struct Node obj, char name[], int name_size) {
-    for (int i = 0; i < sizeof(&name); ++i) {
-        obj.name[i] = name[i];
+void object_setName(struct Node *obj, char name[], int name_size) {
+    obj->name = calloc(sizeof(char), (size_t) name_size);
+    for (int i = 0; i < name_size; ++i) {
+        obj->name[i] = name[i];
     }
 }
 
@@ -50,7 +52,7 @@ int object_equals(struct Node object1, struct Node object2) {
         return 0;
     if (object_equals(*object1.next, *object2.next) == 0)
         return 0;
-    if (type_equals(object1.type, object2.type) == 0)
+    if (type_equals(*object1.type, *object2.type) == 0)
         return 0;
     for (int i = 0; i < object1.size; ++i)
         if (object1.name[i] != object2.name[i])
@@ -72,6 +74,13 @@ int type_equals(Type type1, Type type2) {
     if (object_equals(*type1.fields, *type2.fields) == 0)
         return 0;
     return 1;
+}
 
+Type *type_new() {
+    Type *type = calloc(sizeof(Type), 1);
 
+    if (type != NULL)
+        return type;
+    else
+       printf("Error while allocating memory for new type\nLine: %i", tokensFlow.current->line);
 }

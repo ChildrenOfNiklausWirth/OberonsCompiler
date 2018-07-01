@@ -1,5 +1,5 @@
 #include "SimpleFunctions.h"
-#include "math.h"
+#include <math.h>
 
 int int_contains(int digit, const int mass[], int massSize) {
     for (int i = 0; i < massSize; ++i)

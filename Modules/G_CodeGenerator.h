@@ -74,8 +74,8 @@
 //        FP = 12, SP = 13, LNK, PC = 15;
 
 
-Type intType;
-Type boolType;
+extern Type intType;
+extern Type boolType;
 int curlev;
 int pc;
 int cno;
@@ -93,7 +93,7 @@ void FixLink(long L);
 
 void IncLevel(int n);
 
-void MakeConstltem(struct Item x, Type typ, long val);
+struct Item MakeConstltem(struct Item x, Type typ, long val);
 
 void MakeItem(struct Item x, struct Node y);
 
