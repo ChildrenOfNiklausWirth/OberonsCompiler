@@ -2,7 +2,7 @@ MODULE TEST;
     CONST IntConst = 16;
     VAR sum: INTEGER;
         BoolVar: BOOLEAN;
-    PROCEDURE AddIntegers(a: INT; b: INT);
+    PROCEDURE AddIntegers(a: INTEGER; b: INTEGER);
     BEGIN
         sum := a + b;
     END AddIntegers;

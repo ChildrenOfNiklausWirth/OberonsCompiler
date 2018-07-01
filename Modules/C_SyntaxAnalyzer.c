@@ -48,17 +48,17 @@ Node *addNode(int class) {
 
     Node *objects = &objectsStart;
 
-    end.name = tokensFlow.current->symbols;
-    end.size = tokensFlow.current->size;
+    end.name = lexTokensFlow.current->symbols;
+    end.size = lexTokensFlow.current->size;
 
 
-    while (namesEquals(tokensFlow.current->symbols, tokensFlow.current->size, objects->next->name,
+    while (namesEquals(lexTokensFlow.current->symbols, lexTokensFlow.current->size, objects->next->name,
                        objects->next->size) != 1)
         objects = objects->next;
 
     if (objects->next == &end) {
         Node *newObject = node_new();
-        node_setName(newObject, tokensFlow.current->symbols, tokensFlow.current->size);
+        node_setName(newObject, lexTokensFlow.current->symbols, lexTokensFlow.current->size);
         newObject->class = class;
         newObject->next = &end;
         objects->next = newObject;
@@ -75,13 +75,13 @@ Node *find() {
     Node *objects = &objectsStart;
     Node *object;
 
-    node_setName(&end, tokensFlow.current->symbols, tokensFlow.current->size);
+    node_setName(&end, lexTokensFlow.current->symbols, lexTokensFlow.current->size);
 
     while (true) {
 
         object = objects->next;
 
-        while (namesEquals(object->name, object->size, tokensFlow.current->symbols, tokensFlow.current->size) != 1) {
+        while (namesEquals(object->name, object->size, lexTokensFlow.current->symbols, lexTokensFlow.current->size) != 1) {
             object = object->next;
         }
 
@@ -99,8 +99,8 @@ Node *find() {
 }
 
 Node findField(struct Node list) {
-    node_setName(&end, tokensFlow.current->symbols, tokensFlow.size);
-    while (namesEquals(list.name, list.size, tokensFlow.current->symbols, tokensFlow.current->size) != 1) {
+    node_setName(&end, lexTokensFlow.current->symbols, lexTokensFlow.size);
+    while (namesEquals(list.name, list.size, lexTokensFlow.current->symbols, lexTokensFlow.current->size) != 1) {
         list = *list.next;
     }
     return list;
@@ -150,10 +150,10 @@ void scope_initialise() {
 struct Item expression(struct Item item1);
 
 struct Item selector(struct Item item) {
-    while ((tokensFlow.current->type == terminalSymbols.LBRAK.type) &&
-           (tokensFlow.current->type == terminalSymbols.PERIOD.type)) {
-        if (tokensFlow.current->type == terminalSymbols.LBRAK.type) {
-            tf_next(&tokensFlow);
+    while ((lexTokensFlow.current->type == terminalSymbols.LBRAK.type) &&
+           (lexTokensFlow.current->type == terminalSymbols.PERIOD.type)) {
+        if (lexTokensFlow.current->type == terminalSymbols.LBRAK.type) {
+            tf_next(&lexTokensFlow);
             struct Item exp = expression(item);
 
             if (exp.type->form == ARRAY)
@@ -161,17 +161,17 @@ struct Item selector(struct Item item) {
             else
                 printf("NOT ARR");
 
-            if (tokensFlow.current->type == terminalSymbols.RBRAK.type)
-                tf_next(&tokensFlow);
+            if (lexTokensFlow.current->type == terminalSymbols.RBRAK.type)
+                tf_next(&lexTokensFlow);
             else
                 printf("]");
         } else {
-            tf_next(&tokensFlow);
+            tf_next(&lexTokensFlow);
 
-            if (tokensFlow.current->type != terminalSymbols.IDENT.type) {
+            if (lexTokensFlow.current->type != terminalSymbols.IDENT.type) {
                 if (item.type->form == RECORD) {
                     struct Node obj = findField(*item.type->fields);
-                    tf_next(&tokensFlow);
+                    tf_next(&lexTokensFlow);
                     if (&obj != &end) {
                         Field(item, obj);
                     } else {
@@ -193,30 +193,30 @@ struct Item factor() {
     struct Item _factor;
     Node object;
 
-    if (tokensFlow.current->type < terminalSymbols.LPAREN.type) {
+    if (lexTokensFlow.current->type < terminalSymbols.LPAREN.type) {
         printf("ident?");
 
-        while (tokensFlow.current->type >= terminalSymbols.LPAREN.type)
-            tf_next(&tokensFlow);
+        while (lexTokensFlow.current->type >= terminalSymbols.LPAREN.type)
+            tf_next(&lexTokensFlow);
     }
 
-    if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+    if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
         object = *find();
-        tf_next(&tokensFlow);
+        tf_next(&lexTokensFlow);
         MakeItem(_factor, object);
         selector(_factor);
-    } else if (tokensFlow.current->type == terminalSymbols.NUMBER.type) {
-        _factor = MakeConstltem(_factor, intType, toInt(tokensFlow.current->symbols, tokensFlow.current->size));
-        tf_next(&tokensFlow);
-    } else if (tokensFlow.current->type == terminalSymbols.LPAREN.type) {
-        tf_next(&tokensFlow);
+    } else if (lexTokensFlow.current->type == terminalSymbols.NUMBER.type) {
+        _factor = MakeConstltem(_factor, intType, toInt(lexTokensFlow.current->symbols, lexTokensFlow.current->size));
+        tf_next(&lexTokensFlow);
+    } else if (lexTokensFlow.current->type == terminalSymbols.LPAREN.type) {
+        tf_next(&lexTokensFlow);
         _factor = expression(_factor);
-        if (tokensFlow.current->type == terminalSymbols.RPAREN.type)
-            tf_next(&tokensFlow);
+        if (lexTokensFlow.current->type == terminalSymbols.RPAREN.type)
+            tf_next(&lexTokensFlow);
         else
             printf(")?");
-    } else if (tokensFlow.current->type == terminalSymbols.NOT.type) {
-        tf_next(&tokensFlow);
+    } else if (lexTokensFlow.current->type == terminalSymbols.NOT.type) {
+        tf_next(&lexTokensFlow);
         _factor = factor(_factor);
         Op1(terminalSymbols.NOT.type, _factor);
     } else {
@@ -237,11 +237,11 @@ struct Item term(struct Item item) {
 
     item = factor(item); // Proceed factor
 
-    while ((tokensFlow.current->type >= terminalSymbols.TIMES.type) &&
-           (tokensFlow.current->type <= terminalSymbols.AND.type)) {
+    while ((lexTokensFlow.current->type >= terminalSymbols.TIMES.type) &&
+           (lexTokensFlow.current->type <= terminalSymbols.AND.type)) {
 
-        operator = tokensFlow.current->type;
-        tf_next(&tokensFlow);
+        operator = lexTokensFlow.current->type;
+        tf_next(&lexTokensFlow);
         if (operator == terminalSymbols.AND.type)
             Op1(operator, item);
         factor(item1);
@@ -257,21 +257,21 @@ struct Item simpleExpression(struct Item item1) {
 
     int operator;
 
-    if (tokensFlow.current->type == terminalSymbols.PLUS.type) {
-        tf_next(&tokensFlow);
+    if (lexTokensFlow.current->type == terminalSymbols.PLUS.type) {
+        tf_next(&lexTokensFlow);
         item1 = term(item1);
-    } else if (tokensFlow.current->type == terminalSymbols.MINUS.type) {
-        tf_next(&tokensFlow);
+    } else if (lexTokensFlow.current->type == terminalSymbols.MINUS.type) {
+        tf_next(&lexTokensFlow);
         item1 = term(item1);
         Op1(terminalSymbols.MINUS.type, item1);
     } else {
         item1 = term(item1);
     }
 
-    while ((tokensFlow.current->type >= terminalSymbols.PLUS.type) &&
-           (tokensFlow.current->type <= terminalSymbols.OR.type)) {
-        operator = tokensFlow.current->type;
-        tf_next(&tokensFlow);
+    while ((lexTokensFlow.current->type >= terminalSymbols.PLUS.type) &&
+           (lexTokensFlow.current->type <= terminalSymbols.OR.type)) {
+        operator = lexTokensFlow.current->type;
+        tf_next(&lexTokensFlow);
 
         if (operator == terminalSymbols.OR.type) {
 
@@ -292,11 +292,11 @@ struct Item expression(struct Item item1) {
 
     item1 = simpleExpression(item1); //Proceed SimpleExpression
 
-    if ((tokensFlow.current->type >= terminalSymbols.EQL.type) &&
-        (tokensFlow.current->type <= terminalSymbols.GTR.type)) {
+    if ((lexTokensFlow.current->type >= terminalSymbols.EQL.type) &&
+        (lexTokensFlow.current->type <= terminalSymbols.GTR.type)) {
 
-        operator = tokensFlow.current->type;
-        tf_next(&tokensFlow);
+        operator = lexTokensFlow.current->type;
+        tf_next(&lexTokensFlow);
         simpleExpression(item2);
         Relation(operator, item1, item2);
     }
@@ -315,10 +315,10 @@ void parameter(struct Node framePointer) {
 }
 
 void param(struct Item item) {
-    if (tokensFlow.current->type == terminalSymbols.LPAREN.type)
+    if (lexTokensFlow.current->type == terminalSymbols.LPAREN.type)
         printf(")?");
     expression(item);
-    if (tokensFlow.current->type == terminalSymbols.RPAREN.type)
+    if (lexTokensFlow.current->type == terminalSymbols.RPAREN.type)
         printf(")?");
 }
 
@@ -332,40 +332,40 @@ void StatSequence() {
     while (true) {
         obj = end;
 
-        if (tokensFlow.current->type < terminalSymbols.IDENT.type) {
+        if (lexTokensFlow.current->type < terminalSymbols.IDENT.type) {
             printf("operator?");
-            while (tokensFlow.current->type < terminalSymbols.IDENT.type) {
-                tf_next(&tokensFlow);
+            while (lexTokensFlow.current->type < terminalSymbols.IDENT.type) {
+                tf_next(&lexTokensFlow);
             }
         }
 
-        if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+        if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
             obj = *find();
-            tf_next(&tokensFlow);
+            tf_next(&lexTokensFlow);
             MakeItem(item1, obj);
             selector(item1);
-            if (tokensFlow.current->type == terminalSymbols.BECOMES.type) {
-                tf_next(&tokensFlow);
+            if (lexTokensFlow.current->type == terminalSymbols.BECOMES.type) {
+                tf_next(&lexTokensFlow);
                 expression(item2);
                 Store(item1, item2);
-            } else if (tokensFlow.current->type == terminalSymbols.EQL.type) {
+            } else if (lexTokensFlow.current->type == terminalSymbols.EQL.type) {
                 printf(":=?");
-                tf_next(&tokensFlow);
+                tf_next(&lexTokensFlow);
                 expression(item2);
             } else if (item1.mode == PROC) {
                 parameter = *obj.dsc;
-                if (tokensFlow.current->type == terminalSymbols.LPAREN.type) {
-                    tf_next(&tokensFlow);
-                    if (tokensFlow.current->type == terminalSymbols.RPAREN.type)
-                        tf_next(&tokensFlow);
+                if (lexTokensFlow.current->type == terminalSymbols.LPAREN.type) {
+                    tf_next(&lexTokensFlow);
+                    if (lexTokensFlow.current->type == terminalSymbols.RPAREN.type)
+                        tf_next(&lexTokensFlow);
                     else {
                         while (true) {
-                            if (tokensFlow.current->type == terminalSymbols.COMMA.type)
-                                tf_next(&tokensFlow);
-                            else if (tokensFlow.current->type == terminalSymbols.RPAREN.type) {
-                                tf_next(&tokensFlow);
+                            if (lexTokensFlow.current->type == terminalSymbols.COMMA.type)
+                                tf_next(&lexTokensFlow);
+                            else if (lexTokensFlow.current->type == terminalSymbols.RPAREN.type) {
+                                tf_next(&lexTokensFlow);
                                 break;
-                            } else if (tokensFlow.current->type >= terminalSymbols.SEMICOLON.type)
+                            } else if (lexTokensFlow.current->type >= terminalSymbols.SEMICOLON.type)
                                 break;
                             else
                                 printf(") or ,?");
@@ -388,30 +388,30 @@ void StatSequence() {
             } else {
                 printf("operator");
             }
-        } else if (tokensFlow.current->type == terminalSymbols.IF.type) {
-            tf_next(&tokensFlow);
+        } else if (lexTokensFlow.current->type == terminalSymbols.IF.type) {
+            tf_next(&lexTokensFlow);
             expression(item1);
             CJump(item1);
-            if (tokensFlow.current->type == terminalSymbols.THEN.type)
-                tf_next(&tokensFlow);
+            if (lexTokensFlow.current->type == terminalSymbols.THEN.type)
+                tf_next(&lexTokensFlow);
             else
                 printf("THEN?");
             StatSequence();
             l = 0;
-            while (tokensFlow.current->type == terminalSymbols.ELSEIF.type) {
-                tf_next(&tokensFlow);
+            while (lexTokensFlow.current->type == terminalSymbols.ELSEIF.type) {
+                tf_next(&lexTokensFlow);
                 FJump(l);
                 FixLink(l);
                 expression(item1);
                 CJump(item1);
-                if (tokensFlow.current->type == terminalSymbols.THEN.type)
-                    tf_next(&tokensFlow);
+                if (lexTokensFlow.current->type == terminalSymbols.THEN.type)
+                    tf_next(&lexTokensFlow);
                 else
                     printf("THEN?");
                 StatSequence();
             }
-            if (tokensFlow.current->type == terminalSymbols.ELSE.type) {
-                tf_next(&tokensFlow);
+            if (lexTokensFlow.current->type == terminalSymbols.ELSE.type) {
+                tf_next(&lexTokensFlow);
                 FJump(l);
                 FixLink(item1.a);
                 StatSequence();
@@ -419,27 +419,27 @@ void StatSequence() {
                 FixLink(item1.a);
             }
             FixLink(l);
-            if (tokensFlow.current->type == terminalSymbols.END.type)
-                tf_next(&tokensFlow);
+            if (lexTokensFlow.current->type == terminalSymbols.END.type)
+                tf_next(&lexTokensFlow);
             else
                 printf("END?");
-        } else if (tokensFlow.current->type == terminalSymbols.WHILE.type) {
-            tf_next(&tokensFlow);
+        } else if (lexTokensFlow.current->type == terminalSymbols.WHILE.type) {
+            tf_next(&lexTokensFlow);
             l = pc;
             expression(item1);
             CJump(item1);
-            if (tokensFlow.current->type == terminalSymbols.DO.type)
-                tf_next(&tokensFlow);
+            if (lexTokensFlow.current->type == terminalSymbols.DO.type)
+                tf_next(&lexTokensFlow);
             else
                 printf("DO?");
             StatSequence();
             BJump(l);
             FixLink(item1.a);
         }
-        if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type)
-            tf_next(&tokensFlow);
-        else if ((tokensFlow.current->type >= terminalSymbols.SEMICOLON.type) && (tokensFlow.current->type)
-                 || (tokensFlow.current->type >= terminalSymbols.ARR.type))
+        if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
+            tf_next(&lexTokensFlow);
+        else if ((lexTokensFlow.current->type >= terminalSymbols.SEMICOLON.type) && (lexTokensFlow.current->type)
+                 || (lexTokensFlow.current->type >= terminalSymbols.ARR.type))
             break;
         else
             printf(";?");
@@ -449,25 +449,25 @@ void StatSequence() {
 // identList = ident {, ident};
 Node *identList(int class) {
 
-    if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+    if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
 
         //Add Identifier to parse tree
         Node *firstAdded = addNode(class); //Have to save link for parameter setup later
-        tf_next(&tokensFlow);
+        tf_next(&lexTokensFlow);
 
-        while (tokensFlow.current->type == terminalSymbols.COMMA.type) {
-            tf_next(&tokensFlow);
-            if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+        while (lexTokensFlow.current->type == terminalSymbols.COMMA.type) {
+            tf_next(&lexTokensFlow);
+            if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
                 //If there are any more identifiers add them too
                 addNode(class);
-                tf_next(&tokensFlow);
+                tf_next(&lexTokensFlow);
             } else Mark("Identifier?");
         }
 
 
-        if (tokensFlow.current->type ==
+        if (lexTokensFlow.current->type ==
             terminalSymbols.COLON.type) { // Probably better to move this block it in declarations
-            tf_next(&tokensFlow);
+            tf_next(&lexTokensFlow);
         } else
             Mark("Missing \":\"");
 
@@ -482,34 +482,34 @@ Type *type() {
     Type *tp;
     Type *typ = &intType;
 
-    if (tokensFlow.current->type != terminalSymbols.IDENT.type && tokensFlow.current->type < terminalSymbols.ARR.type) {
+    if (lexTokensFlow.current->type != terminalSymbols.IDENT.type && lexTokensFlow.current->type < terminalSymbols.ARR.type) {
 
         Mark("тип?");
 
-        do { tf_next(&tokensFlow); }
-        while (!(tokensFlow.current->type == terminalSymbols.IDENT.type &&
-                 tokensFlow.current->type >= terminalSymbols.ARR.type));
+        do { tf_next(&lexTokensFlow); }
+        while (!(lexTokensFlow.current->type == terminalSymbols.IDENT.type &&
+                 lexTokensFlow.current->type >= terminalSymbols.ARR.type));
     }
 
-    if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+    if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
         obj = find();
-        tf_next(&tokensFlow);
+        tf_next(&lexTokensFlow);
 
         if (obj->class == TYP)
             typ = obj->type;
         else
             Mark("Identifiers isn't a type");
 
-    } else if (tokensFlow.current->type == terminalSymbols.ARR.type) {
+    } else if (lexTokensFlow.current->type == terminalSymbols.ARR.type) {
 
-        tf_next(&tokensFlow);
+        tf_next(&lexTokensFlow);
         x = expression(x);
 
         if ((x.mode != CONST) && (x.a < 0))
             Mark("Array size should be constant and greater than zero");
 
-        if (tokensFlow.current->type == terminalSymbols.OF.type)
-            tf_next(&tokensFlow);
+        if (lexTokensFlow.current->type == terminalSymbols.OF.type)
+            tf_next(&lexTokensFlow);
         else
             Mark("Missing \"OF\" word");
 
@@ -521,9 +521,9 @@ Type *type() {
         typ->len = (int) x.a;
         typ->size = typ->len * baseType->size;
 
-    } else if (tokensFlow.current->type == terminalSymbols.REC.type) {
+    } else if (lexTokensFlow.current->type == terminalSymbols.REC.type) {
 
-        tf_next(&tokensFlow);
+        tf_next(&lexTokensFlow);
 
         typ = type_new();
         typ->form = RECORD;
@@ -532,7 +532,7 @@ Type *type() {
         openScope();
 
         while (true) {
-            if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+            if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
 
                 Node *firstAdded = identList(FLD);
 
@@ -546,9 +546,9 @@ Type *type() {
                 }
             }
 
-            if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type)
-                tf_next(&tokensFlow);
-            else if (tokensFlow.current->type == terminalSymbols.IDENT.type)
+            if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
+                tf_next(&lexTokensFlow);
+            else if (lexTokensFlow.current->type == terminalSymbols.IDENT.type)
                 Mark("Missing \";\"");
             else
                 break;
@@ -556,8 +556,8 @@ Type *type() {
 
         typ->fields = objectsStart.next;
         closeScope();
-        if (tokensFlow.current->type == terminalSymbols.END.type) {
-            tf_next(&tokensFlow);
+        if (lexTokensFlow.current->type == terminalSymbols.END.type) {
+            tf_next(&lexTokensFlow);
         } else
             Mark("Missing \"END\"");
     } else
@@ -576,30 +576,30 @@ long declarations() {
 
     long varsize = 0;
 
-    if ((tokensFlow.current->type < terminalSymbols.CONSTT.type) &&
-        (tokensFlow.current->type != terminalSymbols.END.type)) {
+    if ((lexTokensFlow.current->type < terminalSymbols.CONSTT.type) &&
+        (lexTokensFlow.current->type != terminalSymbols.END.type)) {
 
         printf("Declarations?"); // REPLACE
 
-        while ((tokensFlow.current->type < terminalSymbols.CONSTT.type) ||
-               (tokensFlow.current->type != terminalSymbols.END.type))
-            tf_next(&tokensFlow);
+        while ((lexTokensFlow.current->type < terminalSymbols.CONSTT.type) ||
+               (lexTokensFlow.current->type != terminalSymbols.END.type))
+            tf_next(&lexTokensFlow);
     }
 
     while (true) {
 
-        if (tokensFlow.current->type == terminalSymbols.CONSTT.type) { // Proceed CONST declarations if there are any
+        if (lexTokensFlow.current->type == terminalSymbols.CONSTT.type) { // Proceed CONST declarations if there are any
 
-            tf_next(&tokensFlow);
+            tf_next(&lexTokensFlow);
 
-            while (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+            while (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
 
                 obj = addNode(CONST);
 
-                tf_next(&tokensFlow);
+                tf_next(&lexTokensFlow);
 
-                if (tokensFlow.current->type == terminalSymbols.EQL.type)
-                    tf_next(&tokensFlow);
+                if (lexTokensFlow.current->type == terminalSymbols.EQL.type)
+                    tf_next(&lexTokensFlow);
                 else
                     Mark("=?");
 
@@ -612,39 +612,39 @@ long declarations() {
                     printf("not const");
                 }
 
-                if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type)
-                    tf_next(&tokensFlow);
+                if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
+                    tf_next(&lexTokensFlow);
                 else
                     printf(";");
             }
         }
 
-        if (tokensFlow.current->type == terminalSymbols.INT.type) {
+        if (lexTokensFlow.current->type == terminalSymbols.INT.type) {
 
-            tf_next(&tokensFlow);
+            tf_next(&lexTokensFlow);
 
-            while (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+            while (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
 
                 obj = addNode(TYP);
-                tf_next(&tokensFlow);
+                tf_next(&lexTokensFlow);
 
-                if (tokensFlow.current->type == terminalSymbols.EQL.type)
-                    tf_next(&tokensFlow);
+                if (lexTokensFlow.current->type == terminalSymbols.EQL.type)
+                    tf_next(&lexTokensFlow);
                 else
                     printf("=?");
 
                 type();
 
-                if (tokensFlow.current->type == terminalSymbols.EQL.type)
-                    tf_next(&tokensFlow);
+                if (lexTokensFlow.current->type == terminalSymbols.EQL.type)
+                    tf_next(&lexTokensFlow);
                 else printf(";?");
             }
         }
 
-        if (tokensFlow.current->type == terminalSymbols.VAR.type) {
-            tf_next(&tokensFlow);
+        if (lexTokensFlow.current->type == terminalSymbols.VAR.type) {
+            tf_next(&lexTokensFlow);
 
-            while (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+            while (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
 
                 firstAdded = identList(VARIABLE);
                 Type *tp = type(); // Proceed type identification
@@ -659,14 +659,14 @@ long declarations() {
                 }
 
 
-                if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type)
-                    tf_next(&tokensFlow);
+                if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
+                    tf_next(&lexTokensFlow);
                 else
                     printf(";?");
             }
 
-            if ((tokensFlow.current->type >= terminalSymbols.CONSTT.type) &&
-                (tokensFlow.current->type <= terminalSymbols.VAR.type))
+            if ((lexTokensFlow.current->type >= terminalSymbols.CONSTT.type) &&
+                (lexTokensFlow.current->type <= terminalSymbols.VAR.type))
                 printf("Объявление?");
             else
                 break;
@@ -680,15 +680,15 @@ void FPSection(long *locblksize, long *parblksize) {
     Type *tp;
     long parsize;
 
-    if (tokensFlow.current->type == terminalSymbols.VAR.type) {
-        tf_next(&tokensFlow);
+    if (lexTokensFlow.current->type == terminalSymbols.VAR.type) {
+        tf_next(&lexTokensFlow);
         identList(PAR);
     } else
         identList(VARIABLE);
 
-    if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+    if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
         obj = find();
-        tf_next(&tokensFlow);
+        tf_next(&lexTokensFlow);
         if (obj->class == TYP)
             tp = obj->type;
         else {
@@ -724,30 +724,30 @@ void procedureDeclaration() {
     char *procid;
     long locblksize, parblksize;
 
-    tf_next(&tokensFlow);
+    tf_next(&lexTokensFlow);
 
-    if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
-        procid = tokensFlow.current->symbols;
+    if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
+        procid = lexTokensFlow.current->symbols;
         proc = node_new();
-        tf_next(&tokensFlow);
+        tf_next(&lexTokensFlow);
         parblksize = marksize;
         IncLevel(1);
         openScope();
         proc->val = -1;
-        if (tokensFlow.current->type == terminalSymbols.LPAREN.type) {
-            tf_next(&tokensFlow);
-            if (tokensFlow.current->type == terminalSymbols.RPAREN.type)
-                tf_next(&tokensFlow);
+        if (lexTokensFlow.current->type == terminalSymbols.LPAREN.type) {
+            tf_next(&lexTokensFlow);
+            if (lexTokensFlow.current->type == terminalSymbols.RPAREN.type)
+                tf_next(&lexTokensFlow);
             else {
                 FPSection(&locblksize, &parblksize);
 
-                while (tokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
-                    tf_next(&tokensFlow);
+                while (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
+                    tf_next(&lexTokensFlow);
                     FPSection(&locblksize, &parblksize);
                 }
 
-                if (tokensFlow.current->type == terminalSymbols.RPAREN.type)
-                    tf_next(&tokensFlow);
+                if (lexTokensFlow.current->type == terminalSymbols.RPAREN.type)
+                    tf_next(&lexTokensFlow);
                 else
                     Mark(")?");
             }
@@ -766,8 +766,8 @@ void procedureDeclaration() {
             }
         }
         proc->dsc = objectsStart.next;
-        if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
-            tf_next(&tokensFlow);
+        if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
+            tf_next(&lexTokensFlow);
 
         } else {
             Mark(";?");
@@ -775,30 +775,30 @@ void procedureDeclaration() {
 
         locblksize = 0;
         declarations();
-        while (tokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
+        while (lexTokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
             procedureDeclaration();
-            if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type)
-                tf_next(&tokensFlow);
+            if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
+                tf_next(&lexTokensFlow);
             else
                 Mark(";?");
 
         }
         proc->val = pc;
         Enter(locblksize);
-        if (tokensFlow.current->type == terminalSymbols.BEGIN.type) {
-            tf_next(&tokensFlow);
+        if (lexTokensFlow.current->type == terminalSymbols.BEGIN.type) {
+            tf_next(&lexTokensFlow);
             StatSequence();
 
         }
-        if (tokensFlow.current->type == terminalSymbols.END.type) {
-            tf_next(&tokensFlow);
+        if (lexTokensFlow.current->type == terminalSymbols.END.type) {
+            tf_next(&lexTokensFlow);
         } else
             Mark("end ?");
-        if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+        if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
             //TODO
-            if (procid != tokensFlow.current->symbols) {
+            if (procid != lexTokensFlow.current->symbols) {
                 Mark("не подходит");
-                tf_next(&tokensFlow);
+                tf_next(&lexTokensFlow);
             }
             Return(parblksize - marksize);
             closeScope();
@@ -816,15 +816,15 @@ void module() {
 
     char *moduleIdentifier;
 
-    if (tf_next(&tokensFlow)->type == terminalSymbols.MODULE.type) {
+    if (tf_next(&lexTokensFlow)->type == terminalSymbols.MODULE.type) {
         scope_initialise();
         Open();
         openScope();
-        if (tf_next(&tokensFlow)->type == terminalSymbols.IDENT.type) {
-            moduleIdentifier = tokensFlow.current->symbols;
+        if (tf_next(&lexTokensFlow)->type == terminalSymbols.IDENT.type) {
+            moduleIdentifier = lexTokensFlow.current->symbols;
 
-            if (tf_next(&tokensFlow)->type == terminalSymbols.SEMICOLON.type) {
-                tf_next(&tokensFlow);
+            if (tf_next(&lexTokensFlow)->type == terminalSymbols.SEMICOLON.type) {
+                tf_next(&lexTokensFlow);
             }
         } else {
             Mark(";?");
@@ -832,35 +832,35 @@ void module() {
 
         varsize += declarations(); // Proceed declarations
 
-        while (tokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
+        while (lexTokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
             procedureDeclaration();
-            if (tokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
-                tf_next(&tokensFlow);
+            if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
+                tf_next(&lexTokensFlow);
                 StatSequence();
             } else
                 Mark(";?");
         }
 
         Header(varsize);
-        if (tokensFlow.current->type == terminalSymbols.BEGIN.type) {
-            tf_next(&tokensFlow);
+        if (lexTokensFlow.current->type == terminalSymbols.BEGIN.type) {
+            tf_next(&lexTokensFlow);
             StatSequence();
         }
-        if (tokensFlow.current->type == terminalSymbols.END.type) {
-            tf_next(&tokensFlow);
+        if (lexTokensFlow.current->type == terminalSymbols.END.type) {
+            tf_next(&lexTokensFlow);
 
         } else
             Mark("End?");
-        if (tokensFlow.current->type == terminalSymbols.IDENT.type) {
+        if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
             //TODO
-            if (moduleIdentifier != tokensFlow.current->symbols) {
+            if (moduleIdentifier != lexTokensFlow.current->symbols) {
                 Mark("не подходит");
             }
-            tf_next(&tokensFlow);
+            tf_next(&lexTokensFlow);
 
         } else
             Mark("идентефикатор");
-        if (tokensFlow.current->type != terminalSymbols.PERIOD.type) {
+        if (lexTokensFlow.current->type != terminalSymbols.PERIOD.type) {
             Mark(".?");
         }
         closeScope();

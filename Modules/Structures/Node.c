@@ -84,5 +84,5 @@ Type *type_new() {
     if (type != NULL)
         return type;
     else
-       printf("Error while allocating memory for new type\nLine: %i", tokensFlow.current->line);
+       printf("Error while allocating memory for new type\nLine: %i", lexTokensFlow.current->line);
 }
