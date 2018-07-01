@@ -2,6 +2,7 @@
 
 //D
 int numberOfLine = 1;
+struct TokensFlow lexTokensFlow;
 
 int readNextToken(FILE *file, Token *token) {
     int tokenLength = 0;
