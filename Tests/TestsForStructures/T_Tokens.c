@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "../../Modules/Structures/A_Tokens.h"
 
 //TOKEN
@@ -59,7 +60,7 @@ int test_tf_allocatedMemory() {
     tf_allocatedMemory(&tokensFlow);
     tf_allocatedMemory(&tokensFlow);
 
-    if (tokensFlow.maxSize == 256)
+    if (tokensFlow.maxSize == TF_INIT_MAXSIZE + 40)
         return 1;
     return 0;
 
@@ -77,12 +78,12 @@ int test_tf_addToken() {
         return 0;
 
 
-    for (int i = 0; i < TF_INIT_MAXSIZE * 8 + 1; ++i) {
+    for (int i = 0; i < TF_INIT_MAXSIZE + 31; ++i) {
         Token token;
         tf_addToken(&tokensFlow, &token);
     }
 
-    if (tokensFlow.maxSize == 256 && tokensFlow.size == TF_INIT_MAXSIZE * 8 + 2)
+    if (tokensFlow.size == TF_INIT_MAXSIZE + 32 && tokensFlow.maxSize == TF_INIT_MAXSIZE + 40)
         return 1;
     else return 0;
 
@@ -112,11 +113,10 @@ int test_tf_equals() {
 //
 int main() {
     int rightTestDigit = 0;
-    int maxTestDigit = 9;
+    int maxTestDigit = 7;
 
     printf("Token Testing...\n\n");
 
-    printf("token_allocatedMemory...\n");
 
     printf("token_newToken...\n");
     if (test_token_newToken() == 1) {

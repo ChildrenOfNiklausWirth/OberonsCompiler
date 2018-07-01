@@ -3,8 +3,11 @@ project(OberonsCompiler_C)
 
 set(CMAKE_C_STANDARD 11)
 
-set(LIBRARIES Modules/Structures/B_TerminalSymbols.c Modules/Structures/A_Tokens.c Modules/B_LexAnalyzer.c Modules/G_CodeGenerator.c
-        Modules/SimpleFunctions/SimpleFunctions.c Modules/Structures/Node.c Modules/Structures/Set.c )
+#set(LIBRARIES Modules/Structures/B_TerminalSymbols.c Modules/Structures/A_Tokens.c Modules/B_LexAnalyzer.c Modules/G_CodeGenerator.c
+#        Modules/SimpleFunctions/SimpleFunctions.c Modules/Structures/Node.c Modules/Structures/Set.c)
+set(LIBRARIES Modules/Structures/B_TerminalSymbols.c Modules/Structures/A_Tokens.c Modules/B_LexAnalyzer.c
+        Modules/SimpleFunctions/SimpleFunctions.c)
+
 
 add_library(lib STATIC ${LIBRARIES})
 

@@ -1,5 +1,6 @@
 #include "B_LexAnalyzer.h"
 
+//D
 int numberOfLine = 1;
 
 int readNextToken(FILE *file, Token *token) {
