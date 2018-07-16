@@ -49,16 +49,16 @@ Node *addNode(int class) {
     Node *objects = &objectsStart;
 
     end.name = lexTokensFlow.current->symbols;
-    end.size = lexTokensFlow.current->size;
+    end.size = lexTokensFlow.current->length;
 
 
-    while (namesEquals(lexTokensFlow.current->symbols, lexTokensFlow.current->size, objects->next->name,
+    while (namesEquals(lexTokensFlow.current->symbols, lexTokensFlow.current->length, objects->next->name,
                        objects->next->size) != 1)
         objects = objects->next;
 
     if (objects->next == &end) {
         Node *newObject = node_new();
-        node_setName(newObject, lexTokensFlow.current->symbols, lexTokensFlow.current->size);
+        node_setName(newObject, lexTokensFlow.current->symbols, lexTokensFlow.current->length);
         newObject->class = class;
         newObject->next = &end;
         objects->next = newObject;
@@ -75,13 +75,13 @@ Node *find() {
     Node *objects = &objectsStart;
     Node *object;
 
-    node_setName(&end, lexTokensFlow.current->symbols, lexTokensFlow.current->size);
+    node_setName(&end, lexTokensFlow.current->symbols, lexTokensFlow.current->length);
 
     while (true) {
 
         object = objects->next;
 
-        while (namesEquals(object->name, object->size, lexTokensFlow.current->symbols, lexTokensFlow.current->size) != 1) {
+        while (namesEquals(object->name, object->size, lexTokensFlow.current->symbols, lexTokensFlow.current->length) != 1) {
             object = object->next;
         }
 
@@ -100,7 +100,7 @@ Node *find() {
 
 Node findField(struct Node list) {
     node_setName(&end, lexTokensFlow.current->symbols, lexTokensFlow.size);
-    while (namesEquals(list.name, list.size, lexTokensFlow.current->symbols, lexTokensFlow.current->size) != 1) {
+    while (namesEquals(list.name, list.size, lexTokensFlow.current->symbols, lexTokensFlow.current->length) != 1) {
         list = *list.next;
     }
     return list;
@@ -135,8 +135,8 @@ static enter(int class, long value, char *name, int size, Type *type) {
 
 void scope_initialise() {
     openScope();
-    enter(TYP, 1, terminalSymbols.BOOL.name, terminalSymbols.BOOL.nameLength, &boolType);
-    enter(TYP, 2, terminalSymbols.INT.name, terminalSymbols.INT.nameLength, &intType);
+    enter(TYP, 1, "BOOLEAN", sizeof("BOOLEAN"), &boolType);
+    enter(TYP, 2, "INTЕGER", sizeof("INTЕGER"), &intType);
     enter(CONST, 1, "TRUE", 4, &boolType);
     enter(CONST, 0, "FALSE", 5, &boolType);
     enter(S_PROC, 1, "Read", 5, &boolType);
@@ -206,7 +206,7 @@ struct Item factor() {
         MakeItem(_factor, object);
         selector(_factor);
     } else if (lexTokensFlow.current->type == terminalSymbols.NUMBER.type) {
-        _factor = MakeConstltem(_factor, intType, toInt(lexTokensFlow.current->symbols, lexTokensFlow.current->size));
+        _factor = MakeConstltem(_factor, intType, toInt(lexTokensFlow.current->symbols, lexTokensFlow.current->length));
         tf_next(&lexTokensFlow);
     } else if (lexTokensFlow.current->type == terminalSymbols.LPAREN.type) {
         tf_next(&lexTokensFlow);
@@ -619,7 +619,7 @@ long declarations() {
             }
         }
 
-        if (lexTokensFlow.current->type == terminalSymbols.INT.type) {
+        if (lexTokensFlow.current->type == terminalSymbols.VAR.type) {
 
             tf_next(&lexTokensFlow);
 
@@ -667,14 +667,14 @@ long declarations() {
 
             if ((lexTokensFlow.current->type >= terminalSymbols.CONSTT.type) &&
                 (lexTokensFlow.current->type <= terminalSymbols.VAR.type))
-                printf("Объявление?");
+                printf("Declaration?");
             else
                 break;
         }
 
     }
 };
-
+//TODO there is bug
 void FPSection(long *locblksize, long *parblksize) {
     Node *obj, *first;
     Type *tp;
@@ -717,7 +717,7 @@ void FPSection(long *locblksize, long *parblksize) {
         }
     }
 }
-
+//TODO There is bug
 void procedureDeclaration() {
     int const marksize = 8;
     Node *proc, obj;
@@ -739,7 +739,7 @@ void procedureDeclaration() {
             if (lexTokensFlow.current->type == terminalSymbols.RPAREN.type)
                 tf_next(&lexTokensFlow);
             else {
-                FPSection(&locblksize, &parblksize);
+                FPSection(&locblksize, &parblksize);//TODO there is bug
 
                 while (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
                     tf_next(&lexTokensFlow);

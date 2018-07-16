@@ -11,6 +11,7 @@ struct TerminalSymbol ts_newTerminalSymbol(char name[], int nameLength, int type
     return terminalSymbol;
 }
 
+
 //__________________________________________________________________________________________________
 void tss_initialize(struct TerminalSymbols *terminalSymbols) {
     terminalSymbols->NULLL = ts_newTerminalSymbol("NULL", 4, 0);
@@ -50,8 +51,7 @@ void tss_initialize(struct TerminalSymbols *terminalSymbols) {
     terminalSymbols->ARR = ts_newTerminalSymbol("ARRAY", 5, 54);
     terminalSymbols->REC = ts_newTerminalSymbol("RECORD", 6, 55);
     terminalSymbols->CONSTT = ts_newTerminalSymbol("CONST", 5, 57);
-    terminalSymbols->INT = ts_newTerminalSymbol("INTEGER", 7, 58);
-    terminalSymbols->BOOL = ts_newTerminalSymbol("BOOLEAN", 7, 58);
+    terminalSymbols->TYPE = ts_newTerminalSymbol("TYPE", 7, 58);
     terminalSymbols->VAR = ts_newTerminalSymbol("VAR", 3, 59);
     terminalSymbols->PROCEDURE = ts_newTerminalSymbol("PROCEDURE", 9, 60);
     terminalSymbols->BEGIN = ts_newTerminalSymbol("BEGIN", 5, 61);

@@ -142,13 +142,8 @@ int token_defineType(Token token, struct TerminalSymbols terminalSymbols) {
         return terminalSymbols.REC.type;
     if (token_equalsWithString(token, terminalSymbols.CONSTT.name, terminalSymbols.CONSTT.nameLength))
         return terminalSymbols.CONSTT.type;
-    if (token_equalsWithString(token, terminalSymbols.INT.name, terminalSymbols.INT.nameLength))
-        return terminalSymbols.INT.type;
-    if (token_equalsWithString(token, terminalSymbols.BOOL.name, terminalSymbols.BOOL.nameLength))
-        if (token_equalsWithString(token, terminalSymbols.INT.name, terminalSymbols.INT.nameLength))
-            return terminalSymbols.INT.type;
-    if (token_equalsWithString(token, terminalSymbols.BOOL.name, terminalSymbols.BOOL.nameLength))
-        return terminalSymbols.BOOL.type;
+    if (token_equalsWithString(token, terminalSymbols.TYPE.name, terminalSymbols.TYPE.nameLength))
+        return terminalSymbols.TYPE.type;
     if (token_equalsWithString(token, terminalSymbols.VAR.name, terminalSymbols.VAR.nameLength))
         return terminalSymbols.VAR.type;
     if (token_equalsWithString(token, terminalSymbols.PROCEDURE.name, terminalSymbols.PROCEDURE.nameLength))
