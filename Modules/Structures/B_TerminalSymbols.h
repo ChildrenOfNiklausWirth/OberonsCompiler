@@ -49,8 +49,7 @@ struct TerminalSymbols {
     struct TerminalSymbol ARR;
     struct TerminalSymbol REC;
     struct TerminalSymbol CONSTT;
-    struct TerminalSymbol INT;
-    struct TerminalSymbol BOOL;
+    struct TerminalSymbol TYPE;
     struct TerminalSymbol VAR;
     struct TerminalSymbol PROCEDURE;
     struct TerminalSymbol BEGIN;

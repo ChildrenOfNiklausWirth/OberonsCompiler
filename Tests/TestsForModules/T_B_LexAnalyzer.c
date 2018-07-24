@@ -27,13 +27,13 @@ void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
     tokens[8] = token_newTokenWithType("VAR", 3, 59, 3);
     tokens[9] = token_newTokenWithType("sum", 3, 37, 3);
     tokens[10] = token_newTokenWithType(":", 1, 20, 3);
-    tokens[11] = token_newTokenWithType("INTEGER", 7, 58, 3);
+    tokens[11] = token_newTokenWithType("INTEGER", 7, 37, 3);
     tokens[12] = token_newTokenWithType(";", 1, 38, 3);
 
     //BoolVar: BOOLE;
     tokens[13] = token_newTokenWithType("BoolVar", 7, 37, 4);
     tokens[14] = token_newTokenWithType(":", 1, 20, 4);
-    tokens[15] = token_newTokenWithType("BOOLEAN", 7, 58, 4);
+    tokens[15] = token_newTokenWithType("BOOLEAN", 7, 37, 4);
     tokens[16] = token_newTokenWithType(";", 1, 38, 4);
 
 
@@ -43,11 +43,11 @@ void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
     tokens[19] = token_newTokenWithType("(", 1, 29, 5);
     tokens[20] = token_newTokenWithType("a", 1, 37, 5);
     tokens[21] = token_newTokenWithType(":", 1, 20, 5);
-    tokens[22] = token_newTokenWithType("INTEGER", 7, 58, 5);
+    tokens[22] = token_newTokenWithType("INTEGER", 7, 37, 5);
     tokens[23] = token_newTokenWithType(";", 1, 38, 5);
     tokens[24] = token_newTokenWithType("b", 1, 37, 5);
     tokens[25] = token_newTokenWithType(":", 1, 20, 5);
-    tokens[26] = token_newTokenWithType("INTEGER", 7, 58, 5);
+    tokens[26] = token_newTokenWithType("INTEGER", 7, 37, 5);
     tokens[27] = token_newTokenWithType(")", 1, 22, 5);
     tokens[28] = token_newTokenWithType(";", 1, 38, 5);
 
@@ -121,8 +121,8 @@ void createRightResultForSecondTest(struct TokensFlow *tokensflow) {
     tokens[34] = token_newTokenWithType("ARRAY", 5, 54, 34);
     tokens[35] = token_newTokenWithType("RECORD", 6, 55, 35);
     tokens[36] = token_newTokenWithType("CONST", 5, 57, 36);
-    tokens[37] = token_newTokenWithType("INTEGER", 7, 58, 37);
-    tokens[38] = token_newTokenWithType("BOOLEAN", 7, 58, 38);
+    tokens[37] = token_newTokenWithType("INTEGER", 7, 37, 37);
+    tokens[38] = token_newTokenWithType("BOOLEAN", 7, 37, 38);
     tokens[39] = token_newTokenWithType("VAR", 3, 59, 39);
     tokens[40] = token_newTokenWithType("PROCEDURE", 9, 60, 40);
     tokens[41] = token_newTokenWithType("BEGIN", 5, 61, 41);
