@@ -11,7 +11,7 @@
 #define MAXCODE 10000
 #define NUMBER_OF_COMMANDS 16
 #define MAXREL 200
-#define HEAD 0
+#define HEAD 0//TODO WWU
 #define VARIABLE 1
 #define PAR 2
 #define CONST 3
@@ -25,7 +25,7 @@
 #define INTEGER 1
 #define ARRAY 2
 #define RECORD 3
-#define MOV 0
+#define MOV 0//TODO WWU
 #define MVN 1
 #define ADD 2
 #define SUB 3

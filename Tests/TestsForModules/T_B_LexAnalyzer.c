@@ -140,10 +140,10 @@ void createRightResultForSecondTest(struct TokensFlow *tokensflow) {
 
 }
 
-void tf_assertEqualsTwoTokensFlows(struct TokensFlow tokensFlow, struct TokensFlow rightTokensFlow) {
+int tf_assertEqualsTwoTokensFlows(struct TokensFlow tokensFlow, struct TokensFlow rightTokensFlow) {
     int result = tf_equals(tokensFlow, rightTokensFlow);
     if (result == 1)
-        printf("True\n");
+        return 1;
     else if (result == 0) {
         printf("False\n");
         if (tokensFlow.size != rightTokensFlow.size)
@@ -165,8 +165,8 @@ void tf_assertEqualsTwoTokensFlows(struct TokensFlow tokensFlow, struct TokensFl
                 }
             }
         }
-
     }
+    return 0;
 
 }
 
@@ -196,13 +196,18 @@ void firstTest(enum PrintOfTokensFlow print) {
 
 
     if (print == PRINT) {
-        printf("SYNTAX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
+        printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
         tf_printWithTypeTwoTokensFlow(lexTokensFlow, rightTokensFlow);
         printf("\n\n\n");
     }
 
     printf("1 Test Result:\n");
-    tf_assertEqualsTwoTokensFlows(lexTokensFlow, rightTokensFlow);
+
+    int result = tf_assertEqualsTwoTokensFlows(lexTokensFlow, rightTokensFlow);
+    if (result == 1)
+        printf("True\n");
+    else printf("False\n");
+
     tf_clear(&lexTokensFlow);
 
 }
@@ -215,13 +220,18 @@ void secondTest(enum PrintOfTokensFlow print) {
     lexAnalysis(secondAdress);
 
     if (print == PRINT) {
-        printf("SYNTAX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
+        printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
         tf_printWithTypeTwoTokensFlow(lexTokensFlow, rightTokensFlow);
         printf("\n\n\n");
     }
 
     printf("2 Test Result:\n");
-    tf_assertEqualsTwoTokensFlows(lexTokensFlow, rightTokensFlow);
+
+    int result = tf_assertEqualsTwoTokensFlows(lexTokensFlow, rightTokensFlow);
+    if (result == 1) {
+        printf("True\n");
+    } else printf("False\n");
+
     tf_clear(&lexTokensFlow);
 
 }
@@ -234,5 +244,6 @@ int main() {
     secondTest(PRINT);
     printf("------------------------------------------------------------------------------------------------");
 }
+
 
 

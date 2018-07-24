@@ -4,6 +4,8 @@
 int numberOfLine = 1;
 struct TokensFlow lexTokensFlow;
 
+
+
 int readNextToken(FILE *file, Token *token) {
     int tokenLength = 0;
     char firstSymbol, lastSymbol;
@@ -61,8 +63,9 @@ int readNextToken(FILE *file, Token *token) {
 
     token_initialize(token, tokenLength);
 
-    // if (lastSymbol == '\n')
-      //   fseek(file, -1, SEEK_CUR);
+    //TODO necessary for Windows
+    if (lastSymbol == '\n')
+        fseek(file, -1, SEEK_CUR);
 
 
     fseek(file, -tokenLength - 1, SEEK_CUR);

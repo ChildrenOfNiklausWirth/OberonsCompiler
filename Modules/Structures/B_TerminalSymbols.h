@@ -49,13 +49,14 @@ struct TerminalSymbols {
     struct TerminalSymbol ARR;
     struct TerminalSymbol REC;
     struct TerminalSymbol CONSTT;
+    struct TerminalSymbol INT;
+    struct TerminalSymbol BOOL;
     struct TerminalSymbol TYPE;
     struct TerminalSymbol VAR;
     struct TerminalSymbol PROCEDURE;
     struct TerminalSymbol BEGIN;
     struct TerminalSymbol MODULE;
     struct TerminalSymbol EOFF;
-    struct TerminalSymbol TYPE;
 } terminalSymbols;
 
 void tss_initialize(struct TerminalSymbols *terminalSymbols);

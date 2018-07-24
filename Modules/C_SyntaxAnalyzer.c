@@ -857,6 +857,7 @@ void module() {
             Mark(";?");
         }
 
+
         declarations(&varsize); // Proceed declarations
 
         while (lexTokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
