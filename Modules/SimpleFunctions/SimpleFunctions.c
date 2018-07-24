@@ -9,8 +9,8 @@ int int_contains(int digit, const int mass[], int massSize) {
 
 }
 
-int ASH(int x, int n) {
-    return (int) (x * pow(2, n));
+unsigned long ASH(unsigned long x, long n) {
+    return (unsigned long) (x * pow(2, n));
 }
 
 int int_hexToDecimal(int digit) {

@@ -47,7 +47,7 @@ int test_token_equalsWithString() {
 int test_tf_initialize() {
     struct TokensFlow tokensFlow;
     tf_initialize(&tokensFlow);
-    if (tokensFlow.size == 0 && tokensFlow.maxSize == TF_INIT_MAXSIZE)
+    if (tokensFlow.length == 0 && tokensFlow.maxSize == TF_INIT_MAXSIZE)
         return 1;
     else return 0;
 }
@@ -83,7 +83,7 @@ int test_tf_addToken() {
         tf_addToken(&tokensFlow, &token);
     }
 
-    if (tokensFlow.size == TF_INIT_MAXSIZE + 32 && tokensFlow.maxSize == TF_INIT_MAXSIZE + 40)
+    if (tokensFlow.length == TF_INIT_MAXSIZE + 32 && tokensFlow.maxSize == TF_INIT_MAXSIZE + 40)
         return 1;
     else return 0;
 

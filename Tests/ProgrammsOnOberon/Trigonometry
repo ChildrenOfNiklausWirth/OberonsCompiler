@@ -1,0 +1,57 @@
+MODULE Trigonometry;
+    TYPE Point = RECORD x, y : INTEGER END;
+    VAR int1, int2, int3, int4 : INTEGER;
+        pt1, pt2, pt3 : Point;
+        bol1, bol2, bol3, bol4 : BOOLEAN;
+
+    PROCEDURE isFirstOrSecond (VAR pt : Point; VAR ansBool : BOOLEAN);
+    BEGIN
+        IF pt.y > 0 THEN
+            ansBool := TRUE;
+        ELSE
+            ansBool := FALSE;
+        END;
+    END isFirstOrSecond;
+
+    PROCEDURE isThirdOrForth (VAR pt : Point; VAR ansBool : BOOLEAN);
+        BEGIN
+        IF pt.y < 0 THEN
+                ansBool := TRUE;
+            ELSE
+                ansBool := FALSE;
+            END;
+    END isThirdOrForth;
+
+    PROCEDURE sqr (int : INTEGER; VAR sqrInt : INTEGER);
+    BEGIN
+        sqrInt := int * int;
+    END sqr;
+
+    PROCEDURE RVLengthSqr (VAR pt : Point; VAR lengthInt : INTEGER);
+        VAR tempInt : INTEGER;
+    BEGIN
+        sqr(pt.x, tempInt);
+        sqr(pt.y, lengthInt);
+        lengthInt := lengthInt + tempInt;
+    END RVLengthSqr;
+
+    BEGIN
+
+    int2 := 0;
+    pt1.y := 6;
+    pt2.y := -6;
+
+    WHILE (int2 <= 5) DO
+       pt1.x := int2;
+       pt2.x := int2;
+
+       RVLengthSqr(pt1, int1);
+       RVLengthSqr(pt2, int1);
+       isFirstOrSecond(pt1, bol1);
+       isFirstOrSecond(pt2, bol1);
+       isThirdOrForth(pt1, bol2);
+       isThirdOrForth(pt2, bol2);
+
+       int2 := int2 + 1;
+
+END Trigonometry.

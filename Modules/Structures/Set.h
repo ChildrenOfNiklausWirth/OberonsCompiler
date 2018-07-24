@@ -8,7 +8,7 @@ struct Set {
     int maxSize;
 };
 
-struct Set set_newSet();
+struct Set *set_new();
 
 void set_initialize(struct Set *set);
 

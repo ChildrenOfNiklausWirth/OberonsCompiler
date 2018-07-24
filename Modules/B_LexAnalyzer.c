@@ -61,9 +61,9 @@ int readNextToken(FILE *file, Token *token) {
 
     token_initialize(token, tokenLength);
 
+    // if (lastSymbol == '\n')
+      //   fseek(file, -1, SEEK_CUR);
 
-    if (lastSymbol == '\n')
-        fseek(file, -1, SEEK_CUR);
 
     fseek(file, -tokenLength - 1, SEEK_CUR);
 

@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include "A_Tokens.h"
 
-Ident ident_new(char name[], int nameLength) {
-    Ident ident;
-    ident.name = malloc(sizeof(char) * nameLength);
+Ident *ident_new(char name[], int nameLength) {
+    Ident *ident;
+    ident = calloc(1, sizeof(ident));
+    ident->name = malloc(sizeof(char) * nameLength);
     for (int i = 0; i < nameLength; ++i)
-        ident.name[i] = name[i];
+        ident->name[i] = name[i];
     return ident;
 }
 
@@ -157,6 +158,8 @@ int token_defineType(Token token, struct TerminalSymbols terminalSymbols) {
         return terminalSymbols.BEGIN.type;
     if (token_equalsWithString(token, terminalSymbols.MODULE.name, terminalSymbols.MODULE.nameLength))
         return terminalSymbols.MODULE.type;
+    if (token_equalsWithString(token, terminalSymbols.TYPE.name, terminalSymbols.TYPE.nameLength))
+        return terminalSymbols.TYPE.type;
     if (token_equalsWithString(token, terminalSymbols.EOFF.name, terminalSymbols.EOFF.nameLength))
         return terminalSymbols.EOFF.type;
 

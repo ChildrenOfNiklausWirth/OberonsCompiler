@@ -4,11 +4,13 @@
 
 int const SET_INIT_MAXSIZE = 16;
 
-struct Set set_newSet() {
-    struct Set set;
-    set.maxSize = SET_INIT_MAXSIZE;
-    set.size = 0;
-    set.digit = malloc(sizeof(int) * SET_INIT_MAXSIZE);
+struct Set *set_new() {
+    struct Set *set;
+    set = calloc(1, sizeof(*set));
+    set->maxSize = SET_INIT_MAXSIZE;
+    set->size = 0;
+    set->digit = malloc(sizeof(int) * SET_INIT_MAXSIZE);
+    return set;
 }
 
 void set_initialize(struct Set *set) {

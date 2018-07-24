@@ -147,7 +147,7 @@ void tf_assertEqualsTwoTokensFlows(struct TokensFlow tokensFlow, struct TokensFl
     else if (result == 0) {
         printf("False\n");
         if (tokensFlow.size != rightTokensFlow.size)
-            printf("Not equal size of TokensFlow\nsyntaxTokensFlow=%d\t rightTokensFlow=%d\n", tokensFlow.size,
+            printf("Not equal length of TokensFlow\nsyntaxTokensFlow=%d\t rightTokensFlow=%d\n", tokensFlow.size,
                    rightTokensFlow.size);
 
         for (int i = 0; i < rightTokensFlow.size; ++i) {

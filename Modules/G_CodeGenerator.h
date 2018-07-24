@@ -1,5 +1,6 @@
 #ifndef OBERONSCOMPILER_C_G_CODEGENERATOR_H
 #define OBERONSCOMPILER_C_G_CODEGENERATOR_H
+
 #include <stdbool.h>
 #include "Structures/Node.h"
 #include "Structures/Set.h"
@@ -7,7 +8,7 @@
 #include "Structures/B_TerminalSymbols.h"
 #include "B_LexAnalyzer.h"
 
-#define MAXCODE 1000
+#define MAXCODE 10000
 #define NUMBER_OF_COMMANDS 16
 #define MAXREL 200
 #define HEAD 0
@@ -55,7 +56,7 @@
 #define BNE 49
 #define BLT 50
 #define BGE 51
-#define BLE 42
+#define BLE 52
 #define BGT 53
 #define BR 56
 #define BSR 57
@@ -80,45 +81,47 @@ int pc;
 int cno;
 long entry;
 long fixlist;
-struct Set regs;
+struct Set *regs;
 //W:TextWriter
-long code[MAXCODE];
+//long code[MAXCODE];
 //comname
-long comadr[NUMBER_OF_COMMANDS];
-char mnemo[64][5];
+//char mnemo[64][5];
 
+void cg_initialize();
 
-void FixLink(long L);
+void decode();
+
+long FixLink(long L);
 
 void IncLevel(int n);
 
-struct Item MakeConstltem(struct Item x, Type typ, long val);
+void MakeConstltem(struct Item *x, Type *typ, long val);
 
-void MakeItem(struct Item x, struct Node y);
+void MakeItem(struct Item *x, Node *y);
 
-void Field(struct Item x, struct Node y);
+void Field(struct Item *x, Node *y);
 
-void Index(struct Item x, struct Item y);
+void Index(struct Item *x, struct Item *y);
 
-void Op1(int op, struct Item x);
+void Op1(int op, struct Item *x);
 
-void Op2(int op, struct Item x, struct Item y);
+void Op2(int op, struct Item *x, struct Item *y);
 
-void Relation(int op, struct Item x, struct Item y);
+void Relation(int op, struct Item *x, struct Item *y);
 
-void Store(struct Item x, struct Item y);
+void Store(struct Item *x, struct Item *y);
 
-void Parameter(struct Item x, Type ftyp, int class);
+void Parameter(struct Item *x, Type *ftyp, int class);
 
-void CJump(struct Item x);
+void CJump(struct Item *x);
 
 void BJump(long L);
 
-void FJump(long L);
+void FJump(long *L);
 
-void Call(struct Item x);
+void Call(struct Item *x);
 
-void IOCall(struct Item x, struct Item y);
+void IOCall(struct Item *x, struct Item *y);
 
 void Header(long size);
 
@@ -129,5 +132,7 @@ void Return(long size);
 void Open();
 
 void Close(long globals);
+
+void EnterCMD(char name[], int nameLength);
 
 #endif //OBERONSCOMPILER_C_G_CODEGENERATOR_H

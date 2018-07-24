@@ -50,13 +50,14 @@ void tss_initialize(struct TerminalSymbols *terminalSymbols) {
     terminalSymbols->ARR = ts_newTerminalSymbol("ARRAY", 5, 54);
     terminalSymbols->REC = ts_newTerminalSymbol("RECORD", 6, 55);
     terminalSymbols->CONSTT = ts_newTerminalSymbol("CONST", 5, 57);
-    terminalSymbols->INT = ts_newTerminalSymbol("INTEGER", 7, 58);
-    terminalSymbols->BOOL = ts_newTerminalSymbol("BOOLEAN", 7, 58);
+    terminalSymbols->INT = ts_newTerminalSymbol("INTEGER", 7, 37);
+    terminalSymbols->BOOL = ts_newTerminalSymbol("BOOLEAN", 7, 37);
     terminalSymbols->VAR = ts_newTerminalSymbol("VAR", 3, 59);
     terminalSymbols->PROCEDURE = ts_newTerminalSymbol("PROCEDURE", 9, 60);
     terminalSymbols->BEGIN = ts_newTerminalSymbol("BEGIN", 5, 61);
     terminalSymbols->MODULE = ts_newTerminalSymbol("MODULE", 6, 63);
     terminalSymbols->EOFF = ts_newTerminalSymbol("EOF", 3, 64);
+    terminalSymbols->TYPE = ts_newTerminalSymbol("TYPE", 4, 58);
 
 }
 

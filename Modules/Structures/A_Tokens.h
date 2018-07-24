@@ -9,7 +9,7 @@ typedef struct {
     char *name;
 } Ident;
 
-Ident ident_new(char name[], int nameLength);
+Ident *ident_new(char name[], int nameLength);
 
 //__________________________________________________________________________________________________
 typedef struct {

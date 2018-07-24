@@ -3,7 +3,7 @@
 
 int int_contains(int digit, const int mass[], int massSize);
 
-int ASH(int x, int n);
+unsigned long ASH(unsigned long x, long n);
 
 int int_hexToDecimal(int digit);
 
