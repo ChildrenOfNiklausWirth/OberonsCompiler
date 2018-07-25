@@ -1,9 +1,13 @@
 #include "B_LexAnalyzer.h"
 
-//D
+
+enum OC {
+    WINDOWS, LINUX
+};
+enum OC oc = WINDOWS;//TODO check before using
+
 int numberOfLine = 1;
 struct TokensFlow lexTokensFlow;
-
 
 
 int readNextToken(FILE *file, Token *token) {
@@ -63,9 +67,9 @@ int readNextToken(FILE *file, Token *token) {
 
     token_initialize(token, tokenLength);
 
-    //TODO necessary for Windows
-    if (lastSymbol == '\n')
-        fseek(file, -1, SEEK_CUR);
+    if (oc == WINDOWS)
+        if (lastSymbol == '\n')
+            fseek(file, -1, SEEK_CUR);
 
 
     fseek(file, -tokenLength - 1, SEEK_CUR);

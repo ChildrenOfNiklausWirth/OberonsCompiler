@@ -61,6 +61,5 @@ int main() {
         printf("\nALL TESTS WAS SUCCESSFULLY\n\n");
     else printf("\nSOME TESTS FAILED\n\n");
 
-    test_procedureDeclaration();
 
 }

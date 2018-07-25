@@ -16,7 +16,7 @@ set(MAIN main.c)
 set(TEST_TOKENS Tests/TestsForStructures/T_Tokens.c)
 set(TEST_SIMPLE Tests/TestForSimpleFucntions/T_SimpleFunctions.c)
 set(TEST_LEX Tests/TestsForModules/T_B_LexAnalyzer.c)
-set(TEST_SYNTAX Tests/TestsForModules/C_SyntaxAnalyzer.c)
+set(TEST_SYNTAX Tests/TestsForModules/T_C_SyntaxAnalyzer.c)
 
 #add_executable(test_test ${TEST})
 add_executable(main ${MAIN})
