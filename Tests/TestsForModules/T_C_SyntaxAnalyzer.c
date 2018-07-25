@@ -3,16 +3,7 @@
 
 char address[] = "../Tests/ProgrammsOnOberon/Trigonometry";
 
-void test_intitialize() {
-    lexAnalysis(address);
-    scope_initialise();
-    Open();
-    openScope();
-
-}
-
 int test_declarations() {
-    test_intitialize();
     do {
         tf_next(&lexTokensFlow);
     } while (!namesEquals(lexTokensFlow.current->symbols, lexTokensFlow.current->length,
@@ -21,6 +12,8 @@ int test_declarations() {
 
     long varsize = 0;
     declarations(&varsize);
+
+
     if (varsize == 56)
         return 1;
     return 0;
@@ -29,29 +22,37 @@ int test_declarations() {
 }
 
 int test_procedureDeclaration() {
-    test_intitialize();
 
-    do {
-        tf_next(&lexTokensFlow);
-    } while (!namesEquals(lexTokensFlow.current->symbols, lexTokensFlow.current->length,
-                          "PROCEDURE", sizeof("PROCEDURE") - 1));
     procedureDeclaration();
+
 
 
 }
 
 
 int main() {
-
-
     int rightTestDigit = 0;
     int maxTestDigit = 1;
+
+
+    lexAnalysis(address);
+    scope_initialise();
+    Open();
+    openScope();
+
 
     printf("Syntax Analyzer Testing...\n\n");
 
 
-    printf("test_declarations...\n");
+    printf("test declarations...\n");
     if (test_declarations() == 1) {
+        printf("True\n\n");
+        rightTestDigit++;
+    } else printf("False\n\n");
+
+
+    printf("test procedureDeclarations...\n");
+    if (test_procedureDeclaration() == 1) {
         printf("True\n\n");
         rightTestDigit++;
     } else printf("False\n\n");

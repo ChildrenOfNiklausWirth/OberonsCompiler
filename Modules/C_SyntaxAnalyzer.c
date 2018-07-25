@@ -47,11 +47,11 @@ Node *addNode(int class) {
     Node *objects = objectsStart;
 
     end.name = lexTokensFlow.current->symbols;
-    end.size = lexTokensFlow.current->length;
+    end.nameLength = lexTokensFlow.current->length;
 
 
     while (namesEquals(lexTokensFlow.current->symbols, lexTokensFlow.current->length, objects->next->name,
-                       objects->next->size) != 1)
+                       objects->next->nameLength) != 1)
         objects = objects->next;
 
     if (objects->next == &end) {
@@ -79,7 +79,7 @@ Node *find() {
 
         object = objects->next;
 
-        while (namesEquals(object->name, object->size, lexTokensFlow.current->symbols, lexTokensFlow.current->length) !=
+        while (namesEquals(object->name, object->nameLength, lexTokensFlow.current->symbols, lexTokensFlow.current->length) !=
                1) {
             object = object->next;
         }
@@ -99,7 +99,7 @@ Node *find() {
 
 Node *findField(Node *list) {
     node_setName(&end, lexTokensFlow.current->symbols, lexTokensFlow.size);
-    while (namesEquals(list->name, list->size, lexTokensFlow.current->symbols, lexTokensFlow.current->length) != 1) {
+    while (namesEquals(list->name, list->nameLength, lexTokensFlow.current->symbols, lexTokensFlow.current->length) != 1) {
         list = list->next;
     }
     return list;
@@ -679,6 +679,7 @@ long declarations(long *varsize) {
     }
 };
 
+//
 void FPSection(long *parblksize) {
     Node *obj, *firstAdded;
     Type *tp;
@@ -731,8 +732,8 @@ void procedureDeclaration() {
     Node *procedure, *obj;
     char *procedureIdentifier;
     int procedureIdentifierLength;
-    long locblksize = 0;
-    long parblksize = 0;
+    long locblksize = 0;//
+    long parblksize = 0;//
 
     tf_next(&lexTokensFlow);
 

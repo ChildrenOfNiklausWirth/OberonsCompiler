@@ -6,7 +6,7 @@ enum OC {
 };
 enum OC oc = WINDOWS;//TODO check before using
 
-int numberOfLine = 1;
+int numberOfLine;
 struct TokensFlow lexTokensFlow;
 
 
@@ -88,6 +88,7 @@ int readNextToken(FILE *file, Token *token) {
 }
 
 void lexAnalysis(char *fileName) {
+    numberOfLine = 1;
 
     tf_initialize(&lexTokensFlow);
     tss_initialize(&terminalSymbols);
