@@ -41,7 +41,7 @@ int namesEquals(char *name1, int size1, char *name2, int size2) {
         return 0;
 }
 
-
+//Добавление нового узла в objectStart
 Node *addNode(int class) {
 
     Node *objects = objectsStart;
@@ -67,7 +67,7 @@ Node *addNode(int class) {
     }
 
 };
-
+//Поиск объекта в objectStart
 Node *find() {
 
     Node *objects = objectsStart;
@@ -79,7 +79,8 @@ Node *find() {
 
         object = objects->next;
 
-        while (namesEquals(object->name, object->nameLength, lexTokensFlow.current->symbols, lexTokensFlow.current->length) !=
+        while (namesEquals(object->name, object->nameLength, lexTokensFlow.current->symbols,
+                           lexTokensFlow.current->length) !=
                1) {
             object = object->next;
         }
@@ -99,7 +100,8 @@ Node *find() {
 
 Node *findField(Node *list) {
     node_setName(&end, lexTokensFlow.current->symbols, lexTokensFlow.size);
-    while (namesEquals(list->name, list->nameLength, lexTokensFlow.current->symbols, lexTokensFlow.current->length) != 1) {
+    while (namesEquals(list->name, list->nameLength, lexTokensFlow.current->symbols, lexTokensFlow.current->length) !=
+           1) {
         list = list->next;
     }
     return list;
@@ -206,7 +208,7 @@ factor(struct Item *_factor) {
         selector(_factor);
     } else if (lexTokensFlow.current->type == terminalSymbols.NUMBER.type) {
         MakeConstltem(_factor, &intType,
-                                toInt(lexTokensFlow.current->symbols, lexTokensFlow.current->length));
+                      toInt(lexTokensFlow.current->symbols, lexTokensFlow.current->length));
         tf_next(&lexTokensFlow);
     } else if (lexTokensFlow.current->type == terminalSymbols.LPAREN.type) {
         tf_next(&lexTokensFlow);
@@ -302,8 +304,7 @@ struct Item parameter(Node *framePointer) {
     if (isParam(framePointer)) {
         Parameter(&item, framePointer->type, framePointer->class);
         framePointer = framePointer->next;
-    }
-    else {
+    } else {
         item.mode = NULL;
         printf("too many arguments");
     }
@@ -450,6 +451,7 @@ void StatSequence() {
 };
 
 // identList = ident {, ident};
+//Идентификация переменных одного типа
 Node *identList(int class) {
 
     if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
@@ -477,7 +479,7 @@ Node *identList(int class) {
         return firstAdded;
     }
 }
-
+//Определение типа объекта
 Type *type() {
 
     Node *obj;
@@ -836,9 +838,7 @@ void procedureDeclaration() {
 };
 
 
-// STARTING SYMBOL
-// MODULE = MODULE ident; [ImportList] declarations [BEGIN StatementSequence] END ident "."
-void module() {
+void moduleWithoutCloseScope() {
 
     char *moduleIdentifier;
     int moduleIdentifierLength;
@@ -890,11 +890,22 @@ void module() {
         if (lexTokensFlow.current->type != terminalSymbols.PERIOD.type) {
             Mark(".?");
         }
-        closeScope();
 
     } else
         Mark("Модуль?");
 }
+
+// STARTING SYMBOL
+// MODULE = MODULE ident; [ImportList] declarations [BEGIN StatementSequence] END ident "."
+void module() {
+
+    moduleWithoutCloseScope();
+    closeScope();
+}
+
+
+
+
 
 
 

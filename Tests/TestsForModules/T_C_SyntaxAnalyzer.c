@@ -1,66 +1,51 @@
 #include "../../Modules/C_SyntaxAnalyzer.c"
-#include "../../Modules/Structures/A_Tokens.h"
 
 char address[] = "../Tests/ProgrammsOnOberon/Trigonometry";
-
-int test_declarations() {
-    do {
-        tf_next(&lexTokensFlow);
-    } while (!namesEquals(lexTokensFlow.current->symbols, lexTokensFlow.current->length,
-                          "TYPE", sizeof("TYPE") - 1));
+Node *rigthObjectStart;
 
 
-    long varsize = 0;
-    declarations(&varsize);
+Node *object_newObject(int class, int level, long val, char *name, int nameLength, Type *type, Node *dsc, Node *next) {
+    Node *newObject = node_new();
+    newObject->class = class;
+    newObject->level = level;
+    newObject->val = val;
+    newObject->name = name;
+    newObject->nameLength = nameLength;
+    newObject->type = type;
+    newObject->dsc = dsc;
+    newObject->next = next;
+    return newObject;
+}
 
-
-    if (varsize == 56)
-        return 1;
-    return 0;
-
+void object_addObject(Node *node, Node *next) {
+    node->next = next;
+    node = node->next;
 
 }
 
-int test_procedureDeclaration() {
+void createRightResultForObjectStart(Node *rightObjectStart) {
+    rightObjectStart=calloc(1, sizeof(Node));
+    Node *currentNode;
+    currentNode = object_newObject(5, 0, 0, "Point", sizeof("Point") - 1, type_new(), NULL, NULL);
+    object_addObject(rightObjectStart, currentNode);
 
-    procedureDeclaration();
-
-
+    currentNode = object_newObject(5, 0, 0, "int1", sizeof("int1") - 1, type_new(), NULL, NULL);
+    object_addObject(rightObjectStart, currentNode);
 
 }
 
+
+int compareNodesPointer(Node *node1, Node *node2) {
+
+
+}
 
 int main() {
-    int rightTestDigit = 0;
-    int maxTestDigit = 1;
-
 
     lexAnalysis(address);
-    scope_initialise();
-    Open();
-    openScope();
+    moduleWithoutCloseScope();
 
-
-    printf("Syntax Analyzer Testing...\n\n");
-
-
-    printf("test declarations...\n");
-    if (test_declarations() == 1) {
-        printf("True\n\n");
-        rightTestDigit++;
-    } else printf("False\n\n");
-
-
-    printf("test procedureDeclarations...\n");
-    if (test_procedureDeclaration() == 1) {
-        printf("True\n\n");
-        rightTestDigit++;
-    } else printf("False\n\n");
-
-
-    if (rightTestDigit == maxTestDigit)
-        printf("\nALL TESTS WAS SUCCESSFULLY\n\n");
-    else printf("\nSOME TESTS FAILED\n\n");
+    createRightResultForObjectStart(rigthObjectStart);
 
 
 }
