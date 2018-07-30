@@ -6,7 +6,6 @@
 #include "Structures/B_TerminalSymbols.h"
 #include "Structures/A_Tokens.h"
 #include "B_LexAnalyzer.h"
-#include "Structures/Object.h"
 #include "G_CodeGenerator.h"
 
 

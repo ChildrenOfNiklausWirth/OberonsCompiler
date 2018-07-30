@@ -2,16 +2,16 @@
 #include "Modules/C_SyntaxAnalyzer.c"
 #include "Modules/G_CodeGenerator.h"
 
-char firstAdress[] = "../Tests/ProgrammsOnOberon/Trigonometry";
-
+char inputAddress[] = "../Tests/ProgrammsOnOberon/Trigonometry";
+char outputAddress[] = "../code.txt";
 
 
 int main() {
-    lexAnalysis(firstAdress);
+    lexAnalysis(inputAddress);
     module();
 
     cg_initialize();
-    decode();
+    decode(outputAddress);
     return 0;
 }
 

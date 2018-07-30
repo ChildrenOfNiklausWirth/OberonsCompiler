@@ -11,6 +11,8 @@
 #define MAXCODE 10000
 #define NUMBER_OF_COMMANDS 16
 #define MAXREL 200
+
+////Constants for Node.class
 #define HEAD 0
 #define VARIABLE 1
 #define PAR 2
@@ -21,10 +23,14 @@
 #define S_PROC 7
 #define REG 10
 #define COND 11
+
+//Constants for
 #define BOOLEAN 0
 #define INTEGER 1
 #define ARRAY 2
 #define RECORD 3
+
+//Constants for assembler
 #define MOV 0
 #define MVN 1
 #define ADD 2
@@ -66,12 +72,6 @@
 #define LNK 14
 #define PC 15
 
-//int const maxRel = 200, Head = 0, Var = 1, Par = 2, Const = 3, Fld = 4, Typ = 5, Proc = 6,
-//        SProc = 7, Reg = 10, Cond = 11, Boolean = 0, Integer = 1, Array = 2, Record = 3, MOV = 0, MVN = 1, ADD = 2,
-//        SUB = 3, MUL = 4, Div = 5, Mod = 6, CMP = 7, MOVI = 16, MVNI = 17, ADDI = 18, SUBI = 19, MULI = 20, DIVI = 21,
-//        MODI = 22, CMPI = 23, CHKI = 24, LDW = 32, LDB = 33, POP = 34, STW = 36, STB = 37, PSH = 38, RD = 40, WRD = 41,
-//       WRH = 42, WRL = 43, BEQ = 48, BNE = 49, BLT = 50, BGE = 51, BLE = 52, BGT = 53, BR = 56, BSR = 57, RET = 58,
-//        FP = 12, SP = 13, LNK, PC = 15;
 
 
 extern Type intType;
@@ -89,7 +89,7 @@ struct Set *regs;
 
 void cg_initialize();
 
-void decode();
+void decode(char address[]);
 
 long FixLink(long L);
 
