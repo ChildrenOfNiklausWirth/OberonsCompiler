@@ -40,10 +40,10 @@ typedef struct Node {
     int level;
     long val;
     char *name;
+    int nameLength;
     Type *type;//
     Node *dsc;//
     Node *next;
-    int nameLength;
 } Node;
 
 Node *node_new();
