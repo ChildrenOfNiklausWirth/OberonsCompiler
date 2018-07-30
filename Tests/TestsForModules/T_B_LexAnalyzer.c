@@ -4,7 +4,7 @@ enum PrintOfTokensFlow {
     PRINT, NO_PRINT
 };
 
-char firstAdress[] = "../Tests/ProgrammsOnOberon/1_Test.txt";
+char firstAddress[] = "../Tests/ProgrammsOnOberon/1_Test.txt";
 char secondAdress[] = "../Tests/ProgrammsOnOberon/2_Test.txt";
 
 void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
@@ -192,7 +192,7 @@ void firstTest(enum PrintOfTokensFlow print) {
     tf_initialize(&rightTokensFlow);
     createRightResultForFirstTest(&rightTokensFlow);
 
-    lexAnalysis(firstAdress);
+    lexAnalysis(firstAddress);
 
 
     if (print == PRINT) {
@@ -238,12 +238,10 @@ void secondTest(enum PrintOfTokensFlow print) {
 //__________________________________________________________________________________________________
 
 int main() {
+    printf("LexAnalyzer Testing...\n\n");
     printf("-----------------------------------1 TEST-------------------------------------------------------\n");
     firstTest(PRINT);
     printf("-----------------------------------2 TEST-------------------------------------------------------\n");
     secondTest(PRINT);
     printf("------------------------------------------------------------------------------------------------");
 }
-
-
-

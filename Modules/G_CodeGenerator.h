@@ -89,7 +89,7 @@ struct Set *regs;
 
 void cg_initialize();
 
-void decode();
+void decode(char address[]);
 
 long FixLink(long L);
 
