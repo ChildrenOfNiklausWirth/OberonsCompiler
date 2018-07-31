@@ -8,7 +8,8 @@ void Execute(long start, char inputAddres[], char outputAddress[]) {
     R[14] = 0;
     R[15] = start + ProgOrg;
 
-    while (true) {
+    bool loop = true;
+    while (loop) {
         nxt = R[15] + 4;
         IR = M[R[15] / 4];
         opc = IR / int_hexToDecimal(4000000) % int_hexToDecimal(40);
@@ -104,7 +105,8 @@ void Execute(long start, char inputAddres[], char outputAddress[]) {
                 break;
             case RD:
                 //TODO check
-                fscanf(inputFile, "%li", &R[a]);
+                if (fscanf(inputFile, "%li", &R[a]) == EOF)
+                    loop = false;
                 break;
             case WRD:
                 //TODO check
