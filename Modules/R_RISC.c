@@ -1,6 +1,9 @@
 #include "R_RISC.h"
 
 void Execute(long start, char inputAddres[], char outputAddress[]) {
+    FILE *inputFile = fopen(inputAddres, "r");
+    FILE *outputFile = fopen(outputAddress, "w+");
+
     long opc, a, b, c, nxt;
     R[14] = 0;
     R[15] = start + ProgOrg;
@@ -100,16 +103,20 @@ void Execute(long start, char inputAddres[], char outputAddress[]) {
                 M[R[b] / 4] = R[a];
                 break;
             case RD:
-                //TODO
+                //TODO check
+                fscanf(inputFile, "%li", &R[a]);
                 break;
             case WRD:
-                //TODO
+                //TODO check
+                fprintf(outputFile, " %li %d", R[c], 1);
                 break;
             case WRH:
-                //TODO
+                //TODO check
+                fprintf(outputFile, " %o", (unsigned int) R[c]);
                 break;
             case WRL:
-                //TODO
+                //TODO check
+                fprintf(outputFile, "\n");
                 break;
             case BEQ:
                 if (Z)
@@ -153,7 +160,7 @@ void Execute(long start, char inputAddres[], char outputAddress[]) {
     }
 }
 
-void Load(long code[], long len) {
+void Load(const long code[], long len) {
     int i = 0;
     while (i < len) {
         M[i + ProgOrg / 4] = code[i];
