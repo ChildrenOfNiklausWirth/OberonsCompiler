@@ -206,7 +206,7 @@ factor(struct Item *_factor) {
         selector(_factor);
     } else if (lexTokensFlow.current->type == terminalSymbols.NUMBER.type) {
         MakeConstltem(_factor, &intType,
-                                toInt(lexTokensFlow.current->symbols, lexTokensFlow.current->length));
+                      toInt(lexTokensFlow.current->symbols, lexTokensFlow.current->length));
         tf_next(&lexTokensFlow);
     } else if (lexTokensFlow.current->type == terminalSymbols.LPAREN.type) {
         tf_next(&lexTokensFlow);
@@ -302,8 +302,7 @@ struct Item parameter(Node *framePointer) {
     if (isParam(framePointer)) {
         Parameter(&item, framePointer->type, framePointer->class);
         framePointer = framePointer->next;
-    }
-    else {
+    } else {
         item.mode = NULL;
         printf("too many arguments");
     }
@@ -311,9 +310,13 @@ struct Item parameter(Node *framePointer) {
 
 struct Item param(struct Item item) {
     if (lexTokensFlow.current->type == terminalSymbols.LPAREN.type)
-        printf(")?");
+        tf_next(&lexTokensFlow);
+    else
+        printf("(?");
     expression(&item);
     if (lexTokensFlow.current->type == terminalSymbols.RPAREN.type)
+        tf_next(&lexTokensFlow);
+    else
         printf(")?");
     return item;
 }
