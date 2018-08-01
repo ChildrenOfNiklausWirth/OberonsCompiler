@@ -1,8 +1,14 @@
 #include "B_LexAnalyzer.h"
 
-//D
-int numberOfLine = 1;
+
+enum OC {
+    WINDOWS, LINUX
+};
+enum OC oc = WINDOWS;//TODO check before using
+
+int numberOfLine;
 struct TokensFlow lexTokensFlow;
+
 
 int readNextToken(FILE *file, Token *token) {
     int tokenLength = 0;
@@ -61,8 +67,9 @@ int readNextToken(FILE *file, Token *token) {
 
     token_initialize(token, tokenLength);
 
-    // if (lastSymbol == '\n')
-      //   fseek(file, -1, SEEK_CUR);
+    if (oc == WINDOWS)
+        if (lastSymbol == '\n')
+            fseek(file, -1, SEEK_CUR);
 
 
     fseek(file, -tokenLength - 1, SEEK_CUR);
@@ -81,6 +88,7 @@ int readNextToken(FILE *file, Token *token) {
 }
 
 void lexAnalysis(char *fileName) {
+    numberOfLine = 1;
 
     tf_initialize(&lexTokensFlow);
     tss_initialize(&terminalSymbols);
@@ -102,5 +110,5 @@ void lexAnalysis(char *fileName) {
 
 void Mark(char msg[]) {
     printf("Error in line number%d\n", lexTokensFlow.current->line);
-    printf("%s", msg);
+    printf("%s\n\n", msg);
 }

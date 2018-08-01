@@ -474,11 +474,11 @@ void EnterCMD(char name[], int nameLength) {
     cno++;
 }
 
-void decode() {
+void decode(char address[]) {
     unsigned long w, op;
     long a;
     char str[150];
-    FILE *file = fopen("../code.txt", "w+");
+    FILE *file = fopen(address, "w+");
     fprintf(file, "Enter:");
     sprintf(str, "%ld", entry * 4);
     fprintf(file, str);
@@ -506,7 +506,7 @@ void decode() {
                 if (a >= 0x2000000) {
                     a -= 0x4000000;
                 }
-                fprintf(file, "%#+.6x\n", (unsigned int)a * 4);
+                fprintf(file, "%#+.6x\n", (unsigned int) a * 4);
             }
         }
     }
