@@ -67,7 +67,6 @@ Node *addNode(int class) {
     }
 
 };
-
 //Поиск объекта в objectStart
 Node *find() {
 
@@ -313,13 +312,9 @@ struct Item parameter(Node *framePointer) {
 
 struct Item param(struct Item item) {
     if (lexTokensFlow.current->type == terminalSymbols.LPAREN.type)
-        tf_next(&lexTokensFlow);
-    else
-        Mark("(?");
+        Mark(")?");
     expression(&item);
     if (lexTokensFlow.current->type == terminalSymbols.RPAREN.type)
-        tf_next(&lexTokensFlow);
-    else
         Mark(")?");
     return item;
 }
@@ -456,6 +451,7 @@ void StatSequence() {
 };
 
 // identList = ident {, ident};
+//Идентификация переменных одного типа
 Node *identList(int class) {
 
     if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
@@ -483,7 +479,6 @@ Node *identList(int class) {
         return firstAdded;
     }
 }
-
 //Определение типа объекта
 Type *type() {
 
@@ -863,6 +858,7 @@ void moduleWithoutCloseScope() {
             Mark(";?");
         }
 
+
         declarations(&varsize); // Proceed declarations
 
         while (lexTokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
@@ -902,6 +898,7 @@ void moduleWithoutCloseScope() {
 // STARTING SYMBOL
 // MODULE = MODULE ident; [ImportList] declarations [BEGIN StatementSequence] END ident "."
 void module() {
+
     moduleWithoutCloseScope();
     closeScope();
 }
