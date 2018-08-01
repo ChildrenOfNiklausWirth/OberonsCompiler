@@ -5,9 +5,10 @@ enum PrintOfTokensFlow {
 };
 
 char firstAddress[] = "../Tests/ProgrammsOnOberon/1_Test.txt";
-char secondAdress[] = "../Tests/ProgrammsOnOberon/2_Test.txt";
+char secondAddress[] = "../Tests/ProgrammsOnOberon/1_TestWithCommentaries.txt";
+char thirdAdress[] = "../Tests/ProgrammsOnOberon/2_Test.txt";
 
-void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
+void createRightResultForFirstAndSecondTest(struct TokensFlow *tokensflow) {
     Token tokens[42];
     int tokensSize = 42;
 
@@ -81,7 +82,7 @@ void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
 
 }
 
-void createRightResultForSecondTest(struct TokensFlow *tokensflow) {
+void createRightResultForThirdTest(struct TokensFlow *tokensflow) {
     Token tokens[44];
     int tokenSize = 44;
     tokens[0] = token_newTokenWithType("NULL", 4, 0, 1);
@@ -190,7 +191,7 @@ void firstTest(enum PrintOfTokensFlow print) {
 
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
-    createRightResultForFirstTest(&rightTokensFlow);
+    createRightResultForFirstAndSecondTest(&rightTokensFlow);
 
     lexAnalysis(firstAddress);
 
@@ -201,7 +202,6 @@ void firstTest(enum PrintOfTokensFlow print) {
         printf("\n\n\n");
     }
 
-    printf("1 Test Result:\n");
 
     int result = tf_assertEqualsTwoTokensFlows(lexTokensFlow, rightTokensFlow);
     if (result == 1)
@@ -215,9 +215,9 @@ void firstTest(enum PrintOfTokensFlow print) {
 void secondTest(enum PrintOfTokensFlow print) {
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
-    createRightResultForSecondTest(&rightTokensFlow);
+    createRightResultForFirstAndSecondTest(&rightTokensFlow);
 
-    lexAnalysis(secondAdress);
+    lexAnalysis(secondAddress);
 
     if (print == PRINT) {
         printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
@@ -225,7 +225,30 @@ void secondTest(enum PrintOfTokensFlow print) {
         printf("\n\n\n");
     }
 
-    printf("2 Test Result:\n");
+
+    int result = tf_assertEqualsTwoTokensFlows(lexTokensFlow, rightTokensFlow);
+    if (result == 1) {
+        printf("True\n");
+    } else printf("False\n");
+
+    tf_clear(&lexTokensFlow);
+
+
+}
+
+void thirdTest(enum PrintOfTokensFlow print) {
+    struct TokensFlow rightTokensFlow;
+    tf_initialize(&rightTokensFlow);
+    createRightResultForThirdTest(&rightTokensFlow);
+
+    lexAnalysis(thirdAdress);
+
+    if (print == PRINT) {
+        printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
+        tf_printWithTypeTwoTokensFlow(lexTokensFlow, rightTokensFlow);
+        printf("\n\n\n");
+    }
+
 
     int result = tf_assertEqualsTwoTokensFlows(lexTokensFlow, rightTokensFlow);
     if (result == 1) {
@@ -240,8 +263,13 @@ void secondTest(enum PrintOfTokensFlow print) {
 int main() {
     printf("LexAnalyzer Testing...\n\n");
     printf("-----------------------------------1 TEST-------------------------------------------------------\n");
-    firstTest(PRINT);
+    printf("Simple Test\n");
+    firstTest(NO_PRINT);
     printf("-----------------------------------2 TEST-------------------------------------------------------\n");
-    secondTest(PRINT);
+    printf("Parsing of commentaries works right\n");
+    secondTest(NO_PRINT);
+    printf("-----------------------------------3 TEST-------------------------------------------------------\n");
+    printf("Parsing of tokens works right\n");
+    thirdTest(NO_PRINT);
     printf("------------------------------------------------------------------------------------------------");
 }

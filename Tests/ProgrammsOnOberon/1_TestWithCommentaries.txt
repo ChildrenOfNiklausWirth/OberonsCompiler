@@ -1,0 +1,13 @@
+/*Commentaries*/
+/*Commentaries*/ MODULE TEST;                                     /*Commentaries*/
+/*                 Multiline comment
+                   Multiline comment                                                            */
+/*Commentaries*/    CONST IntConst = 16;                          /*Commentaries*/
+/*Commentaries*/    VAR sum: INTEGER;                             /*Commentaries*/
+/*Commentaries*/        BoolVar: BOOLEAN;                         /*Commentaries*/
+/*Commentaries*/    PROCEDURE AddIntegers(a: INTEGER; b: INTEGER);/*Commentaries*/
+/*Commentaries*/    BEGIN                                         /*Commentaries*/
+/*Commentaries*/        sum := a + b;                             /*Commentaries*/
+/*Commentaries*/    END AddIntegers;                              /*Commentaries*/
+END TEST;                                                         /*Commentaries*/
+/*Commentaries*/ /*Commentaries*/ /*Commentaries*/
