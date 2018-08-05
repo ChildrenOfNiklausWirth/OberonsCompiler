@@ -2,16 +2,25 @@
 #include "Modules/C_SyntaxAnalyzer.c"
 #include "Modules/G_CodeGenerator.h"
 
-char inputAddress[] = "../Tests/ProgrammsOnOberon/Trigonometry";
-char outputAddress[] = "../code.txt";
+char oberonCode[] = "../Tests/ProgrammsOnOberon/Trigonometry";
+char codeGeneratorResult[] = "../code.txt";
+char executeResult[] = "../execute.txt";
 
+int FLAG_EXECUTABLE = 1;
 
 int main() {
-    lexAnalysis(inputAddress);
+    lexAnalysis(oberonCode);
+
     module();
 
-    cg_initialize();
-    decode(outputAddress);
+    decode(codeGeneratorResult);
+
+    if (FLAG_EXECUTABLE) {
+        Load(executeResult);
+        Exec(executeResult);
+    }
+
+
     return 0;
 }
 

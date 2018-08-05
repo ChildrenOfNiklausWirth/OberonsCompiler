@@ -45,12 +45,8 @@
 #define RET 58
 
 
-long IR;
-bool N, Z;
-long R[16];
-long M[MemSize / 4];
-FILE W;
+void RiscExecute(long start, char *outputAddress);
 
-void Execute(long start, char inputAddres[], char outputAddress[]);
+void RiscLoad(const long code[], long len);
 
 #endif //OBERONSCOMPILER_C_R_RISC_H

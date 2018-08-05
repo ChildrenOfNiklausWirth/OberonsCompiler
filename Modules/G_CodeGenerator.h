@@ -7,6 +7,7 @@
 #include "SimpleFunctions/SimpleFunctions.h"
 #include "Structures/B_TerminalSymbols.h"
 #include "B_LexAnalyzer.h"
+#include "R_RISC.h"
 
 #define MAXCODE 10000
 #define NUMBER_OF_COMMANDS 16
@@ -73,7 +74,6 @@
 #define PC 15
 
 
-
 extern Type intType;
 extern Type boolType;
 int curlev;
@@ -134,5 +134,9 @@ void Open();
 void Close(long globals);
 
 void EnterCMD(char name[], int nameLength);
+
+void Load(char outputAddress[]);
+
+void Exec(char outputAddress[]);
 
 #endif //OBERONSCOMPILER_C_G_CODEGENERATOR_H

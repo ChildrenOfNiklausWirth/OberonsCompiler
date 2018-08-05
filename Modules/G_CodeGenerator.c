@@ -1,6 +1,6 @@
 #include "G_CodeGenerator.h"
 
-int MemSize = 1024;
+//int MemSize = 1024;
 Ident *comname[NUMBER_OF_COMMANDS];
 long comaddr[NUMBER_OF_COMMANDS];
 char *mnemo[64];
@@ -475,6 +475,9 @@ void EnterCMD(char name[], int nameLength) {
 }
 
 void decode(char address[]) {
+
+    cg_initialize();
+
     unsigned long w, op;
     long a;
     char str[150];
@@ -515,5 +518,22 @@ void decode(char address[]) {
     fclose(file);
 
 }
+
+
+//TODO Texts.Scanner in signature by Wirth
+void Load(char outputAddress[]) {
+    RiscLoad((const long *) code, pc);
+    RiscExecute(entry * 4, outputAddress);
+
+}
+
+//TODO Texts.Scanner in signature by Wirth
+void Exec(char outputAddress[]) {
+    for (int i = 0; i < cno; ++i)
+        RiscExecute(comaddr[i], outputAddress);
+}
+
+
+
 
 
