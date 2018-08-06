@@ -28,19 +28,6 @@ long toInt(char *val, int size) {
     return num;
 }
 
-int namesEquals(char *name1, int size1, char *name2, int size2) {
-    if (size1 == size2) {
-
-        for (int i = 0; i < size1; ++i)
-            if (name1[i] != name2[i])
-                return 0;
-
-        return 1;
-
-    } else
-        return 0;
-}
-
 //Добавление нового узла в objectStart
 Node *addNode(int class) {
 

@@ -393,7 +393,6 @@ void CJump(struct Item *x) {
     }
 }
 
-
 void BJump(long L) {
     PutBR(BR, L - pc);
 }
@@ -462,12 +461,15 @@ void Open() {
     regs = set_new();
 }
 
+
+//TODO почему то не используется
 void Close(long globals) {
     Put(POP, LNK, SP, 4);
     PutBR(RET, LNK);
 
 }
 
+//Собирает Item comname[ ] и long comaddr[ ]
 void EnterCMD(char name[], int nameLength) {
     comname[cno] = ident_new(name, nameLength);
     comaddr[cno] = pc * 4;
@@ -520,17 +522,22 @@ void decode(char address[]) {
 }
 
 
-//TODO Texts.Scanner in signature by Wirth
 void Load(char outputAddress[]) {
     RiscLoad((const long *) code, pc);
     RiscExecute(entry * 4, outputAddress);
 
 }
 
-//TODO Texts.Scanner in signature by Wirth
+
 void Exec(char outputAddress[]) {
-    for (int i = 0; i < cno; ++i)
+    char *s = calloc(20, sizeof(char));
+    scanf(s);
+    int i = 0;
+    while (i < cno && namesEquals(s, sizeof(s), comname[i]->name, comname[i]->nameLength))
+        i++;
+    if (i < cno)
         RiscExecute(comaddr[i], outputAddress);
+
 }
 
 
