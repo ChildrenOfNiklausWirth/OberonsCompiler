@@ -531,7 +531,7 @@ void Load(char outputAddress[]) {
 
 void Exec(char outputAddress[]) {
     char *s = calloc(20, sizeof(char));
-    scanf(s);
+    scanf("%s", s);
     int i = 0;
     while (i < cno && namesEquals(s, sizeof(s), comname[i]->name, comname[i]->nameLength))
         i++;
