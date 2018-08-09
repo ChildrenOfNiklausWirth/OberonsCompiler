@@ -7,6 +7,8 @@
 
 #define MemSize 4096
 #define ProgOrg 2048
+
+//F0
 #define MOV 0
 #define MVN 1
 #define ADD 2
@@ -15,6 +17,8 @@
 #define Div 5
 #define Mod 6
 #define CMP 7
+
+//F1
 #define MOVI 16
 #define MVNI 17
 #define ADDI 18
@@ -24,6 +28,8 @@
 #define MODI 22
 #define CMPI 23
 #define CHKI 24
+
+//F2
 #define LDW 32
 #define LDB 33
 #define POP 34
@@ -34,6 +40,8 @@
 #define WRD 41
 #define WRH 42
 #define WRL 43
+
+//F3
 #define BEQ 48
 #define BNE 49
 #define BLT 50
@@ -43,6 +51,10 @@
 #define BR 56
 #define BSR 57
 #define RET 58
+
+#define F1 MOVI
+#define F2 LDW
+#define F3 BEQ
 
 
 void RiscExecute(long start, char *outputAddress);

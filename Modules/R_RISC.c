@@ -1,7 +1,7 @@
 #include "R_RISC.h"
 
 
-long IR;
+long IR;//instruction register
 bool N, Z;//negative,zero
 long R[16];//регистры
 long M[MemSize / 4];//€чейки пам€ти
@@ -10,9 +10,9 @@ long M[MemSize / 4];//€чейки пам€ти
 void RiscExecute(long start, char *outputAddress) {
     FILE *outputFile = fopen(outputAddress, "w+");
 
-    long opc;//ќпераци€
+    int opc;//ќпераци€
     long nxt;//”казатель
-    long a, b, c;//ѕараметры
+    long a = 0, b = 0, c = 0;//ѕараметры
 
     R[14] = 0;
     R[15] = start + ProgOrg;
@@ -20,72 +20,81 @@ void RiscExecute(long start, char *outputAddress) {
     while (loop) {
         nxt = R[15] + 4;
         IR = M[R[15] / 4];
-        opc = IR / int_hexToDecimal(4000000) % int_hexToDecimal(40);
-        a = IR / int_hexToDecimal(400000) % int_hexToDecimal(10);
-        b = IR / int_hexToDecimal(40000) % int_hexToDecimal(10);
-        c = IR % int_hexToDecimal(40000);
-        if (opc < MOVI)
-            c = R[IR % int_hexToDecimal(10)];
-        else if (opc < BEQ) {
-            c = IR % int_hexToDecimal(40000);
-            if (c >= int_hexToDecimal(20000))
-                c -= int_hexToDecimal(40000);
-        } else {
-            c = IR % int_hexToDecimal(4000000);
-            if (c >= int_hexToDecimal(2000000))
-                c -= int_hexToDecimal(4000000);
 
+        opc = (IR >> 26) & 63;
+
+        if (opc < F1) {//F0
+            a = (IR >> 22) & 15;
+            b = (IR >> 18) & 15;
+            c = IR & 15;
+        } else if (opc < F2) {//F1
+            a = (IR >> 22) & 15;
+            b = (IR >> 18) & 15;
+            c = IR & 262143;
+        } else if (opc < F3) {//F2
+            a = (IR >> 22) & 15;
+            b = (IR >> 18) & 15;
+            c = IR & 262143;
+        } else {//F3
+            c = IR & 67108863;
         }
+
+
         switch (opc) {
+//F0----------------------------------------------------------------------
             case MOV:
-                R[a] = ASH((unsigned long) c, b);
-                break;
-            case MOVI:
-                R[a] = ASH((unsigned long) c, b);
+                R[a] = c << b;
                 break;
             case MVN:
-                R[a] = -ASH((unsigned long) c, b);
+                R[a] = -(c << b);
                 break;
-            case MVNI:
-                R[a] = -ASH((unsigned long) c, b);
             case ADD:
-                R[a] = R[b] + c;
-                break;
-            case ADDI:
                 R[a] = R[b] + c;
                 break;
             case SUB:
                 R[a] = R[b] - c;
                 break;
-            case SUBI:
-                R[a] = R[b] - c;
-                break;
             case MUL:
-                R[a] = R[b] * c;
-                break;
-            case MULI:
                 R[a] = R[b] * c;
                 break;
             case Div:
                 R[a] = R[b] / c;
                 break;
-            case DIVI:
-                R[a] = R[b] / c;
-                break;
             case Mod:
-                R[a] = R[b] % c;
-                break;
-            case MODI:
                 R[a] = R[b] % c;
                 break;
             case CMP:
                 Z = (R[b] == c);
                 N = R[b] < c;
                 break;
+
+//F1----------------------------------------------------------------------
+            case MOVI:
+                R[a] = c << b;
+                break;
+            case MVNI:
+                R[a] = -(c << b);
+            case ADDI:
+                R[a] = R[b] + c;
+                break;
+            case SUBI:
+                R[a] = R[b] - c;
+                break;
+            case MULI:
+                R[a] = R[b] * c;
+                break;
+            case DIVI:
+                R[a] = R[b] / c;
+                break;
+            case MODI:
+                R[a] = R[b] % c;
+                break;
             case CMPI:
                 Z = (R[b] == c);
                 N = R[b] < c;
                 break;
+
+//F2----------------------------------------------------------------------
             case CHKI:
                 if (R[a] < 0 || R[a] >= c)
                     R[a] = 0;
@@ -125,6 +134,8 @@ void RiscExecute(long start, char *outputAddress) {
                 //TODO check
                 fprintf(outputFile, "\n");
                 break;
+
+//F3----------------------------------------------------------------------
             case BEQ:
                 if (Z)
                     nxt = R[15] + c * 4;
@@ -161,7 +172,7 @@ void RiscExecute(long start, char *outputAddress) {
                 if (nxt == 0)
                     loop = false;
             default:
-                printf("Case underfined");
+                printf("Problems with RISC Interpreter");
                 break;
         }
         R[15] = nxt;
