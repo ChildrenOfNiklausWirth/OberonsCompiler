@@ -1,0 +1,13 @@
+MODULE Simple;
+    VAR x, y, z : INTEGER;
+
+    BEGIN
+
+    x := 6 ;
+    y := 0 ;
+    z := ( x - y ) * ( x + y ) ;
+    y := x ;
+
+
+
+END Simple.

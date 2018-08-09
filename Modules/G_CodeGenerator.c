@@ -491,7 +491,7 @@ void decode(char address[]) {
     for (unsigned long j = 0; j < pc; ++j) {
         w = code[j];
         op = (w >> 26) & 0x3F;
-        fprintf(file, "%#.8x %#.8x %-4s", (unsigned int) j * 4, (unsigned int) w, mnemo[op]);
+        fprintf(file, "%#.8x %#.8x %-4s ", (unsigned int) j * 4, (unsigned int) w, mnemo[op]);
 
         if (op < MOVI) {
             fprintf(file, "R%.2lu, R%.2lu, R%.2lu\n", ((w >> 22) & 0x0F), ((w >> 18) & 0x0F), w & 0x0F);
