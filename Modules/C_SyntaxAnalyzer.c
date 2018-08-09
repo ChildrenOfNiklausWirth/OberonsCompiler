@@ -54,6 +54,7 @@ Node *addNode(int class) {
     }
 
 };
+
 //Поиск объекта в objectStart
 Node *find() {
 
@@ -134,7 +135,7 @@ void scope_initialise() {
     universe = objectsStart;
 }
 
-
+//expression = SimpleExpresion [("=" | "#" | "<" "<=" |">" |">=") SimpleExpression]
 void expression(struct Item *item1);
 
 struct Item selector(struct Item *item) {
@@ -176,7 +177,6 @@ struct Item selector(struct Item *item) {
 }
 
 // factor = ident selector | integer | ( expression ) | ~ factor
-
 factor(struct Item *_factor) {
 
     Node *node;
@@ -235,6 +235,7 @@ void term(struct Item *item) {
     }
 }
 
+//simpleExpression=["+"|"-"]term{("+"|"-"|"OR")term}
 void simpleExpression(struct Item *item1) {
 
     struct Item item2;
@@ -266,7 +267,6 @@ void simpleExpression(struct Item *item1) {
 }
 
 //expression = SimpleExpression [relation SimpleExpression]
-
 void expression(struct Item *item1) {
 
     struct Item item2;
@@ -306,6 +306,7 @@ struct Item param(struct Item item) {
     return item;
 }
 
+//StatSequence=statement{";"statement}
 void StatSequence() {
     Node *par;
     Node *node;
@@ -466,7 +467,9 @@ Node *identList(int class) {
         return firstAdded;
     }
 }
+
 //Определение типа объекта
+//type=ident|ArrauType|RecordType
 Type *type() {
 
     Node *obj;
@@ -559,8 +562,8 @@ Type *type() {
     return typ;
 }
 
-// declarations = ["CONST" {ident = expression ;}] [TYPE {ident = type;}] [VAR = {IdentList : type ;}] {ProcedureDeclarations;}
 // ORDER SENSITIVE
+// declarations = ["CONST" {ident = expression ;}] [TYPE {ident = type;}] [VAR = {IdentList : type ;}] {ProcedureDeclarations;}
 long declarations(long *varsize) {
 
     Node *firstAdded;
@@ -668,7 +671,7 @@ long declarations(long *varsize) {
     }
 };
 
-//
+//FPSection=["VAR"]IdentList ":" type
 void FPSection(long *parblksize) {
     Node *obj, *firstAdded;
     Type *tp;

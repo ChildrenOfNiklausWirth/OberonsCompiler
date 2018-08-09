@@ -1,5 +1,6 @@
 #include "SimpleFunctions.h"
 #include <math.h>
+#include <stdio.h>
 
 int int_contains(int digit, const int mass[], int massSize) {
     for (int i = 0; i < massSize; ++i)
@@ -40,4 +41,15 @@ int namesEquals(char *name1, int size1, char *name2, int size2) {
 
     } else
         return 0;
+}
+
+void binaryPrint(int n) {
+    while (n) {
+        if (n & 1)
+            printf("1");
+        else
+            printf("0");
+
+        n >>= 1;
+    }
 }
