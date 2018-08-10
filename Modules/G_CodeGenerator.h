@@ -13,7 +13,7 @@
 #define NUMBER_OF_COMMANDS 16
 #define MAXREL 200
 
-////Constants for Node.class
+////Constants for Node.class and Item.mode
 #define HEAD 0
 #define VARIABLE 1
 #define PAR 2

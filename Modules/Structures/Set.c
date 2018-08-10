@@ -20,7 +20,7 @@ void set_initialize(struct Set *set) {
 }
 
 void set_allocatedMemory(struct Set *set) {
-    set->maxSize = set->maxSize * 2;
+    set->maxSize = set->maxSize + 5;
     set->digit = realloc(set->digit, sizeof(int) * set->maxSize);
 }
 

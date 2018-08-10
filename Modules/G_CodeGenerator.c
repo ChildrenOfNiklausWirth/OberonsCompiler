@@ -54,6 +54,7 @@ void cg_initialize() {
     mnemo[WRL] = "WRL";
 }
 
+//Возвращает свободный регистр
 long GetReg() {
     int i = 0;
     while ((i < FP) && (set_contains(*regs, i)))
@@ -62,6 +63,7 @@ long GetReg() {
     return i;
 }
 
+//Генерирует команды форматов F0,F1,F2
 void Put(long op, long a, long b, long c) {
     if (op >= 32)
         op -= 64;
@@ -69,6 +71,7 @@ void Put(long op, long a, long b, long c) {
     pc++;
 }
 
+//Генерирует команды формата F3
 void PutBR(long op, long disp) {
     code[pc] = (op - 0x40) << 26 | (disp & 0x3FFFFFF);
     pc++;
@@ -80,6 +83,7 @@ void TestRange(long x) {
 
 }
 
+//Загружает переменную или константу в code[ ]
 struct Item load(struct Item *x) {
     long r;
     if (x->mode == VARIABLE) {
@@ -107,16 +111,17 @@ struct Item loadBool(struct Item *x) {
     x->c = 1;
 }
 
-void PutOp(long cd, struct Item *x, struct Item *y) {
+//Генерирует операцию с двумя операндами
+void PutOp(long operation, struct Item *x, struct Item *y) {
     if (x->mode != REG)
         load(x);
     if (y->mode == CONST) {
         TestRange(y->a);
-        Put(cd + 16, x->r, x->r, y->a);
+        Put(operation + 16, x->r, x->r, y->a);
     } else {
         if (y->mode != REG)
             load(y);
-        Put(cd, x->r, x->r, y->r);
+        Put(operation, x->r, x->r, y->r);
         set_EXCL(regs, y->r);
     }
 }
@@ -178,6 +183,7 @@ void MakeConstltem(struct Item *x, Type *typ, long val) {
     x->a = val;
 }
 
+//Создает Item на основе Node
 void MakeItem(struct Item *x, Node *y) {
     long r;
 
