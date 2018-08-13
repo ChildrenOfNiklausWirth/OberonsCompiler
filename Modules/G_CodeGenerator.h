@@ -95,33 +95,33 @@ long FixLink(long L);
 
 void IncLevel(int n);
 
-void MakeConstltem(struct Item *x, Type *typ, long val);
+void MakeConstltem(struct Item *item, Type *typ, long val);
 
-void MakeItem(struct Item *x, Node *y);
+void MakeItem(struct Item *item, Node *node);
 
-void Field(struct Item *x, Node *y);
+void Field(struct Item *item, Node *node);
 
-void Index(struct Item *x, struct Item *y);
+void Index(struct Item *item1, struct Item *item2);
 
-void Op1(int op, struct Item *x);
+void Op1(int op, struct Item *item);
 
-void Op2(int op, struct Item *x, struct Item *y);
+void Op2(int op, struct Item *item1, struct Item *item2);
 
-void Relation(int op, struct Item *x, struct Item *y);
+void Relation(int op, struct Item *item1, struct Item *item2);
 
-void Store(struct Item *x, struct Item *y);
+void Store(struct Item *item1, struct Item *item2);
 
-void Parameter(struct Item *x, Type *ftyp, int class);
+void Parameter(struct Item *item, Type *ftyp, int class);
 
-void CJump(struct Item *x);
+void CJump(struct Item *item);
 
 void BJump(long L);
 
 void FJump(long *L);
 
-void Call(struct Item *x);
+void Call(struct Item *item);
 
-void IOCall(struct Item *x, struct Item *y);
+void IOCall(struct Item *item1, struct Item *item2);
 
 void Header(long size);
 

@@ -84,45 +84,45 @@ void TestRange(long x) {
 }
 
 //Загружает переменную или константу в code[ ]
-struct Item load(struct Item *x) {
+struct Item load(struct Item *item) {
     long r;
-    if (x->mode == VARIABLE) {
-        if (x->level == 0)
-            x->a = x->a - pc * 4;
+    if (item->mode == VARIABLE) {
+        if (item->level == 0)
+            item->a = item->a - pc * 4;
         r = GetReg();
-        Put(LDW, r, x->r, x->a);
-        set_EXCL(regs, x->r);
-        x->r = r;
-    } else if (x->mode == CONST) {
-        TestRange(x->a);
-        x->r = GetReg();
-        Put(MOVI, x->r, 0, x->a);
+        Put(LDW, r, item->r, item->a);
+        set_EXCL(regs, item->r);
+        item->r = r;
+    } else if (item->mode == CONST) {
+        TestRange(item->a);
+        item->r = GetReg();
+        Put(MOVI, item->r, 0, item->a);
     }
-    x->mode = REG;
+    item->mode = REG;
 }
 
-struct Item loadBool(struct Item *x) {
-    if (x->type->form != BOOLEAN)
+struct Item loadBool(struct Item *item) {
+    if (item->type->form != BOOLEAN)
         Mark("Boolean?");
-    load(x);
-    x->mode = COND;
-    x->a = 0;
-    x->b = 0;
-    x->c = 1;
+    load(item);
+    item->mode = COND;
+    item->a = 0;
+    item->b = 0;
+    item->c = 1;
 }
 
 //Генерирует операцию с двумя операндами
-void PutOp(long operation, struct Item *x, struct Item *y) {
-    if (x->mode != REG)
-        load(x);
-    if (y->mode == CONST) {
-        TestRange(y->a);
-        Put(operation + 16, x->r, x->r, y->a);
+void PutOp(long operation, struct Item *item1, struct Item *item2) {
+    if (item1->mode != REG)
+        load(item1);
+    if (item2->mode == CONST) {
+        TestRange(item2->a);
+        Put(operation + 16, item1->r, item1->r, item2->a);
     } else {
-        if (y->mode != REG)
-            load(y);
-        Put(operation, x->r, x->r, y->r);
-        set_EXCL(regs, y->r);
+        if (item2->mode != REG)
+            load(item2);
+        Put(operation, item1->r, item1->r, item2->r);
+        set_EXCL(regs, item2->r);
     }
 }
 
@@ -177,225 +177,225 @@ void IncLevel(int n) {
     curlev += n;
 }
 
-void MakeConstltem(struct Item *x, Type *typ, long val) {
-    x->mode = CONST;
-    x->type = typ;
-    x->a = val;
+void MakeConstltem(struct Item *item, Type *typ, long val) {
+    item->mode = CONST;
+    item->type = typ;
+    item->a = val;
 }
 
 //Создает Item на основе Node
-void MakeItem(struct Item *x, Node *y) {
+void MakeItem(struct Item *item, Node *node) {
     long r;
 
-    x->mode = y->class;
-    x->type = y->type;
-    x->level = y->level;
-    x->a = y->val;
-    x->b = 0;
+    item->mode = node->class;
+    item->type = node->type;
+    item->level = node->level;
+    item->a = node->val;
+    item->b = 0;
 
-    if (y->level == 0) {
-        x->r = PC;
-    } else if (y->level == curlev)
-        x->r = FP;
+    if (node->level == 0) {
+        item->r = PC;
+    } else if (node->level == curlev)
+        item->r = FP;
     else {
         Mark("Level mismatch!");
-        x->r = 0;
+        item->r = 0;
     }
-    if (y->class == PAR) {
+    if (node->class == PAR) {
         r = GetReg();
-        Put(LDW, r, x->r, x->a);
-        x->mode = VARIABLE;
-        x->r = r;
-        x->a = 0;
+        Put(LDW, r, item->r, item->a);
+        item->mode = VARIABLE;
+        item->r = r;
+        item->a = 0;
     }
 }
 
-void Field(struct Item *x, Node *y) {
-    x->a += y->val;
-    x->type = y->type;
+void Field(struct Item *item, Node *node) {
+    item->a += node->val;
+    item->type = node->type;
 }
 
-void Index(struct Item *x, struct Item *y) {
-    if (y->type != &intType)
+void Index(struct Item *item1, struct Item *item2) {
+    if (item2->type != &intType)
         Mark("Index isn't integer");
-    if (y->mode == CONST) {
-        if ((y->a < 0) || (y->a >= x->type->len))
+    if (item2->mode == CONST) {
+        if ((item2->a < 0) || (item2->a >= item1->type->len))
             Mark("Wrong index");
     } else {
-        if (y->mode != REG)
-            load(y);
-        Put(CHKI, y->r, 0, x->type->len);
-        Put(MULI, y->r, y->r, x->type->base->size);
-        Put(ADD, y->r, x->r, y->r);
-        set_EXCL(regs, x->r);
-        x->r = y->r;
+        if (item2->mode != REG)
+            load(item2);
+        Put(CHKI, item2->r, 0, item1->type->len);
+        Put(MULI, item2->r, item2->r, item1->type->base->size);
+        Put(ADD, item2->r, item1->r, item2->r);
+        set_EXCL(regs, item1->r);
+        item1->r = item2->r;
     }
-    x->type = x->type->base;
+    item1->type = item1->type->base;
 }
 
-void Op1(int op, struct Item *x) {
+void Op1(int op, struct Item *item) {
     long t;
     if (op == terminalSymbols.MINUS.type)
-        if (x->type->form != INTEGER) {
+        if (item->type->form != INTEGER) {
             Mark("Type mismatch");
-        } else if (x->mode == CONST) {
-            x->a = -x->a;
+        } else if (item->mode == CONST) {
+            item->a = -item->a;
         } else {
-            if (x->mode == VARIABLE)
-                load(x);
-            Put(MVN, x->r, 0, x->r);
+            if (item->mode == VARIABLE)
+                load(item);
+            Put(MVN, item->r, 0, item->r);
         }
     else if (op == terminalSymbols.NOT.type) {
-        if (x->mode != COND) {
-            loadBool(x);
+        if (item->mode != COND) {
+            loadBool(item);
         }
-        x->c = negated(x->c);
-        t = x->a;
-        x->a = x->b;
-        x->b = t;
+        item->c = negated(item->c);
+        t = item->a;
+        item->a = item->b;
+        item->b = t;
     } else if (op == terminalSymbols.AND.type) {
-        if (x->mode != COND)
-            loadBool(x);
-        PutBR(BEQ + negated(x->c), x->a);
-        set_EXCL(regs, x->r);
-        x->a = pc - 1;
-        FixLink(x->b);
-        x->b = 0;
+        if (item->mode != COND)
+            loadBool(item);
+        PutBR(BEQ + negated(item->c), item->a);
+        set_EXCL(regs, item->r);
+        item->a = pc - 1;
+        FixLink(item->b);
+        item->b = 0;
     } else if (op == terminalSymbols.OR.type) {
-        if (x->mode != COND)
-            loadBool(x);
-        PutBR(BEQ + x->c, x->b);
-        set_EXCL(regs, x->r);
-        x->b = pc - 1;
-        FixLink(x->a);
-        x->a = 0;
+        if (item->mode != COND)
+            loadBool(item);
+        PutBR(BEQ + item->c, item->b);
+        set_EXCL(regs, item->r);
+        item->b = pc - 1;
+        FixLink(item->a);
+        item->a = 0;
     }
 
 }
 
-void Op2(int op, struct Item *x, struct Item *y) {
-    if ((x->type->form == INTEGER) && (y->type->form == INTEGER)) {
-        if ((x->mode == CONST) && (y->mode == CONST)) {
+void Op2(int op, struct Item *item1, struct Item *item2) {
+    if ((item1->type->form == INTEGER) && (item2->type->form == INTEGER)) {
+        if ((item1->mode == CONST) && (item2->mode == CONST)) {
             if (op == terminalSymbols.PLUS.type) {
-                x->a += y->a;
+                item1->a += item2->a;
             } else if (op == terminalSymbols.MINUS.type) {
-                x->a -= y->a;
+                item1->a -= item2->a;
             } else if (op == terminalSymbols.TIMES.type) {
-                x->a *= y->a;
+                item1->a *= item2->a;
             } else if (op == terminalSymbols.DIV.type) {
-                x->a /= y->a;
+                item1->a /= item2->a;
             } else if (op == terminalSymbols.MOD.type) {
-                x->a %= y->a;
+                item1->a %= item2->a;
             }
         } else {
             if (op == terminalSymbols.PLUS.type) {
-                PutOp(ADD, x, y);
+                PutOp(ADD, item1, item2);
             } else if (op == terminalSymbols.MINUS.type) {
-                PutOp(SUB, x, y);
+                PutOp(SUB, item1, item2);
             } else if (op == terminalSymbols.TIMES.type) {
-                PutOp(MUL, x, y);
+                PutOp(MUL, item1, item2);
             } else if (op == terminalSymbols.DIV.type) {
-                PutOp(DIVIDE, x, y);
+                PutOp(DIVIDE, item1, item2);
             } else if (op == terminalSymbols.MOD.type) {
-                PutOp(MODULUS, x, y);
+                PutOp(MODULUS, item1, item2);
             } else
                 Mark("�������� ���");
         }
-    } else if (x->type->form == BOOLEAN && y->type->form == BOOLEAN) {
-        if (y->mode != COND)
-            loadBool(y);
+    } else if (item1->type->form == BOOLEAN && item2->type->form == BOOLEAN) {
+        if (item2->mode != COND)
+            loadBool(item2);
         if (op == terminalSymbols.OR.type) {
-            x->a = y->a;
-            x->b = merged(y->b, x->b);
-            x->c = y->c;
+            item1->a = item2->a;
+            item1->b = merged(item2->b, item1->b);
+            item1->c = item2->c;
         }
     } else Mark("Type mismatch");
 
 }
 
-void Relation(int op, struct Item *x, struct Item *y) {
-    if (x->type->form != INTEGER || y->type->form != INTEGER) {
+void Relation(int op, struct Item *item1, struct Item *item2) {
+    if (item1->type->form != INTEGER || item2->type->form != INTEGER) {
         Mark("Wrong type");
 
     } else {
-        PutOp(CMP, x, y);
-        x->c = op - terminalSymbols.EQL.type;
-        set_EXCL(regs, y->r);
+        PutOp(CMP, item1, item2);
+        item1->c = op - terminalSymbols.EQL.type;
+        set_EXCL(regs, item2->r);
     }
-    x->mode = COND;
-    x->type = &boolType;
-    x->a = 0;
-    x->b = 0;
+    item1->mode = COND;
+    item1->type = &boolType;
+    item1->a = 0;
+    item1->b = 0;
 
 }
 
-void Store(struct Item *x, struct Item *y) {
+void Store(struct Item *item1, struct Item *item2) {
     long r;
-    if (((x->type->form == BOOLEAN) || (x->type->form == INTEGER)) && (x->type->form == y->type->form)) {
-        if (y->mode == COND) {
-            Put(BEQ + negated(y->c), y->r, 0, y->a);
-            set_EXCL(regs, y->r);
-            y->a = pc - 1;
-            FixLink(y->b);
-            y->r = GetReg();
-            Put(MOVI, y->r, 0, 1);
+    if (((item1->type->form == BOOLEAN) || (item1->type->form == INTEGER)) && (item1->type->form == item2->type->form)) {
+        if (item2->mode == COND) {
+            Put(BEQ + negated(item2->c), item2->r, 0, item2->a);
+            set_EXCL(regs, item2->r);
+            item2->a = pc - 1;
+            FixLink(item2->b);
+            item2->r = GetReg();
+            Put(MOVI, item2->r, 0, 1);
             PutBR(BR, 2);
-            FixLink(y->a);
-            Put(MOVI, y->r, 0, 0);
-        } else if (y->mode != REG)
-            load(y);
-        if (x->mode == VARIABLE) {
-            if (x->level == 0)
-                x->a = x->a - pc * 4;
-            Put(STW, y->r, x->r, x->a);
+            FixLink(item2->a);
+            Put(MOVI, item2->r, 0, 0);
+        } else if (item2->mode != REG)
+            load(item2);
+        if (item1->mode == VARIABLE) {
+            if (item1->level == 0)
+                item1->a = item1->a - pc * 4;
+            Put(STW, item2->r, item1->r, item1->a);
 
         } else
             Mark("Wrong assertion");
-        set_EXCL(regs, x->r);
-        set_EXCL(regs, y->r);
+        set_EXCL(regs, item1->r);
+        set_EXCL(regs, item2->r);
     } else
         Mark("Type mismatch");
 }
 
-void Parameter(struct Item *x, Type *ftyp, int class) {
+void Parameter(struct Item *item, Type *ftyp, int class) {
     long r;
-    if (x->type == ftyp) {
+    if (item->type == ftyp) {
         if (class == PAR) {
-            if (x->mode == VARIABLE)
-                if (x->a != 0) {
+            if (item->mode == VARIABLE)
+                if (item->a != 0) {
                     r = GetReg();
-                    if (x->level == 0) {
-                        (x->a -= pc * 4);
+                    if (item->level == 0) {
+                        (item->a -= pc * 4);
                     }
-                    Put(ADDI, r, x->r, x->a);
+                    Put(ADDI, r, item->r, item->a);
                 } else
-                    r = x->r;
+                    r = item->r;
             else
                 Mark("Parameter type mismatch");
             Put(PSH, r, SP, 4);
             set_EXCL(regs, r);
 
         } else {
-            if (x->mode != REG)
-                load(x);
-            Put(PSH, x->r, SP, 4);
-            set_EXCL(regs, x->r);
+            if (item->mode != REG)
+                load(item);
+            Put(PSH, item->r, SP, 4);
+            set_EXCL(regs, item->r);
         }
     } else Mark("Parameter type mismatch");
 
 }
 
-void CJump(struct Item *x) {
-    if (x->type->form == BOOLEAN) {
-        if (x->mode != COND)
-            loadBool(x);
-        PutBR(BEQ + negated(x->c), x->a);
-        set_EXCL(regs, x->r);
-        FixLink(x->b);
-        x->a = pc - 1;
+void CJump(struct Item *item) {
+    if (item->type->form == BOOLEAN) {
+        if (item->mode != COND)
+            loadBool(item);
+        PutBR(BEQ + negated(item->c), item->a);
+        set_EXCL(regs, item->r);
+        FixLink(item->b);
+        item->a = pc - 1;
     } else {
         printf("Boolean?");
-        x->a = pc;
+        item->a = pc;
     }
 }
 
@@ -408,31 +408,31 @@ void FJump(long *L) {
     *L = pc - 1;
 }
 
-void Call(struct Item *x) {
-    PutBR(BSR, x->a - pc);
+void Call(struct Item *item) {
+    PutBR(BSR, item->a - pc);
 }
 
-void IOCall(struct Item *x, struct Item *y) {
+void IOCall(struct Item *item1, struct Item *item2) {
     struct Item z;
-    if (x->a < 4) {
-        if (y->type->form != INTEGER)
+    if (item1->a < 4) {
+        if (item2->type->form != INTEGER)
             printf("Intege?");
 
     }
-    if (x->a == 1) {
+    if (item1->a == 1) {
         z.r = GetReg();
         z.mode = REG;
         z.type = &intType;
         Put(RD, z.r, 0, 0);
-        Store(y, &z);
-    } else if (x->a == 2) {
-        load(y);
-        Put(WRD, 0, 0, y->r);
-        set_EXCL(regs, y->r);
-    } else if (x->a == 3) {
-        load(y);
-        Put(WRH, 0, 0, y->r);
-        set_EXCL(regs, y->r);
+        Store(item2, &z);
+    } else if (item1->a == 2) {
+        load(item2);
+        Put(WRD, 0, 0, item2->r);
+        set_EXCL(regs, item2->r);
+    } else if (item1->a == 3) {
+        load(item2);
+        Put(WRH, 0, 0, item2->r);
+        set_EXCL(regs, item2->r);
     } else {
         Put(WRL, 0, 0, 0);
     }
