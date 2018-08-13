@@ -111,4 +111,5 @@ void lexAnalysis(char *fileName) {
 void Mark(char msg[]) {
     printf("Error in line number%d\n", lexTokensFlow.current->line);
     printf("%s\n\n", msg);
+    exit(1);
 }
