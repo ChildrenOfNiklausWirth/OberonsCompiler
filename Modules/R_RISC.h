@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include "SimpleFunctions/SimpleFunctions.h"
 
-#define MemSize 4096
-#define ProgOrg 2048
+#define RMemSize 4096
+#define ProgOrg (RMemSize/2)
 
 //F0
 #define MOV 0

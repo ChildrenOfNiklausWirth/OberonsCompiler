@@ -2,7 +2,6 @@
 #define OBERONSCOMPILER_B_LEKSANALYZER_H
 
 #include <stdio.h>
-#include <stdlib.h>
 #include "Structures/A_Tokens.h"
 #include "Structures/B_TerminalSymbols.h"
 

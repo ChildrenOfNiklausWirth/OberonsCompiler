@@ -1,6 +1,6 @@
 #include "G_CodeGenerator.h"
 
-//int MemSize = 1024;
+int MemSize = 1024;
 Ident *comname[NUMBER_OF_COMMANDS];
 long comaddr[NUMBER_OF_COMMANDS];
 char *mnemo[64];
@@ -67,13 +67,13 @@ long GetReg() {
 void Put(long op, long a, long b, long c) {
     if (op >= 32)
         op -= 64;
-    code[pc] = (((((op << 4) | a) << 4) | b) << 18) | (c & 0x3FFFF);
+    code[pc] = (((((op << 4) | a) << 4) | b) << 18) | (unsigned long) (c % int_hexToDecimal(40000));
     pc++;
 }
 
 //Генерирует команды формата F3
 void PutBR(long op, long disp) {
-    code[pc] = (op - 0x40) << 26 | (disp & 0x3FFFFFF);
+    code[pc] = (op - 0x40) << 26 | (unsigned long) (disp & 0x3FFFFFF);
     pc++;
 }
 

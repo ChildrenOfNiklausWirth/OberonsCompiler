@@ -4,7 +4,7 @@
 long IR;//instruction register
 bool N, Z;//negative,zero
 long R[16];//регистры
-long M[MemSize / 4];//€чейки пам€ти
+long M[RMemSize / 4];//€чейки пам€ти
 //FILE W;
 
 void RiscExecute(long start, char *outputAddress) {
