@@ -89,6 +89,10 @@ struct Set *regs;
 
 void cg_initialize();
 
+unsigned long encode(long op, long a, long b, long c);
+
+unsigned long encodeF3(long op, long disp);
+
 void decode(char address[]);
 
 long FixLink(long L);

@@ -63,19 +63,29 @@ long GetReg() {
     return i;
 }
 
+
 //Генерирует команды форматов F0,F1,F2
-void Put(long op, long a, long b, long c) {
+unsigned long encode(long op, long a, long b, long c) {
     if (op >= 32)
         op -= 64;
-    code[pc] = (((((op << 4) | a) << 4) | b) << 18) | (unsigned long) (c % int_hexToDecimal(40000));
+    return (unsigned long) ((((((op << 4) | a) << 4) | b) << 18) | (c%int_hexToDecimal(40000)));
+}
+
+void Put(long op, long a, long b, long c) {
+    code[pc] = encode(op, a, b, c);
     pc++;
 }
 
 //Генерирует команды формата F3
+unsigned long encodeF3(long op, long disp) {
+    return (unsigned long) (op - 0x40) << 26 | (disp & 0x3FFFFFF);
+}
+
 void PutBR(long op, long disp) {
-    code[pc] = (op - 0x40) << 26 | (unsigned long) (disp & 0x3FFFFFF);
+    code[pc] = encodeF3(op, disp);
     pc++;
 }
+
 
 void TestRange(long x) {
     if ((x >= int_hexToDecimal(20000)) || (x < int_hexToDecimal(-20000)))
@@ -331,7 +341,8 @@ void Relation(int op, struct Item *item1, struct Item *item2) {
 
 void Store(struct Item *item1, struct Item *item2) {
     long r;
-    if (((item1->type->form == BOOLEAN) || (item1->type->form == INTEGER)) && (item1->type->form == item2->type->form)) {
+    if (((item1->type->form == BOOLEAN) || (item1->type->form == INTEGER)) &&
+        (item1->type->form == item2->type->form)) {
         if (item2->mode == COND) {
             Put(BEQ + negated(item2->c), item2->r, 0, item2->a);
             set_EXCL(regs, item2->r);

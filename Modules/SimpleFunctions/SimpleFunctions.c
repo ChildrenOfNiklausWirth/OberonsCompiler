@@ -43,13 +43,10 @@ int namesEquals(char *name1, int size1, char *name2, int size2) {
         return 0;
 }
 
-void binaryPrint(int n) {
-    while (n) {
-        if (n & 1)
-            printf("1");
-        else
-            printf("0");
+void binaryPrint(long n) {
+    int length = 32;
+    for (int i = 0; i < length; ++i)
+        printf("%d", (int) ((n >> length - i - 1) & 1));
+    printf("\n");
 
-        n >>= 1;
-    }
 }

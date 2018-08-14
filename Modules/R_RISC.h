@@ -57,8 +57,13 @@
 #define F3 BEQ
 
 
+void myDecode(long IR, long *opc, long *a, long *b, long *c);
+
+void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c);
+
 void RiscExecute(long start, char *outputAddress);
 
 void RiscLoad(const long code[], long len);
+
 
 #endif //OBERONSCOMPILER_C_R_RISC_H

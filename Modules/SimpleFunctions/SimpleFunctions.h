@@ -9,5 +9,5 @@ int int_hexToDecimal(int digit);
 
 int namesEquals(char *name1, int size1, char *name2, int size2);
 
-void binaryPrint(int n);
+void binaryPrint(long n);
 #endif //OBERONSCOMPILER_C_Z_SIMPLEFUNCTIONS_H

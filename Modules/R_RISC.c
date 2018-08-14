@@ -1,16 +1,56 @@
 #include "R_RISC.h"
 
 
-long IR;//instruction register
 bool N, Z;//negative,zero
 long R[16];//регистры
 long M[RMemSize / 4];//€чейки пам€ти
 //FILE W;
 
+void myDecode(long IR, long *opc, long *a, long *b, long *c) {
+
+    *opc = ((IR >> 26) & 63);
+
+    if (*opc < F1) {//F0
+        *a = ((IR >> 22) & 15);
+        *b = ((IR >> 18) & 15);
+        *c = (IR & 15);
+    } else if (*opc < F2) {//F1
+        *a = ((IR >> 22) & 15);
+        *b = ((IR >> 18) & 15);
+        *c = (IR & 262143);
+    } else if (*opc < F3) {//F2
+        *a = ((IR >> 22) & 15);
+        *b = ((IR >> 18) & 15);
+        *c = (IR & 262143);
+    } else {//F3
+        *c = (IR & 67108863);
+    }
+
+
+}
+
+void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
+    *opc = IR / int_hexToDecimal(4000000) % int_hexToDecimal(40);
+    *a = IR / int_hexToDecimal(400000) % int_hexToDecimal(10);
+    *b = IR / int_hexToDecimal(40000) % int_hexToDecimal(10);
+    *c = IR % int_hexToDecimal(40000);
+    if (*opc < BEQ) {
+        *c = IR % int_hexToDecimal(40000);
+        if (*c >= int_hexToDecimal(20000))
+            *c -= int_hexToDecimal(40000);
+    } else {
+        *c = IR % int_hexToDecimal(4000000);
+        if (*c >= int_hexToDecimal(2000000))
+            *c -= int_hexToDecimal(4000000);
+    }
+
+}
+
 void RiscExecute(long start, char *outputAddress) {
     FILE *outputFile = fopen(outputAddress, "w+");
 
-    int opc;//ќпераци€
+    long IR;//instruction register
+    long opc;//ќпераци€
     long nxt;//”казатель
     long a = 0, b = 0, c = 0;//ѕараметры
 
@@ -21,25 +61,7 @@ void RiscExecute(long start, char *outputAddress) {
         nxt = R[15] + 4;
         IR = M[R[15] / 4];
 
-        opc = (IR >> 26) & 63;
-
-        if (opc < F1) {//F0
-            a = (IR >> 22) & 15;
-            b = (IR >> 18) & 15;
-            c = IR & 15;
-        } else if (opc < F2) {//F1
-            a = (IR >> 22) & 15;
-            b = (IR >> 18) & 15;
-            c = IR & 262143;
-        } else if (opc < F3) {//F2
-            a = (IR >> 22) & 15;
-            b = (IR >> 18) & 15;
-            c = IR & 262143;
-        } else {//F3
-            c = IR & 67108863;
-        }
-
-
+        myDecode(IR, &opc, &a, &b, &c);
         switch (opc) {
 //F0----------------------------------------------------------------------
             case MOV:
