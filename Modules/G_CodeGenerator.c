@@ -68,7 +68,7 @@ long GetReg() {
 unsigned long encode(long op, long a, long b, long c) {
     if (op >= 32)
         op -= 64;
-    return (unsigned long) ((((((op << 4) | a) << 4) | b) << 18) | (c%int_hexToDecimal(40000)));
+    return (unsigned long) ((((((op << 4) | a) << 4) | b) << 18) | (c % int_hexToDecimal(40000)));
 }
 
 void Put(long op, long a, long b, long c) {
@@ -76,7 +76,7 @@ void Put(long op, long a, long b, long c) {
     pc++;
 }
 
-//Генерирует команды формата F3
+//Генерирует команды формата F3 (команды перехода)
 unsigned long encodeF3(long op, long disp) {
     return (unsigned long) (op - 0x40) << 26 | (disp & 0x3FFFFFF);
 }
@@ -86,7 +86,7 @@ void PutBR(long op, long disp) {
     pc++;
 }
 
-
+//Проверяет размер переменной
 void TestRange(long x) {
     if ((x >= int_hexToDecimal(20000)) || (x < int_hexToDecimal(-20000)))
         Mark("Value is out of range");
@@ -143,6 +143,7 @@ long negated(long cond) {
         return cond + 1;
 }
 
+//TODO ?
 long merged(long L0, long L1) {
     long L2, L3;
     if (L0 != 0) {
@@ -159,6 +160,7 @@ long merged(long L0, long L1) {
         return L1;
 }
 
+//TODO ?
 void fix(long at, long with) {
     code[at] = code[at] / int_hexToDecimal(400000) * int_hexToDecimal(400000) + with % int_hexToDecimal(400000);
 }
@@ -283,6 +285,7 @@ void Op1(int op, struct Item *item) {
 
 }
 
+//Генерирует выражения вида item1.a op item2.b
 void Op2(int op, struct Item *item1, struct Item *item2) {
     if ((item1->type->form == INTEGER) && (item2->type->form == INTEGER)) {
         if ((item1->mode == CONST) && (item2->mode == CONST)) {
@@ -410,15 +413,18 @@ void CJump(struct Item *item) {
     }
 }
 
+//Генерация команды перехода BR
 void BJump(long L) {
     PutBR(BR, L - pc);
 }
 
+//Генерация команды перехода BR
 void FJump(long *L) {
     PutBR(BR, L);
     *L = pc - 1;
 }
 
+//Генерация команды BSR по item->a
 void Call(struct Item *item) {
     PutBR(BSR, item->a - pc);
 }
@@ -449,6 +455,7 @@ void IOCall(struct Item *item1, struct Item *item2) {
     }
 
 }
+
 
 void Header(long size) {
     entry = pc;

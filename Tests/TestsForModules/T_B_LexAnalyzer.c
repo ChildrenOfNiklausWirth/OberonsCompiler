@@ -1,7 +1,7 @@
 #include "../../Modules/B_LexAnalyzer.h"
 
-enum PrintOfTokensFlow {
-    PRINT, NO_PRINT
+enum Report {
+    REPORT, NO_REPORT
 };
 
 char firstAddress[] = "../Tests/ProgrammsOnOberon/1_Test.txt";
@@ -186,7 +186,7 @@ void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct Token
 }
 
 //__________________________________________________________________________________________________
-void firstTest(enum PrintOfTokensFlow print) {
+void firstTest(enum Report print) {
 
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
@@ -195,7 +195,7 @@ void firstTest(enum PrintOfTokensFlow print) {
     lexAnalysis(firstAddress);
 
 
-    if (print == PRINT) {
+    if (print == REPORT) {
         printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
         tf_printWithTypeTwoTokensFlow(lexTokensFlow, rightTokensFlow);
         printf("\n\n\n");
@@ -212,14 +212,14 @@ void firstTest(enum PrintOfTokensFlow print) {
 
 }
 
-void secondTest(enum PrintOfTokensFlow print) {
+void secondTest(enum Report print) {
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
     createRightResultForSecondTest(&rightTokensFlow);
 
     lexAnalysis(secondAdress);
 
-    if (print == PRINT) {
+    if (print == REPORT) {
         printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
         tf_printWithTypeTwoTokensFlow(lexTokensFlow, rightTokensFlow);
         printf("\n\n\n");
@@ -240,8 +240,8 @@ void secondTest(enum PrintOfTokensFlow print) {
 int main() {
     printf("LexAnalyzer Testing...\n\n");
     printf("-----------------------------------1 TEST-------------------------------------------------------\n");
-    firstTest(PRINT);
+    firstTest(REPORT);
     printf("-----------------------------------2 TEST-------------------------------------------------------\n");
-    secondTest(PRINT);
+    secondTest(REPORT);
     printf("------------------------------------------------------------------------------------------------");
 }
