@@ -6,7 +6,7 @@ long R[16];//регистры
 long M[RMemSize / 4];//€чейки пам€ти
 //FILE W;
 
-void myDecode(long IR, long *opc, long *a, long *b, long *c) {
+void myDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
 
     *opc = ((IR >> 26) & 63);
 
@@ -14,16 +14,25 @@ void myDecode(long IR, long *opc, long *a, long *b, long *c) {
         *a = ((IR >> 22) & 15);
         *b = ((IR >> 18) & 15);
         *c = (IR & 15);
+        if (*c >= 1 << 3)
+            *c -= 1 << 4;
     } else if (*opc < F2) {//F1
         *a = ((IR >> 22) & 15);
         *b = ((IR >> 18) & 15);
         *c = (IR & 262143);
+        if (*c >= 1 << 17)
+            *c -= 1 << 18;
     } else if (*opc < F3) {//F2
         *a = ((IR >> 22) & 15);
         *b = ((IR >> 18) & 15);
         *c = (IR & 262143);
+        if (*c >= 1 << 17)
+            *c -= 1 << 18;
     } else {//F3
         *c = (IR & 67108863);
+        if (*c >= 1 << 25)
+            *c -= 1 << 26;
+
     }
 
 
@@ -33,7 +42,6 @@ void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
     *opc = IR / int_hexToDecimal(4000000) % int_hexToDecimal(40);
     *a = IR / int_hexToDecimal(400000) % int_hexToDecimal(10);
     *b = IR / int_hexToDecimal(40000) % int_hexToDecimal(10);
-    *c = IR % int_hexToDecimal(40000);
     if (*opc < BEQ) {
         *c = IR % int_hexToDecimal(40000);
         if (*c >= int_hexToDecimal(20000))

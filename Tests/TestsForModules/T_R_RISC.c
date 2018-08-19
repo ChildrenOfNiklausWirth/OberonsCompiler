@@ -4,110 +4,255 @@
 
 enum Report {
     REPORT,//Test with report
-    NO_REPORT,//Test without report
-    NO_WORK//Test just returns 1
+    ONLY_ERROR,
+    NO_REPORT
 };
-int maxMessageLength;
-int currentMessageLength;
-char *message;
 
 //-----------------------------------------------------------------------------------------------
-void message_initialize() {
-    maxMessageLength = 10;
-    currentMessageLength = 0;
-    message = calloc((size_t) maxMessageLength, sizeof(char));
-}
+void printOperation(int op) {
+    switch (op) {
+        //F0
+        case MOV:
+            printf("%s", "MOV : ");
+            break;
+        case MVN:
+            printf("%s", "MVN : ");
+            break;
+        case ADD :
+            printf("%s", "ADD : ");
+            break;
+        case SUB :
+            printf("%s", "SUB : ");
+            break;
+        case MUL :
+            printf("%s", "MUL : ");
+            break;
+        case Div :
+            printf("%s", "DIV : ");
+            break;
+        case Mod :
+            printf("%s", "MOD : ");
+            break;
+        case CMP :
+            printf("%s", "CMP : ");
+            break;
 
-void message_add(char testNumber) {
-    char newMess[] = "Error in test number ";
+//F1
+        case MOVI :
+            printf("%s", "MOVI : ");
+            break;
+        case MVNI :
+            printf("%s", "MVNI : ");
+            break;
+        case ADDI :
+            printf("%s", "ADDI : ");
+            break;
+        case SUBI :
+            printf("%s", "SUBI : ");
+            break;
+        case MULI :
+            printf("%s", "MULI : ");
+            break;
+        case DIVI :
+            printf("%s", "DIVI : ");
+            break;
+        case MODI :
+            printf("%s", "MODI : ");
+            break;
+        case CMPI :
+            printf("%s", "CMPI : ");
+            break;
+        case CHKI :
+            printf("%s", "CHKI : ");
+            break;
 
-    if ((currentMessageLength + sizeof(newMess) - 1) >= maxMessageLength) {
-        maxMessageLength = currentMessageLength + sizeof(newMess) + 1;
-        message = realloc(message, (size_t) maxMessageLength);
+//F2
+        case LDW :
+            printf("%s", "LDW : ");
+            break;
+        case LDB :
+            printf("%s", "LDB : ");
+            break;
+        case POP :
+            printf("%s", "POP : ");
+            break;
+        case STW :
+            printf("%s", "STW : ");
+            break;
+        case STB :
+            printf("%s", "STB : ");
+            break;
+        case PSH :
+            printf("%s", "PSH : ");
+            break;
+        case RD :
+            printf("%s", "RD : ");
+            break;
+        case WRD :
+            printf("%s", "WRD : ");
+            break;
+        case WRH :
+            printf("%s", "WRH : ");
+            break;
+        case WRL :
+            printf("%s", "WRL : ");
+            break;
+
+//F3
+        case BEQ :
+            printf("%s", "BEQ : ");
+            break;
+        case BNE :
+            printf("%s", "BNE : ");
+            break;
+        case BLT :
+            printf("%s", "BLT : ");
+            break;
+        case BGE :
+            printf("%s", "BGE : ");
+            break;
+        case BLE :
+            printf("%s", "BLE : ");
+            break;
+        case BGT :
+            printf("%s", "BGT : ");
+            break;
+        case BR :
+            printf("%s", "BR : ");
+            break;
+        case BSR :
+            printf("%s", "BSR : ");
+            break;
+        case RET :
+            printf("%s", "RET : ");
+            break;
+        default:
+            printf("%s", "Case isn't defined");
+
     }
-
-    for (int i = 0; i < sizeof(newMess) - 1; ++i) {
-        message[currentMessageLength] = newMess[i];
-        currentMessageLength++;
-    }
-    message[currentMessageLength] = testNumber;
-    currentMessageLength++;
-    message[currentMessageLength] = '\n';
-    currentMessageLength++;
-
 }
 
-void message_print() {
-    for (int i = 0; i < currentMessageLength; ++i)
-        printf("%c", message[i]);
-    printf("\n");
+void printReport(unsigned long IR, long op, long a, long b, long c,
+                 long mop, long ma, long mb, long mc, long wop, long wa, long wb, long wc) {
+    printf("---------------------------------------\n");
+    printf("\nBinary digit after encoding \n");
+    binaryPrint(IR);
+    printf("\nDecimal form\n");
+    printf("%lu\n", IR);
+    printf("\nComparison\n\n");
+    printf("\tEncode \t\tMy decode \tWirth decode\n");
+    printf("op \t%li \t\t%li \t\t%li\n", op, mop, wop);
+    printf("a \t%li \t\t%li \t\t%li\n", a, ma, wa);
+    printf("b \t%li \t\t%li \t\t%li\n", b, mb, wb);
+    printf("c \t%li \t\t%li \t\t%li\n", c, mc, wc);
+
 
 }
-//-----------------------------------------------------------------------------------------------
 
 int decodingTest(enum Report report, long op, long a, long b, long c) {
-    if (report != NO_WORK) {
-        unsigned long IR;
-        //encoding
-        if (op > WRL)
-            IR = encodeF3(op, c);
-        else
-            IR = encode(op, a, b, c);
+    unsigned long IR;
+    //encoding
+    if (op > WRL)
+        IR = encodeF3(op, c);
+    else
+        IR = encode(op, a, b, c);
 
-        if (report == REPORT) {
-            printf("\nBinary digit after encoding \n");
-            binaryPrint(IR);
-            printf("\nDecimal form\n");
-            printf("%lu\n", IR);
-            printf("\nBinary digit that we multiply with c\n");
-            binaryPrint(int_hexToDecimal(40000));
-        }
-        //my decode
-        long mop, ma, mb, mc;
-        myDecode(IR, &mop, &ma, &mb, &mc);
-        //wirth decode
-        long wop, wa, wb, wc;
-        wirthDecode(IR, &wop, &wa, &wb, &wc);
+    //my decode
+    long mop, ma, mb, mc;
+    myDecode(IR, &mop, &ma, &mb, &mc);
+    //wirth decode
+    long wop, wa, wb, wc;
+    wirthDecode(IR, &wop, &wa, &wb, &wc);
 
-        //Report
-        if (report == REPORT) {
-            printf("\nComparison\n\n");
-            printf("\tEncode \t\tMy decode \tWirth decode\n");
-            printf("op \t%li \t\t%li \t\t%li\n", op, mop, wop);
-            printf("a \t%li \t\t%li \t\t%li\n", a, ma, wa);
-            printf("b \t%li \t\t%li \t\t%li\n", b, mb, wb);
-            printf("c \t%li \t\t%li \t\t%li\n", c, mc, wc);
-        }
-        if ((op == wop && wop == mop) && (a == wa && wa == ma) && (b == wb && wb == mb) && (c == wc && wc == mc))
+    if (op > WRL) {
+        if ((op == wop && wop == mop) && (c == wc && wc == mc)) {
+            if (report == REPORT)
+                printReport(IR, op, a, b, c, mop, ma, mb, mc, wop, wa, wb, wc);
             return 1;
-        return 0;
+        }
+    } else {
+        if ((op == wop && wop == mop) && (a == wa && wa == ma) && (b == wb && wb == mb) &&
+            (c == wc && wc == mc)) {
+            if (report == REPORT)
+                printReport(IR, op, a, b, c, mop, ma, mb, mc, wop, wa, wb, wc);
+            return 1;
+        }
     }
-    return 1;
+    if (report == ONLY_ERROR)
+        printReport(IR, op, a, b, c, mop, ma, mb, mc, wop, wa, wb, wc);
+    return 0;
 
 
 }
+
+int opTest(enum Report report, long op, long minA, long maxA, long minB, long maxB, long minC, long maxC) {
+    for (int a = minA; a < maxA; ++a)
+        for (int b = minB; b < maxB; ++b)
+            for (int c = minC; c < maxC; ++c)
+                if (!decodingTest(report, op, a, b, c))
+                    return 0;
+    return 1;
+
+}
+
 
 int main() {
     printf("RISC Testing...\n\n");
-    int maxTests = 2;
+    int maxTests = 0;
     int passedTest = 0;
-    message_initialize();
 
-    printf("-----------------------------------1 TEST-------------------------------------------------------\n");
-    if (decodingTest(REPORT, STW, 5, 0, 16)) {
-        passedTest++;
-        printf("\nTRUE\n");
-    } else
-        message_add('1');
+    printf("-----------------------------------F0 Testing-------------------------------------------------------\n");
+    maxTests += 8;
+    for (int op = 0; op <= 7; ++op) {
+        if (opTest(ONLY_ERROR, op, 0, 1 << 4, 0, 1 << 4, -(1 << 3), 1 << 3)) {
+            passedTest++;
+            printOperation(op);
+            printf("TRUE\n");
+        } else {
+            printOperation(op);
+            printf("FALSE\n");
+        }
+    }
 
+    printf("-----------------------------------F1 Testing-------------------------------------------------------\n");
+    maxTests += (25 - 16);
+    for (int op = 16; op <= 24; ++op) {
+        if (opTest(ONLY_ERROR, op, 0, 1 << 4, 0, 1 << 4, -(1 << 7), 1 << 8)) {
+            passedTest++;
+            printOperation(op);
+            printf("TRUE\n");
+        } else {
+            printOperation(op);
+            printf("FALSE\n");
+        }
+    }
 
-    printf("\n-----------------------------------2 TEST-------------------------------------------------------\n");
-    if (decodingTest(NO_WORK, STW, 5, 0, -16)) {
-        passedTest++;
-        printf("\nTRUE\n");
-    } else
-        message_add('2');
-
+    printf("-----------------------------------F2 Testing-------------------------------------------------------\n");
+    maxTests += (44 - 32 - 2);
+    for (int op = 32; op <= 43; ++op) {
+        if (op != 35 && op != 39)
+            if (opTest(ONLY_ERROR, op, 0, 1 << 4, 0, 1 << 4, -(1 << 7), 1 << 8)) {
+                passedTest++;
+                printOperation(op);
+                printf("TRUE\n");
+            } else {
+                printOperation(op);
+                printf("FALSE\n");
+            }
+    }
+    printf("-----------------------------------F3 Testing-------------------------------------------------------\n");
+    maxTests += (59 - 48 - 2);
+    for (int op = 48; op <= 58; ++op) {
+        if (op != 54 && op != 55)
+            if (opTest(ONLY_ERROR, op, 0, 1 << 4, 0, 1 << 4, 0, 1 << 13)) {//TODO попробуй поставить minC<0
+                passedTest++;
+                printOperation(op);
+                printf("TRUE\n");
+            } else {
+                printOperation(op);
+                printf("FALSE\n");
+            }
+    }
 
 
     printf("\n-----------------------------------REPORT-------------------------------------------------------\n");
@@ -115,9 +260,7 @@ int main() {
         printf("\nALL TESTS WAS SUCCESSFULLY\n\n");
     else {
         printf("\nSOME TESTS FAILED\n\n");
-        message_print();
     }
-
 
     return 1;
 }

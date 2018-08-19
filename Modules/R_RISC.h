@@ -57,7 +57,7 @@
 #define F3 BEQ
 
 
-void myDecode(long IR, long *opc, long *a, long *b, long *c);
+void myDecode(unsigned long IR, long *opc, long *a, long *b, long *c);
 
 void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c);
 

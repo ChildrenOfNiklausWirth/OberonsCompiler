@@ -68,7 +68,7 @@ long GetReg() {
 unsigned long encode(long op, long a, long b, long c) {
     if (op >= 32)
         op -= 64;
-    return (unsigned long) ((((((op << 4) | a) << 4) | b) << 18) | (c % int_hexToDecimal(40000)));
+    return ((((((op << 4) | a) << 4) | b) << 18) | (unsigned long) c % int_hexToDecimal(40000));
 }
 
 void Put(long op, long a, long b, long c) {
@@ -78,7 +78,7 @@ void Put(long op, long a, long b, long c) {
 
 //Генерирует команды формата F3 (команды перехода)
 unsigned long encodeF3(long op, long disp) {
-    return (unsigned long) (op - 0x40) << 26 | (disp & 0x3FFFFFF);
+    return (unsigned long) (op - int_hexToDecimal(40)) << 26 | (disp % int_hexToDecimal(4000000));
 }
 
 void PutBR(long op, long disp) {
