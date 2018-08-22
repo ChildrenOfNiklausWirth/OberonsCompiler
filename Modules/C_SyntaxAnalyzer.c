@@ -28,19 +28,6 @@ long toInt(char *val, int size) {
     return num;
 }
 
-int namesEquals(char *name1, int size1, char *name2, int size2) {
-    if (size1 == size2) {
-
-        for (int i = 0; i < size1; ++i)
-            if (name1[i] != name2[i])
-                return 0;
-
-        return 1;
-
-    } else
-        return 0;
-}
-
 //Добавление нового узла в objectStart
 Node *addNode(int class) {
 
@@ -148,7 +135,7 @@ void scope_initialise() {
     universe = objectsStart;
 }
 
-
+//expression = SimpleExpresion [("=" | "#" | "<" "<=" |">" |">=") SimpleExpression]
 void expression(struct Item *item1);
 
 struct Item selector(struct Item *item) {
@@ -190,7 +177,6 @@ struct Item selector(struct Item *item) {
 }
 
 // factor = ident selector | integer | ( expression ) | ~ factor
-
 factor(struct Item *_factor) {
 
     Node *node;
@@ -249,6 +235,7 @@ void term(struct Item *item) {
     }
 }
 
+//simpleExpression=["+"|"-"]term{("+"|"-"|"OR")term}
 void simpleExpression(struct Item *item1) {
 
     struct Item item2;
@@ -280,7 +267,6 @@ void simpleExpression(struct Item *item1) {
 }
 
 //expression = SimpleExpression [relation SimpleExpression]
-
 void expression(struct Item *item1) {
 
     struct Item item2;
@@ -324,6 +310,7 @@ struct Item param(struct Item item) {
     return item;
 }
 
+//StatSequence=statement{";"statement}
 void StatSequence() {
     Node *par;
     Node *node;
@@ -486,6 +473,7 @@ Node *identList(int class) {
 }
 
 //Определение типа объекта
+//type=ident|ArrauType|RecordType
 Type *type() {
 
     Node *obj;
@@ -578,8 +566,8 @@ Type *type() {
     return typ;
 }
 
-// declarations = ["CONST" {ident = expression ;}] [TYPE {ident = type;}] [VAR = {IdentList : type ;}] {ProcedureDeclarations;}
 // ORDER SENSITIVE
+// declarations = ["CONST" {ident = expression ;}] [TYPE {ident = type;}] [VAR = {IdentList : type ;}] {ProcedureDeclarations;}
 long declarations(long *varsize) {
 
     Node *firstAdded;
@@ -687,7 +675,7 @@ long declarations(long *varsize) {
     }
 };
 
-//
+//FPSection=["VAR"]IdentList ":" type
 void FPSection(long *parblksize) {
     Node *obj, *firstAdded;
     Type *tp;

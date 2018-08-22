@@ -1,9 +1,12 @@
 #include "Modules/B_LexAnalyzer.h"
-#include "Modules/C_SyntaxAnalyzer.c"
+#include "Modules/C_SyntaxAnalyzer.h"
 #include "Modules/G_CodeGenerator.h"
 
-char inputAddress[] = "../Tests/ProgrammsOnOberon/Procedures";
-char outputAddress[] = "../code.txt";
+
+char executeResult[] = "../execute.txt";
+int FLAG_LOAD = 1;
+int FLAG_EXECUTABLE = 0;
+
 
 
 int main(int argc, char *argv[]) {
@@ -14,8 +17,14 @@ int main(int argc, char *argv[]) {
     lexAnalysis(inputFile);
     module();
 
-    cg_initialize();
+    
     decode(outputFile);
+    
+    if (FLAG_EXECUTABLE)
+        Exec(executeResult);
+    if (FLAG_LOAD)
+        Load(executeResult);
+
     return 0;
 }
 

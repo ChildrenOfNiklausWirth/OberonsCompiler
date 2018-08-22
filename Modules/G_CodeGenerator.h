@@ -7,12 +7,13 @@
 #include "SimpleFunctions/SimpleFunctions.h"
 #include "Structures/B_TerminalSymbols.h"
 #include "B_LexAnalyzer.h"
+#include "R_RISC.h"
 
 #define MAXCODE 10000
 #define NUMBER_OF_COMMANDS 16
 #define MAXREL 200
 
-////Constants for Node.class
+////Constants for Node.class and Item.mode
 #define HEAD 0
 #define VARIABLE 1
 #define PAR 2
@@ -73,7 +74,6 @@
 #define PC 15
 
 
-
 extern Type intType;
 extern Type boolType;
 int curlev;
@@ -89,39 +89,43 @@ struct Set *regs;
 
 void cg_initialize();
 
+unsigned long encode(long op, long a, long b, long c);
+
+unsigned long encodeF3(long op, long disp);
+
 void decode(char address[]);
 
 long FixLink(long L);
 
 void IncLevel(int n);
 
-void MakeConstltem(struct Item *x, Type *typ, long val);
+void MakeConstltem(struct Item *item, Type *typ, long val);
 
-void MakeItem(struct Item *x, Node *y);
+void MakeItem(struct Item *item, Node *node);
 
-void Field(struct Item *x, Node *y);
+void Field(struct Item *item, Node *node);
 
-void Index(struct Item *x, struct Item *y);
+void Index(struct Item *item1, struct Item *item2);
 
-void Op1(int op, struct Item *x);
+void Op1(int op, struct Item *item);
 
-void Op2(int op, struct Item *x, struct Item *y);
+void Op2(int op, struct Item *item1, struct Item *item2);
 
-void Relation(int op, struct Item *x, struct Item *y);
+void Relation(int op, struct Item *item1, struct Item *item2);
 
-void Store(struct Item *x, struct Item *y);
+void Store(struct Item *item1, struct Item *item2);
 
-void Parameter(struct Item *x, Type *ftyp, int class);
+void Parameter(struct Item *item, Type *ftyp, int class);
 
-void CJump(struct Item *x);
+void CJump(struct Item *item);
 
 void BJump(long L);
 
 void FJump(long *L);
 
-void Call(struct Item *x);
+void Call(struct Item *item);
 
-void IOCall(struct Item *x, struct Item *y);
+void IOCall(struct Item *item1, struct Item *item2);
 
 void Header(long size);
 
@@ -134,5 +138,9 @@ void Open();
 void Close(long globals);
 
 void EnterCMD(char name[], int nameLength);
+
+void Load(char outputAddress[]);
+
+void Exec(char outputAddress[]);
 
 #endif //OBERONSCOMPILER_C_G_CODEGENERATOR_H
