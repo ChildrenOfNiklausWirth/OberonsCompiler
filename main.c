@@ -2,20 +2,24 @@
 #include "Modules/C_SyntaxAnalyzer.h"
 #include "Modules/G_CodeGenerator.h"
 
-char oberonCode[] = "../Tests/ProgrammsOnOberon/1_SimpleProgram.txt";
-char codeGeneratorResult[] = "../code.txt";
-char executeResult[] = "../execute.txt";
 
+char executeResult[] = "../execute.txt";
 int FLAG_LOAD = 1;
 int FLAG_EXECUTABLE = 0;
 
-int main() {
-    lexAnalysis(oberonCode);
 
+
+int main(int argc, char *argv[]) {
+
+    char* inputFile = argv[1];
+    char* outputFile = argv[2];
+
+    lexAnalysis(inputFile);
     module();
 
-    decode(codeGeneratorResult);
-
+    
+    decode(outputFile);
+    
     if (FLAG_EXECUTABLE)
         Exec(executeResult);
     if (FLAG_LOAD)

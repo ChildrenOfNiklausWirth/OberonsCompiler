@@ -9,6 +9,16 @@ enum OC oc = WINDOWS;//TODO check before using
 int numberOfLine;
 struct TokensFlow lexTokensFlow;
 
+void parseCommentaries(FILE *file, char *c) {
+    do {
+        fscanf(file, "%c", c);
+    } while (*c != '*');
+    fscanf(file, "%c", c);
+    if (*c != '/')
+        parseCommentaries(file, c);
+    else
+        fscanf(file, "%c", c);
+}
 
 int readNextToken(FILE *file, Token *token) {
     int tokenLength = 0;
@@ -19,6 +29,7 @@ int readNextToken(FILE *file, Token *token) {
     if (fscanf(file, "%c", &firstSymbol) == EOF)
         return 0;
 
+    //Missing of  spaces and \n
     while (firstSymbol == ' ' || firstSymbol == '\n') {
         if (firstSymbol == '\n')
             numberOfLine++;
@@ -27,6 +38,29 @@ int readNextToken(FILE *file, Token *token) {
 
     }
 
+    //Parsing of comments
+    if (firstSymbol == '/') {
+        fscanf(file, "%c", &firstSymbol);
+        if (firstSymbol == '*') {
+            parseCommentaries(file, &firstSymbol);
+            return readNextToken(file, token);
+        } else
+            switch (firstSymbol) {
+                case '\n':
+                    switch (oc) {
+                        case WINDOWS:
+                            fseek(file, -2, SEEK_CUR);
+                            break;
+                        case LINUX:
+                            fseek(file, -1, SEEK_CUR);
+                            break;
+                    }
+                    break;
+                default:
+                    fseek(file, -1, SEEK_CUR);
+            }
+
+    }
 
     if (fscanf(file, "%c", &lastSymbol) == EOF) {
         token_initialize(token, 1);
