@@ -78,11 +78,11 @@ void Put(long op, long a, long b, long c) {
 
 //Генерирует команды формата F3 (команды перехода)
 unsigned long encodeF3(long op, long disp) {
-    return (unsigned long) (op - int_hexToDecimal(40)) << 26 | (disp % int_hexToDecimal(4000000));
+    return (unsigned long) ((op - int_hexToDecimal(40)) << 26) | (disp & 0x3FFFFFF);
 }
 
 void PutBR(long op, long disp) {
-    code[pc] = encodeF3(op, disp);
+    code[pc] = (unsigned long) (op - 0x40) << 26 | (disp & 0x3FFFFFF);
     pc++;
 }
 

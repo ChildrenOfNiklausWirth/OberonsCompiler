@@ -6,7 +6,7 @@
 #include "SimpleFunctions/SimpleFunctions.h"
 
 #define RMemSize 4096
-#define ProgOrg (RMemSize/2)
+#define ProgOrg 0
 
 //F0
 #define MOV 0
