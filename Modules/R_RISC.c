@@ -3,7 +3,7 @@
 
 bool N, Z;//negative,zero
 long R[16];//регистры
-long M[RMemSize / 4];//€чейки пам€ти
+long M[(RMemSize / 4) - 1];//€чейки пам€ти
 //FILE W;
 
 void myDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
@@ -39,10 +39,14 @@ void myDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
 }
 
 void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
+
     *opc = IR / int_hexToDecimal(4000000) % int_hexToDecimal(40);
     *a = IR / int_hexToDecimal(400000) % int_hexToDecimal(10);
     *b = IR / int_hexToDecimal(40000) % int_hexToDecimal(10);
-    if (*opc < BEQ) {
+
+    if (*opc < MOVI) {
+        *c = R[IR & 0xF];
+    } else if (*opc < BEQ) {
         *c = IR % int_hexToDecimal(40000);
         if (*c >= int_hexToDecimal(20000))
             *c -= int_hexToDecimal(40000);
@@ -69,7 +73,7 @@ void RiscExecute(long start, char *outputAddress) {
         nxt = R[15] + 4;
         IR = M[R[15] / 4];
 
-        myDecode(IR, &opc, &a, &b, &c);
+        wirthDecode(IR, &opc, &a, &b, &c);
         switch (opc) {
 //F0----------------------------------------------------------------------
             case MOV:

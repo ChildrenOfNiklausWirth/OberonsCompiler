@@ -360,7 +360,7 @@ void Store(struct Item *item1, struct Item *item2) {
             load(item2);
         if (item1->mode == VARIABLE) {
             if (item1->level == 0)
-                item1->a = item1->a - pc * 4;
+                item1->a = (MemSize + item1->a) - pc * 4;
             Put(STW, item2->r, item1->r, item1->a);
 
         } else
@@ -508,10 +508,7 @@ void decode(char address[]) {
     long a;
     char str[150];
     FILE *file = fopen(address, "w+");
-    fprintf(file, "Enter:");
-    sprintf(str, "%ld", entry * 4);
-    fprintf(file, str);
-    fprintf(file, "\n");
+    fprintf(file, "Enter: %#+.8x\n", entry * 4);
     for (unsigned long j = 0; j < pc; ++j) {
         w = code[j];
         op = (w >> 26) & 0x3F;
@@ -524,18 +521,18 @@ void decode(char address[]) {
             if (a >= 0x20000) {
                 a -= 0x40000;
             }
-            fprintf(file, "R%.2lu, R%.2lu, %#+.8x\n", ASH(w, 22) & 0x0F, (w >> 18) & 0x0F, (unsigned int) a);
+            fprintf(file, "R%.2lu, R%.2lu, %s%#+.8x\n", w >> 22 & 0x0F, w >> 18 & 0x0F, a < 0?"-":"", a < 0 ? - (unsigned) a : (unsigned) a);
         } else {
             a = (int) (w & 0x3FFFFFF);
 
             if (op == RET) {
                 // c = link register
-                fprintf(file, "R%.2d\n", (int) a);
+                fprintf(file, "R%.2d\n", a);
             } else {
                 if (a >= 0x2000000) {
                     a -= 0x4000000;
                 }
-                fprintf(file, "%#+.6x\n", (unsigned int) a * 4);
+                fprintf(file, "%s%#+.6x\n", a < 0 ? "-":"", a < 0 ? - (unsigned) (a * 4) : (unsigned) a * 4);
             }
         }
     }

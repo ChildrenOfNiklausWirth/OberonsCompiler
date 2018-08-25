@@ -789,6 +789,7 @@ void procedureDeclaration() {
             Mark(";?");
         }
 
+        locblksize = 0;
         declarations(&locblksize);
 
         while (lexTokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
