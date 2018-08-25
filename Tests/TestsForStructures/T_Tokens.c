@@ -113,24 +113,28 @@ int test_tf_equals() {
 //
 int main() {
     int rightTestDigit = 0;
-    int maxTestDigit = 7;
+    int maxTestDigit = 0;
 
     printf("Token Testing...\n\n");
 
 
+
     printf("token_newToken...\n");
+    maxTestDigit++;
     if (test_token_newToken() == 1) {
         printf("True\n\n");
         rightTestDigit++;
     } else printf("False\n\n");
 
     printf("token_newTokenWithType...\n");
+    maxTestDigit++;
     if (test_token_newTokenWithType() == 1) {
         printf("True\n\n");
         rightTestDigit++;
     } else printf("False\n\n");
 
     printf("token_equalsWithString...\n");
+    maxTestDigit++;
     if (test_token_equalsWithString() == 1) {
         printf("True\n\n");
         rightTestDigit++;
@@ -139,6 +143,7 @@ int main() {
     printf("TokensFlow Testing...\n\n");
 
     printf("tf_initialize...\n");
+    maxTestDigit++;
     if (test_tf_initialize() == 1) {
         printf("True\n\n");
         rightTestDigit++;
@@ -146,6 +151,7 @@ int main() {
 
 
     printf("tf_allocatedMemory...\n");
+    maxTestDigit++;
     if (test_tf_allocatedMemory() == 1) {
         printf("True\n\n");
         rightTestDigit++;
@@ -153,12 +159,14 @@ int main() {
 
 
     printf("tf_addToken...\n");
+    maxTestDigit++;
     if (test_tf_addToken() == 1) {
         printf("True\n\n");
         rightTestDigit++;
     } else printf("False\n\n");
 
     printf("tf_equals...\n");
+    maxTestDigit++;
     if (test_tf_equals() == 1) {
         printf("True\n\n");
         rightTestDigit++;

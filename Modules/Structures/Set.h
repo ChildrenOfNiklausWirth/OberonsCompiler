@@ -1,9 +1,7 @@
 #ifndef OBERONSCOMPILER_C_SET_H
 #define OBERONSCOMPILER_C_SET_H
-int const SET_INIT_MAXSIZE;
-
 struct Set {
-    int *digit;
+    int *array;
     int size;
     int maxSize;
 };
@@ -11,10 +9,6 @@ struct Set {
 struct Set *set_new();
 
 void set_initialize(struct Set *set);
-
-void set_allocatedMemory(struct Set *set);
-
-void set_addDigit(struct Set *set, int digit);
 
 void set_INCL(struct Set *set, int digit);
 
