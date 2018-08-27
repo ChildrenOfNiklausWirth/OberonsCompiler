@@ -158,7 +158,7 @@ void RiscExecute(long start, char *outputAddress) {
                 break;
             case WRD:
                 //TODO check
-                fprintf(outputFile, " %li", R[c]);
+                fprintf(outputFile, "%li ", R[c]);
                 break;
             case WRH:
                 //TODO check

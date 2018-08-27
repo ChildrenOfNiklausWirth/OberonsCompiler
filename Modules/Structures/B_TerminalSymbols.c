@@ -15,7 +15,7 @@ struct TerminalSymbol ts_newTerminalSymbol(char name[], int nameLength, int type
 void tss_initialize(struct TerminalSymbols *terminalSymbols) {
     terminalSymbols->NULLL = ts_newTerminalSymbol("NULL", 4, 0);
     terminalSymbols->TIMES = ts_newTerminalSymbol("*", 1, 1);
-    terminalSymbols->DIV = ts_newTerminalSymbol("/", 1, 3);
+    terminalSymbols->DIV = ts_newTerminalSymbol("DIV", 3, 3);
     terminalSymbols->MOD = ts_newTerminalSymbol("MOD", 3, 4);
     terminalSymbols->AND = ts_newTerminalSymbol("AND", 3, 5);
     terminalSymbols->PLUS = ts_newTerminalSymbol("+", 1, 6);
@@ -97,8 +97,6 @@ int bothCharIsMathSymbol(char c1, char c2) {
 int charIsASeparatingTerminalSymbol(struct TerminalSymbols terminalSymbols, char symbol) {
 
     if (symbol == terminalSymbols.TIMES.name[0])
-        return 1;
-    if (symbol == terminalSymbols.DIV.name[0])
         return 1;
     if (symbol == terminalSymbols.PLUS.name[0])
         return 1;
