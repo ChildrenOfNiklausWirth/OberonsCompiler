@@ -4,7 +4,7 @@
 enum OC {
     WINDOWS, LINUX
 };
-enum OC oc = WINDOWS;//TODO check before using
+enum OC oc = LINUX;//TODO check before using
 
 int numberOfLine;
 struct TokensFlow lexTokensFlow;

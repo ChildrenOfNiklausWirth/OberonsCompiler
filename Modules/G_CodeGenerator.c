@@ -98,7 +98,7 @@ struct Item load(struct Item *item) {
     long r;
     if (item->mode == VARIABLE) {
         if (item->level == 0)
-            item->a = item->a - pc * 4;
+            item->a = MemSize + item->a - pc * 4;
         r = GetReg();
         Put(LDW, r, item->r, item->a);
         set_EXCL(regs, item->r);
@@ -379,7 +379,7 @@ void Parameter(struct Item *item, Type *ftyp, int class) {
                 if (item->a != 0) {
                     r = GetReg();
                     if (item->level == 0) {
-                        (item->a -= pc * 4);
+                        (item->a = MemSize + item->a - pc * 4);
                     }
                     Put(ADDI, r, item->r, item->a);
                 } else

@@ -96,7 +96,7 @@ Node *findField(Node *list) {
 
 bool isParam(Node *obj) {
     //CHANGE
-    return (obj->class == PAR) || (obj->class == VARIABLE) && (obj->val > 0);
+    return (obj->class == PAR) || ((obj->class == VARIABLE) && (obj->val > 0));
 }
 
 void openScope() {
@@ -766,14 +766,16 @@ void procedureDeclaration() {
         }
 
         obj = objectsStart->next;
+
         locblksize = parblksize;
         while (obj != &end) {
             obj->level = curlev;
             if (obj->class == PAR)
                 locblksize -= WordSize;
             else {
-                obj->val = locblksize;
+                locblksize -= obj->type->size;
             }
+            obj->val = locblksize;
             obj = obj->next;
         }
 
