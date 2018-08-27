@@ -68,8 +68,7 @@ Node *find() {
         object = objects->next;
 
         while (namesEquals(object->name, object->nameLength, lexTokensFlow.current->symbols,
-                           lexTokensFlow.current->length) !=
-               1) {
+                           lexTokensFlow.current->length) != 1) {
             object = object->next;
         }
 
@@ -128,10 +127,10 @@ void scope_initialise() {
     enter(TYP, 2, terminalSymbols.INT.name, terminalSymbols.INT.nameLength, &intType);
     enter(CONST, 1, "TRUE", 4, &boolType);
     enter(CONST, 0, "FALSE", 5, &boolType);
-    enter(S_PROC, 1, "Read", 5, &boolType);
+    enter(S_PROC, 1, "Read", 4, &boolType);
     enter(S_PROC, 2, "Write", 5, NULL);
-    enter(S_PROC, 3, "WriteHex", 5, NULL);
-    enter(S_PROC, 4, "WriteLn", 5, NULL);
+    enter(S_PROC, 3, "WriteHex", 8, NULL);
+    enter(S_PROC, 4, "WriteLn", 7, NULL);
     universe = objectsStart;
 }
 
@@ -376,8 +375,8 @@ void StatSequence() {
                     Mark("too many arguments");
                 }
             } else if (item1.mode == S_PROC) {
-                if (node->val <= 3);
-                item2 = param(item2);
+                if (node->val <= 3)
+                    item2 = param(item2);
                 IOCall(&item1, &item2);
             } else if (node->class == TYP) {
                 Mark("wrong operator");
@@ -434,8 +433,7 @@ void StatSequence() {
         }
         if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
             tf_next(&lexTokensFlow);
-        else if ((lexTokensFlow.current->type >= terminalSymbols.SEMICOLON.type) && (lexTokensFlow.current->type)
-                 || (lexTokensFlow.current->type >= terminalSymbols.ARR.type))
+        else if ((lexTokensFlow.current->type >= terminalSymbols.SEMICOLON.type) & (lexTokensFlow.current->type < terminalSymbols.IF.type) || (lexTokensFlow.current->type >= terminalSymbols.ARR.type))
             break;
         else
             Mark(";?");
@@ -705,9 +703,9 @@ void FPSection(long *parblksize) {
         parsize = tp->size;
         if (tp->form >= ARRAY) {
             Mark("not parameter");
-        } else {
-            parsize = WordSize;
         }
+    } else {
+        parsize = WordSize;
     }
 
     obj = firstAdded;
@@ -728,8 +726,8 @@ void procedureDeclaration() {
     Node *procedure, *obj;
     char *procedureIdentifier;
     int procedureIdentifierLength;
-    long locblksize = 0;//
-    long parblksize = 0;//
+    long locblksize = 0; //
+    long parblksize = 0; //
 
     tf_next(&lexTokensFlow);
 
@@ -764,7 +762,6 @@ void procedureDeclaration() {
                     Mark(")?");
             }
         } else if (curlev == 1) {
-            obj = obj->next;
             EnterCMD(procedureIdentifier, procedureIdentifierLength);
         }
 
@@ -784,7 +781,6 @@ void procedureDeclaration() {
 
         if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
             tf_next(&lexTokensFlow);
-
         } else {
             Mark(";?");
         }
@@ -894,6 +890,7 @@ void moduleWithoutCloseScope() {
 void module() {
     moduleWithoutCloseScope();
     closeScope();
+    Close(varsize);
 }
 
 

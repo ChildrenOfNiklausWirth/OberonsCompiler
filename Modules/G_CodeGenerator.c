@@ -431,11 +431,12 @@ void Call(struct Item *item) {
 
 void IOCall(struct Item *item1, struct Item *item2) {
     struct Item z;
+
     if (item1->a < 4) {
         if (item2->type->form != INTEGER)
-            printf("Intege?");
-
+            printf("Integer?");
     }
+
     if (item1->a == 1) {
         z.r = GetReg();
         z.mode = REG;

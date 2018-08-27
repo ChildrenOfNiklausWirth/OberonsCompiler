@@ -202,9 +202,10 @@ void RiscExecute(long start, char *outputAddress) {
                 R[14] = R[15] + 4;
                 break;
             case RET:
-                nxt = R[c % int_hexToDecimal(10)];
+                nxt = R[c & 0xF];
                 if (nxt == 0)
                     loop = false;
+                break;
             default:
                 printf("Problems with RISC Interpreter");
                 break;

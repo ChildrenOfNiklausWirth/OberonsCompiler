@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "SimpleFunctions/SimpleFunctions.h"
 
-#define RMemSize 4096
+#define RMemSize 1024
 #define ProgOrg 0
 
 //F0
