@@ -76,7 +76,7 @@ void RiscExecute(long start, char *outputAddress) {
         nxt = R[15] + 4;
         IR = M[R[15] / 4];
 
-        wirthDecode(IR, &opc, &a, &b, &c);
+        wirthDecode((unsigned long) IR, &opc, &a, &b, &c);
         switch (opc) {
 //F0----------------------------------------------------------------------
             case MOV:
