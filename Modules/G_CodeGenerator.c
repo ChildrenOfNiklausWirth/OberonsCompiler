@@ -68,7 +68,7 @@ long GetReg() {
 unsigned long encode(long op, long a, long b, long c) {
     if (op >= 32)
         op -= 64;
-    return ((((((op << 4) | a) << 4) | b) << 18) | (unsigned long) c % int_hexToDecimal(40000));
+    return ((((((op << 4) | a) << 4) | b) << 18) | (unsigned long) c % (1 << 18));
 }
 
 void Put(long op, long a, long b, long c) {
@@ -78,7 +78,7 @@ void Put(long op, long a, long b, long c) {
 
 //Генерирует команды формата F3 (команды перехода)
 unsigned long encodeF3(long op, long disp) {
-    return (unsigned long) ((op - int_hexToDecimal(40)) << 26) | (disp & 0x3FFFFFF);
+    return (unsigned long) ((op - (1 << 6)) << 26) | (disp & 0x3FFFFFF);
 }
 
 void PutBR(long op, long disp) {
@@ -88,7 +88,7 @@ void PutBR(long op, long disp) {
 
 //Проверяет размер переменной
 void TestRange(long x) {
-    if ((x >= int_hexToDecimal(20000)) || (x < int_hexToDecimal(-20000)))
+    if ((x >= (1 << 17)) || (x < -(1 << 17)))
         Mark("Value is out of range");
 
 }
@@ -149,7 +149,7 @@ long merged(long L0, long L1) {
     if (L0 != 0) {
         L2 = L0;
         while (1) {
-            L3 = code[L2] % int_hexToDecimal(40000);
+            L3 = code[L2] % (1 << 18);
             if (L3 == 0)
                 break;
             L2 = L3;
@@ -162,13 +162,13 @@ long merged(long L0, long L1) {
 
 //TODO ?
 void fix(long at, long with) {
-    code[at] = code[at] / int_hexToDecimal(400000) * int_hexToDecimal(400000) + with % int_hexToDecimal(400000);
+    code[at] = code[at] / (1 << 22) * (1 << 22) + with % (1 << 22);
 }
 
 long fixWith(long L0, long L1) {
     long L2;
     while (L0 != 0) {
-        L2 = code[L0] % int_hexToDecimal(40000);
+        L2 = code[L0] % (1 << 18);
         fix(L0, L1 - L0);
         L0 = L2;
     }
@@ -179,7 +179,7 @@ long fixWith(long L0, long L1) {
 long FixLink(long L) {
     long L1;
     while (L != 0) {
-        L1 = code[L] % int_hexToDecimal(40000);
+        L1 = code[L] % (1 << 18);
         fix(L, pc - L);
         L = L1;
     }
@@ -522,7 +522,8 @@ void decode(char address[]) {
             if (a >= 0x20000) {
                 a -= 0x40000;
             }
-            fprintf(file, "R%.2lu, R%.2lu, %s%#+.8x\n", w >> 22 & 0x0F, w >> 18 & 0x0F, a < 0?"-":"", a < 0 ? - (unsigned) a : (unsigned) a);
+            fprintf(file, "R%.2lu, R%.2lu, %s%#+.8x\n", w >> 22 & 0x0F, w >> 18 & 0x0F, a < 0 ? "-" : "",
+                    a < 0 ? -(unsigned) a : (unsigned) a);
         } else {
             a = (int) (w & 0x3FFFFFF);
 
@@ -533,7 +534,7 @@ void decode(char address[]) {
                 if (a >= 0x2000000) {
                     a -= 0x4000000;
                 }
-                fprintf(file, "%s%#+.6x\n", a < 0 ? "-":"", a < 0 ? - (unsigned) (a * 4) : (unsigned) a * 4);
+                fprintf(file, "%s%#+.6x\n", a < 0 ? "-" : "", a < 0 ? -(unsigned) (a * 4) : (unsigned) a * 4);
             }
         }
     }
