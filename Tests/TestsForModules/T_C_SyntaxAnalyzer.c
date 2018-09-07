@@ -1,6 +1,6 @@
 #include "../../Modules/C_SyntaxAnalyzer.c"
 
-char address[] = "../Tests/ProgrammsOnOberon/Trigonometry";
+char address[] = "../Tests/SamplePrograms/Trigonometry";
 
 
 Node *object_newObject(int class, int level, long val, char *name, int nameLength, Type *type, Node *dsc, Node *next) {

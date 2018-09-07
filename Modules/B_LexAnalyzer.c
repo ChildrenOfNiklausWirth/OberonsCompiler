@@ -1,10 +1,11 @@
 #include "B_LexAnalyzer.h"
 
 
-enum OC {
-    WINDOWS, LINUX
+enum OS {
+    WINDOWS, LINUX, UNSUPPORTED
 };
-enum OC oc = LINUX;//TODO check before using
+
+enum OS os = OS_TYPE;
 
 int numberOfLine;
 struct TokensFlow lexTokensFlow;
@@ -47,7 +48,7 @@ int readNextToken(FILE *file, Token *token) {
         } else
             switch (firstSymbol) {
                 case '\n':
-                    switch (oc) {
+                    switch (os) {
                         case WINDOWS:
                             fseek(file, -2, SEEK_CUR);
                             break;
@@ -101,7 +102,7 @@ int readNextToken(FILE *file, Token *token) {
 
     token_initialize(token, tokenLength);
 
-    if (oc == WINDOWS)
+    if (os == WINDOWS)
         if (lastSymbol == '\n')
             fseek(file, -1, SEEK_CUR);
 
@@ -123,6 +124,11 @@ int readNextToken(FILE *file, Token *token) {
 
 void lexAnalysis(char *fileName) {
     numberOfLine = 1;
+
+    if (os == UNSUPPORTED) {
+        printf("Unsupported OS type. Working in Linux compatibility mode.");
+        os = LINUX;
+    }
 
     tf_initialize(&lexTokensFlow);
     tss_initialize(&terminalSymbols);

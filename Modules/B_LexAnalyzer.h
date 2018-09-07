@@ -5,6 +5,13 @@
 #include "Structures/A_Tokens.h"
 #include "Structures/B_TerminalSymbols.h"
 
+#ifdef _WIN32
+#define OS_TYPE WINDOWS
+#elif __linux__
+#define OS_TYPE LINUX
+#else
+#define OS_TYPE UNSUPPORTED
+#endif
 
 extern struct TerminalSymbols terminalSymbols; //need to be initialised with ts_initialise
 extern struct TokensFlow lexTokensFlow; //need to be created with lexAnalysis
