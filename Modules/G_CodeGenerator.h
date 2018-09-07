@@ -93,7 +93,7 @@ unsigned long encode(long op, long a, long b, long c);
 
 unsigned long encodeF3(long op, long disp);
 
-void decode(char address[]);
+void decode(FILE *outputFile);
 
 long FixLink(long L);
 
@@ -139,8 +139,8 @@ void Close(long globals);
 
 void EnterCMD(char name[], int nameLength);
 
-void Load(char outputAddress[]);
+void Load(FILE *loadFile);
 
-void Exec(char outputAddress[]);
+void Exec(FILE *outputFile);
 
 #endif //OBERONSCOMPILER_C_G_CODEGENERATOR_H

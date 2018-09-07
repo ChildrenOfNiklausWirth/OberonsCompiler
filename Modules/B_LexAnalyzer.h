@@ -18,7 +18,7 @@ extern struct TokensFlow lexTokensFlow; //need to be created with lexAnalysis
 
 int readNextToken(FILE *file, Token *token);
 
-void lexAnalysis(char *fileName);
+void lexAnalysis(FILE *inputFile);
 
 void Mark(char msg[]);
 

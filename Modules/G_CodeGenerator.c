@@ -420,7 +420,7 @@ void BJump(long L) {
 
 //Генерация команды перехода BR
 void FJump(long *L) {
-    PutBR(BR, L);
+    PutBR(BR, *L);
     *L = pc - 1;
 }
 
@@ -501,64 +501,62 @@ void EnterCMD(char name[], int nameLength) {
     cno++;
 }
 
-void decode(char address[]) {
+void decode(FILE *outputFile) {
 
     cg_initialize();
 
     unsigned long w, op;
     long a;
     char str[150];
-    FILE *file = fopen(address, "w+");
-    fprintf(file, "Enter: %#+.8x\n", entry * 4);
+    fprintf(outputFile, "Enter: %#+.8x\n", entry * 4);
     for (unsigned long j = 0; j < pc; ++j) {
         w = code[j];
         op = (w >> 26) & 0x3F;
-        fprintf(file, "%#.8x %#.8x %-4s ", (unsigned int) j * 4, (unsigned int) w, mnemo[op]);
+        fprintf(outputFile, "%#.8x %#.8x %-4s ", (unsigned int) j * 4, (unsigned int) w, mnemo[op]);
 
         if (op < MOVI) {
-            fprintf(file, "R%.2lu, R%.2lu, R%.2lu\n", ((w >> 22) & 0x0F), ((w >> 18) & 0x0F), w & 0x0F);
+            fprintf(outputFile, "R%.2lu, R%.2lu, R%.2lu\n", ((w >> 22) & 0x0F), ((w >> 18) & 0x0F), w & 0x0F);
         } else if (op < BEQ) {
             a = (int) (w & 0x3FFFF);
             if (a >= 0x20000) {
                 a -= 0x40000;
             }
-            fprintf(file, "R%.2lu, R%.2lu, %s%#+.8x\n", w >> 22 & 0x0F, w >> 18 & 0x0F, a < 0?"-":"", a < 0 ? - (unsigned) a : (unsigned) a);
+            fprintf(outputFile, "R%.2lu, R%.2lu, %s%#+.8x\n", w >> 22 & 0x0F, w >> 18 & 0x0F, a < 0?"-":"", a < 0 ? - (unsigned) a : (unsigned) a);
         } else {
             a = (int) (w & 0x3FFFFFF);
 
             if (op == RET) {
                 // c = link register
-                fprintf(file, "R%.2d\n", a);
+                fprintf(outputFile, "R%.2d\n", a);
             } else {
                 if (a >= 0x2000000) {
                     a -= 0x4000000;
                 }
-                fprintf(file, "%s%#+.6x\n", a < 0 ? "-":"", a < 0 ? - (unsigned) (a * 4) : (unsigned) a * 4);
+                fprintf(outputFile, "%s%#+.6x\n", a < 0 ? "-":"", a < 0 ? - (unsigned) (a * 4) : (unsigned) a * 4);
             }
         }
     }
-    fprintf(file, "\n%d bytes\n", pc * 4);
+    fprintf(outputFile, "\n%d bytes\n", pc * 4);
 
-    fclose(file);
+    fclose(outputFile);
 
 }
 
 
-void Load(char outputAddress[]) {
+void Load(FILE *outputFile) {
     RiscLoad((const long *) code, pc);
-    RiscExecute(entry * 4, outputAddress);
-
+    RiscExecute(entry * 4, outputFile);
 }
 
 
-void Exec(char outputAddress[]) {
+void Exec(FILE *outputFile) {
     char *s = calloc(20, sizeof(char));
     scanf("%s", s);
     int i = 0;
     while (i < cno && namesEquals(s, sizeof(s), comname[i]->name, comname[i]->nameLength))
         i++;
     if (i < cno)
-        RiscExecute(comaddr[i], outputAddress);
+        RiscExecute(comaddr[i], outputFile);
 
 }
 

@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <malloc.h>
 #include <math.h>
+#include <stdlib.h>
 #include "Structures/B_TerminalSymbols.h"
 #include "Structures/A_Tokens.h"
 #include "B_LexAnalyzer.h"
@@ -15,18 +16,6 @@ long varsize;
 Node *objectsStart;
 Node *universe;
 Node end;
-
-long toInt(char *val, int size) {
-
-    long num = 0;
-    int exp = 0;
-
-    for (int i = size - 1; i >= 0; --i) {
-        num += (long) (*(val + i) - '0') * (long) pow(10, exp++);
-    }
-
-    return num;
-}
 
 //Добавление нового узла в objectStart
 Node *addNode(int class) {
@@ -111,7 +100,7 @@ void closeScope() {
     objectsStart = objectsStart->dsc;
 }
 
-static enter(int class, long value, char *name, int size, Type *type) {
+void enter(int class, long value, char *name, int size, Type *type) {
     Node *node = node_new();
     node->class = class;
     node->val = value;
@@ -137,12 +126,16 @@ void scope_initialise() {
 //expression = SimpleExpresion [("=" | "#" | "<" "<=" |">" |">=") SimpleExpression]
 void expression(struct Item *item1);
 
-struct Item selector(struct Item *item) {
+void selector(struct Item *item) {
     struct Item item2;
+
     while ((lexTokensFlow.current->type == terminalSymbols.LBRAK.type) ||
            (lexTokensFlow.current->type == terminalSymbols.PERIOD.type)) {
+
         if (lexTokensFlow.current->type == terminalSymbols.LBRAK.type) {
+
             tf_next(&lexTokensFlow);
+
             expression(&item2);
 
             if (item->type->form == ARRAY)
@@ -154,7 +147,9 @@ struct Item selector(struct Item *item) {
                 tf_next(&lexTokensFlow);
             else
                 Mark("]");
+
         } else {
+
             tf_next(&lexTokensFlow);
 
             if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
@@ -171,12 +166,13 @@ struct Item selector(struct Item *item) {
             } else {
                 Mark("ident?");
             }
+
         }
     }
 }
 
 // factor = ident selector | integer | ( expression ) | ~ factor
-factor(struct Item *_factor) {
+void factor(struct Item *_factor) {
 
     Node *node;
 
@@ -193,8 +189,7 @@ factor(struct Item *_factor) {
         MakeItem(_factor, node);
         selector(_factor);
     } else if (lexTokensFlow.current->type == terminalSymbols.NUMBER.type) {
-        MakeConstltem(_factor, &intType,
-                      toInt(lexTokensFlow.current->symbols, lexTokensFlow.current->length));
+        MakeConstltem(_factor, &intType, strtol(lexTokensFlow.current->symbols, 0, 10));
         tf_next(&lexTokensFlow);
     } else if (lexTokensFlow.current->type == terminalSymbols.LPAREN.type) {
         tf_next(&lexTokensFlow);
@@ -283,7 +278,7 @@ void expression(struct Item *item1) {
     }
 }
 
-struct Item parameter(Node *framePointer) {
+void parameter(Node *framePointer) {
     struct Item item;
     expression(&item);
 
@@ -291,22 +286,21 @@ struct Item parameter(Node *framePointer) {
         Parameter(&item, framePointer->type, framePointer->class);
         framePointer = framePointer->next;
     } else {
-        item.mode = NULL;
+        item.mode = -1;
         Mark("too many arguments");
     }
 }
 
-struct Item param(struct Item item) {
+void param(struct Item *item) {
     if (lexTokensFlow.current->type == terminalSymbols.LPAREN.type)
         tf_next(&lexTokensFlow);
     else
         Mark("(?");
-    expression(&item);
+    expression(item);
     if (lexTokensFlow.current->type == terminalSymbols.RPAREN.type)
         tf_next(&lexTokensFlow);
     else
         Mark(")?");
-    return item;
 }
 
 //StatSequence=statement{";"statement}
@@ -350,7 +344,7 @@ void StatSequence() {
                         while (true) {
                             parameter(par);
 
-                            if (item1.mode != NULL) {
+                            if (item1.mode != -1) {
                                 par = par->next;
                             }
 
@@ -376,7 +370,7 @@ void StatSequence() {
                 }
             } else if (item1.mode == S_PROC) {
                 if (node->val <= 3)
-                    item2 = param(item2);
+                    param(&item2);
                 IOCall(&item1, &item2);
             } else if (node->class == TYP) {
                 Mark("wrong operator");
@@ -433,7 +427,9 @@ void StatSequence() {
         }
         if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
             tf_next(&lexTokensFlow);
-        else if ((lexTokensFlow.current->type >= terminalSymbols.SEMICOLON.type) & (lexTokensFlow.current->type < terminalSymbols.IF.type) || (lexTokensFlow.current->type >= terminalSymbols.ARR.type))
+        else if ((lexTokensFlow.current->type >= terminalSymbols.SEMICOLON.type) &
+                 (lexTokensFlow.current->type < terminalSymbols.IF.type) ||
+                 (lexTokensFlow.current->type >= terminalSymbols.ARR.type))
             break;
         else
             Mark(";?");
@@ -468,6 +464,7 @@ Node *identList(int class) {
 
         return firstAdded;
     }
+    return NULL;
 }
 
 //Определение типа объекта
@@ -566,7 +563,7 @@ Type *type() {
 
 // ORDER SENSITIVE
 // declarations = ["CONST" {ident = expression ;}] [TYPE {ident = type;}] [VAR = {IdentList : type ;}] {ProcedureDeclarations;}
-long declarations(long *varsize) {
+void declarations(long *varsize) {
 
     Node *firstAdded;
     Node *obj;
@@ -671,7 +668,7 @@ long declarations(long *varsize) {
             break;
 
     }
-};
+}
 
 //FPSection=["VAR"]IdentList ":" type
 void FPSection(long *parblksize) {
@@ -833,8 +830,8 @@ void procedureDeclaration() {
 
 void moduleWithoutCloseScope() {
 
-    char *moduleIdentifier;
-    int moduleIdentifierLength;
+    char *moduleIdentifier = NULL;
+    int moduleIdentifierLength = 0;
 
     if (tf_next(&lexTokensFlow)->type == terminalSymbols.MODULE.type) {
         scope_initialise();

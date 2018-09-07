@@ -55,6 +55,9 @@ int readNextToken(FILE *file, Token *token) {
                         case LINUX:
                             fseek(file, -1, SEEK_CUR);
                             break;
+                        case UNSUPPORTED:
+                            fseek(file, -1, SEEK_CUR);
+                            break;
                     }
                     break;
                 default:
@@ -122,22 +125,20 @@ int readNextToken(FILE *file, Token *token) {
 
 }
 
-void lexAnalysis(char *fileName) {
+void lexAnalysis(FILE *inputFile) {
     numberOfLine = 1;
 
     if (os == UNSUPPORTED) {
-        printf("Unsupported OS type. Working in Linux compatibility mode.");
-        os = LINUX;
+        printf("Unsupported OS type. Working with Linux compatibility mode.");
     }
 
     tf_initialize(&lexTokensFlow);
     tss_initialize(&terminalSymbols);
-    FILE *file = fopen(fileName, "r");
 
     Token token;
     int result = 1;
     while (result == 1) {
-        result = readNextToken(file, &token);
+        result = readNextToken(inputFile, &token);
         if (result != 0)
             tf_addToken(&lexTokensFlow, &token);
     }
@@ -149,6 +150,6 @@ void lexAnalysis(char *fileName) {
 }
 
 void Mark(char msg[]) {
-    printf("Error in line number%d\n", lexTokensFlow.current->line);
+    printf("\nError in line number: %d\n", lexTokensFlow.current->line);
     printf("%s\n\n", msg);
 }

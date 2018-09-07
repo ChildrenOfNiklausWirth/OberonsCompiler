@@ -58,8 +58,7 @@ void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
 
 }
 
-void RiscExecute(long start, char *outputAddress) {
-    FILE *outputFile = fopen(outputAddress, "w+");
+void RiscExecute(long start, FILE *outputFile) {
 
     long IR;//instruction register
     long opc;//Операция

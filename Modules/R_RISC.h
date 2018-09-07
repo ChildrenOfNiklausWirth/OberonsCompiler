@@ -61,7 +61,7 @@ void myDecode(unsigned long IR, long *opc, long *a, long *b, long *c);
 
 void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c);
 
-void RiscExecute(long start, char *outputAddress);
+void RiscExecute(long start, FILE *outputFile);
 
 void RiscLoad(const long code[], long len);
 
