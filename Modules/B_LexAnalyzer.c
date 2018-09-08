@@ -26,8 +26,6 @@ int readNextToken(FILE *file, Token *token) {
     int tokenLength = 0;
     char firstSymbol, lastSymbol;
 
-    token->line = numberOfLine;
-
     if (fscanf(file, "%c", &firstSymbol) == EOF)
         return 0;
 
@@ -37,7 +35,6 @@ int readNextToken(FILE *file, Token *token) {
             numberOfLine++;
         if (fscanf(file, "%c", &firstSymbol) == EOF)
             return 0;
-
     }
 
     //Parsing of comments
@@ -140,6 +137,7 @@ void lexAnalysis(FILE *inputFile) {
     int result = 1;
     while (result == 1) {
         result = readNextToken(inputFile, &token);
+        token.line = numberOfLine;
         if (result != 0)
             tf_addToken(&lexTokensFlow, &token);
     }
