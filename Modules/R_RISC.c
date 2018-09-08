@@ -159,15 +159,12 @@ void RiscExecute(long start, FILE *outputFile) {
                 scanf("%li", &R[a]);
                 break;
             case WRD:
-                //TODO check
                 fprintf(outputFile, "%li ", R[c]);
                 break;
             case WRH:
-                //TODO check
                 fprintf(outputFile, " %o", (unsigned int) R[c]);
                 break;
             case WRL:
-                //TODO check
                 fprintf(outputFile, "\n");
                 break;
 

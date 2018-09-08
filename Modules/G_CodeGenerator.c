@@ -98,7 +98,7 @@ void TestRange(long x) {
 void load(struct Item *item) {
     long r;
     if (item->mode == VARIABLE) {
-        if (item->level == 0)
+        if (item->r == 15)
             item->a = MemSize + item->a - pc * 4;
         r = GetReg();
         Put(LDW, r, item->r, item->a);
@@ -232,12 +232,17 @@ void Index(struct Item *item1, struct Item *item2) {
     if (item2->mode == CONST) {
         if ((item2->a < 0) || (item2->a >= item1->type->len))
             Mark("Wrong index", -1);
+        item1->a += item2->a * item1->type->base->size;
     } else {
         if (item2->mode != REG)
             load(item2);
         Put(CHKI, item2->r, 0, item1->type->len);
         Put(MULI, item2->r, item2->r, item1->type->base->size);
-        Put(ADD, item2->r, item1->r, item2->r);
+        if (item1->r == PC) {
+            Put(ADDI, item2->r, item2->r, MemSize);
+        } else {
+            Put(ADD, item2->r, item1->r, item2->r);
+        }
         set_EXCL(regs, (int) item1->r);
         item1->r = item2->r;
     }

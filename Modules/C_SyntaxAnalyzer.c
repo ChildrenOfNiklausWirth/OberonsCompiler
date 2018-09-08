@@ -287,7 +287,7 @@ void parameter(Node *framePointer) {
 
     if (isParam(framePointer)) {
         Parameter(&item, framePointer->type, framePointer->class);
-        framePointer = framePointer->next;
+        *framePointer = *(framePointer)->next;
     } else {
         item.mode = -1;
         Mark("too many arguments", -1);
@@ -422,6 +422,12 @@ void StatSequence() {
             StatSequence();
             BJump(l);
             FixLink(item1.a);
+
+            if (lexTokensFlow.current->type == terminalSymbols.END.type) {
+                tf_next(&lexTokensFlow);
+            } else {
+                Mark("\"END\" of WHILE loop expected", -1);
+            }
         }
 
         if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
@@ -510,7 +516,7 @@ Type *type() {
         Type *baseType = type();
 
         typ = type_new();
-        typ->form = terminalSymbols.ARR.type;
+        typ->form = ARRAY;
         typ->base = baseType;
         typ->len = (int) x.a;
         typ->size = typ->len * baseType->size;

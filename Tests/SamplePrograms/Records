@@ -1,0 +1,41 @@
+/* Correct output: 11 26 12 12 5 */
+MODULE Records;
+    TYPE S = RECORD
+                s1, s2: INTEGER;
+                b: BOOLEAN;
+    END;
+
+    VAR v: S;
+        i: INTEGER;
+
+    PROCEDURE proc1 (VAR s: S);
+    BEGIN
+        IF s.b THEN
+            s.s1 := s.s1 + 1;
+            Write(s.s1);
+        END;
+    END proc1;
+
+    PROCEDURE proc2(x: INTEGER);
+        VAR s: S;
+        BEGIN
+            IF x > 3 THEN
+                s.b := TRUE;
+                Write(s.s1);
+            END;
+
+            s.s1 := 5;
+            Write(s.s1);
+
+    END proc2;
+
+BEGIN
+    v.s1 := 11;
+    v.s2 := v.s1 + 15;
+    v.b := v.s1 + v.s2 > 3;
+    Write(v.s1);
+    Write(v.s2);
+    proc1(v);
+    Write(v.s1);
+    proc2(5);
+END Records.

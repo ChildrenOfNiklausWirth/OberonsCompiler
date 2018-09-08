@@ -5,6 +5,8 @@ MODULE SyntaxError;
     BEGIN
         i := i + 100;
         Write(i);
+        forward;
+        Write(6);
     END straight;
 
     BEGIN
