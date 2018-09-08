@@ -1,0 +1,13 @@
+MODULE SyntaxError;
+    VAR i: INTEGER;
+
+    PROCEDURE straight;
+    BEGIN
+        i := i + 100;
+        Write(i);
+    END straight;
+
+    BEGIN
+        i := i + 1;
+        straight;
+    END SyntaxError.

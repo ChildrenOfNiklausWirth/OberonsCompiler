@@ -12,7 +12,8 @@ set(LIBRARIES
         Modules/SimpleFunctions/SimpleFunctions.c
         Modules/Structures/Node.c
         Modules/Structures/Set.c
-        Modules/R_RISC.c)
+        Modules/R_RISC.c
+        )
 
 
 add_library(lib STATIC ${LIBRARIES})

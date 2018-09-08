@@ -1,3 +1,4 @@
+#include <malloc.h>
 #include "B_LexAnalyzer.h"
 
 
@@ -129,7 +130,7 @@ void lexAnalysis(FILE *inputFile) {
     numberOfLine = 1;
 
     if (os == UNSUPPORTED) {
-        printf("Unsupported OS type. Working with Linux compatibility mode.");
+        printf("Unsupported OS type. Working in Linux compatibility mode.");
     }
 
     tf_initialize(&lexTokensFlow);
@@ -142,14 +143,13 @@ void lexAnalysis(FILE *inputFile) {
         if (result != 0)
             tf_addToken(&lexTokensFlow, &token);
     }
-
-
-    if (lexTokensFlow.size == 0)
-        printf("Probably wrong path");
-
 }
 
-void Mark(char msg[]) {
-    printf("\nError in line number: %d\n", lexTokensFlow.current->line);
-    printf("%s\n\n", msg);
+void Mark(char msg[], int line) {
+
+    if (line < 0) {
+        line = lexTokensFlow.current->line;
+    }
+
+    printf("\nLine number: %d. Error: \"%s\". \n", line, msg);
 }

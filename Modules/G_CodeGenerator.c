@@ -89,7 +89,7 @@ void PutBR(long op, long disp) {
 //Проверяет размер переменной
 void TestRange(long x) {
     if ((x >= int_hexToDecimal(20000)) || (x < int_hexToDecimal(-20000)))
-        Mark("Value is out of range");
+        Mark("Value is out of range", -1);
 
 }
 
@@ -113,7 +113,7 @@ struct Item load(struct Item *item) {
 
 struct Item loadBool(struct Item *item) {
     if (item->type->form != BOOLEAN)
-        Mark("Boolean?");
+        Mark("Boolean?", -1);
     load(item);
     item->mode = COND;
     item->a = 0;
@@ -210,7 +210,7 @@ void MakeItem(struct Item *item, Node *node) {
     } else if (node->level == curlev)
         item->r = FP;
     else {
-        Mark("Level mismatch!");
+        Mark("Level mismatch!", -1);
         item->r = 0;
     }
     if (node->class == PAR) {
@@ -229,10 +229,10 @@ void Field(struct Item *item, Node *node) {
 
 void Index(struct Item *item1, struct Item *item2) {
     if (item2->type != &intType)
-        Mark("Index isn't integer");
+        Mark("Index isn't integer", -1);
     if (item2->mode == CONST) {
         if ((item2->a < 0) || (item2->a >= item1->type->len))
-            Mark("Wrong index");
+            Mark("Wrong index", -1);
     } else {
         if (item2->mode != REG)
             load(item2);
@@ -249,7 +249,7 @@ void Op1(int op, struct Item *item) {
     long t;
     if (op == terminalSymbols.MINUS.type)
         if (item->type->form != INTEGER) {
-            Mark("Type mismatch");
+            Mark("Type mismatch", -1);
         } else if (item->mode == CONST) {
             item->a = -item->a;
         } else {
@@ -312,7 +312,7 @@ void Op2(int op, struct Item *item1, struct Item *item2) {
             } else if (op == terminalSymbols.MOD.type) {
                 PutOp(MODULUS, item1, item2);
             } else
-                Mark("�������� ���");
+                Mark("�������� ���", -1);
         }
     } else if (item1->type->form == BOOLEAN && item2->type->form == BOOLEAN) {
         if (item2->mode != COND)
@@ -322,13 +322,13 @@ void Op2(int op, struct Item *item1, struct Item *item2) {
             item1->b = merged(item2->b, item1->b);
             item1->c = item2->c;
         }
-    } else Mark("Type mismatch");
+    } else Mark("Type mismatch", -1);
 
 }
 
 void Relation(int op, struct Item *item1, struct Item *item2) {
     if (item1->type->form != INTEGER || item2->type->form != INTEGER) {
-        Mark("Wrong type");
+        Mark("Wrong type", -1);
 
     } else {
         PutOp(CMP, item1, item2);
@@ -364,11 +364,11 @@ void Store(struct Item *item1, struct Item *item2) {
             Put(STW, item2->r, item1->r, item1->a);
 
         } else
-            Mark("Wrong assertion");
+            Mark("Wrong assertion", -1);
         set_EXCL(regs, item1->r);
         set_EXCL(regs, item2->r);
     } else
-        Mark("Type mismatch");
+        Mark("Type mismatch", -1);
 }
 
 void Parameter(struct Item *item, Type *ftyp, int class) {
@@ -385,7 +385,7 @@ void Parameter(struct Item *item, Type *ftyp, int class) {
                 } else
                     r = item->r;
             else
-                Mark("Parameter type mismatch");
+                Mark("Parameter type mismatch", -1);
             Put(PSH, r, SP, 4);
             set_EXCL(regs, r);
 
@@ -395,7 +395,7 @@ void Parameter(struct Item *item, Type *ftyp, int class) {
             Put(PSH, item->r, SP, 4);
             set_EXCL(regs, item->r);
         }
-    } else Mark("Parameter type mismatch");
+    } else Mark("Parameter type mismatch", -1);
 
 }
 

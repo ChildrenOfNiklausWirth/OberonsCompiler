@@ -20,6 +20,6 @@ int readNextToken(FILE *file, Token *token);
 
 void lexAnalysis(FILE *inputFile);
 
-void Mark(char msg[]);
+void Mark(char msg[], int line);
 
 #endif //OBERONSCOMPILER_B_LEKSANALYZER_H

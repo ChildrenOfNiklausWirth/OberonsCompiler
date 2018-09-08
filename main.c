@@ -28,14 +28,14 @@ int main(int argc, char *argv[]) {
     }
 
     if (outputFileName == NULL) {
-        printf("Specify output file name");
+        printf("Specify output file name or set to 0 for stdout");
         errflag = 1;
     }
 
     if (errflag == 0) {
-        FILE *inputFile = fopen(inputFileName, "r");
-        FILE *decodedFile = fopen(decodedFileName, "w+");
-        FILE *outputFile = stdout;
+        FILE* inputFile = fopen(inputFileName, "r");
+        FILE* decodedFile = fopen(decodedFileName, "w+");
+        FILE* outputFile = stdout;
 
         if (strcmp(outputFileName, "0") != 0) {
             outputFile = fopen(outputFileName, "w+");
