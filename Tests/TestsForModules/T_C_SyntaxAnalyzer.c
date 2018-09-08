@@ -91,7 +91,7 @@ Node *getRightResultForObjectStart() {
 
 
     type = type_newType(3, fields, NULL, 8, 0);
-    dsc = object_newObject(2, 1, 0, "pt", sizeof("pt") - 1, type, NULL, dsc);
+    dsc = object_newObject(2, 1, 12, "pt", sizeof("pt") - 1, type, NULL, dsc);
 
     rightObjectStart = object_newObject(6, 0, 19, "isThirdOrForth", sizeof("isThirdOrForth") - 1, NULL, dsc,
                                         rightObjectStart);
@@ -102,7 +102,6 @@ Node *getRightResultForObjectStart() {
 
     type = type_newType(0, NULL, NULL, 4, 0);
     dsc = object_newObject(2, 1, 0, "ansBool", sizeof("ansBool") - 1, type, NULL, dsc);
-
 
 
     fields = object_newObject(0, 0, 0, "int2", sizeof("int2") - 1, NULL, NULL, NULL);//end
@@ -198,21 +197,36 @@ Node *getRightResultForObjectStart() {
 
 }
 
+void node_print(Node node) {
+    for (int i = 0; i < node.nameLength; ++i)
+        printf("%c", node.name[i]);
+    printf("\n");
+
+}
+
 int node_assertEqualsTwoNodes(Node node1, Node node2) {
 
     if (node1.class != node2.class) {
+        node_print(node1);
+        node_print(node2);
         printf("Unequal class \n%d\n%d\n", node1.class, node2.class);
         return 0;
     }
     if (node1.level != node2.level) {
+        node_print(node1);
+        node_print(node2);
         printf("Unequal level \n%d\n%d\n", node1.level, node2.level);
         return 0;
     }
     if (node1.val != node2.val) {
-        printf("Unequal val \n%li\n%li\n", node1.val, node2.val);
+        node_print(node1);
+        node_print(node2);
+        printf("Unequal val \nright %li\nour %li\n", node1.val, node2.val);
         return 0;
     }
     if (!namesEquals(node1.name, node1.nameLength, node2.name, node2.nameLength)) {
+        node_print(node1);
+        node_print(node2);
         printf("Unequal names \n%s\n%s\n", node1.name, node2.name);
         return 0;
     }
@@ -230,16 +244,18 @@ int node_assertEqualsTwoNodes(Node node1, Node node2) {
 
 int main() {
     printf("SyntaxAnalyzer Testing...\n\n");
-    lexAnalysis(address);
+    FILE *file = fopen(address, "r");
+    lexAnalysis(file);
     moduleWithoutCloseScope();
 
     Node *rightObjectStart = getRightResultForObjectStart();
 
     printf("objectStart equals\n");
-    if (node_assertEqualsTwoNodes(*objectsStart, *rightObjectStart))
+    if (node_assertEqualsTwoNodes(*rightObjectStart, *objectsStart))
         printf("True");
     else
         printf("False");
 
 
 }
+

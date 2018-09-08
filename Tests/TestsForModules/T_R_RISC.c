@@ -259,7 +259,7 @@ int main() {
     if (maxTests == passedTest)
         printf("\nALL TESTS WAS SUCCESSFULLY\n\n");
     else {
-        printf("\nSOME TESTS FAILED\n\n");
+        printf("\nSOME TESTS FAILED\nMAYBE FORGOT REMOVE SOMETHING\n");
     }
 
     return 1;
