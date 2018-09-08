@@ -1,3 +1,4 @@
+#include <memory.h>
 #include "G_CodeGenerator.h"
 
 int MemSize = 1024;
@@ -16,42 +17,42 @@ void cg_initialize() {
         mnemo[i] = calloc(5, sizeof(char));
     }
 
-    mnemo[MOV] = "MOV";
-    mnemo[MVN] = "MVN";
-    mnemo[ADD] = "ADD";
-    mnemo[SUB] = "SUB";
-    mnemo[MUL] = "MUL";
-    mnemo[DIVIDE] = "DIV";
-    mnemo[MODULUS] = "MOD";
-    mnemo[CMP] = "CMP";
-    mnemo[MOVI] = "MOVI";
-    mnemo[MVNI] = "MVNI";
-    mnemo[ADDI] = "ADDI";
-    mnemo[SUBI] = "SUBI";
-    mnemo[MULI] = "MULI";
-    mnemo[DIVI] = "DIVI";
-    mnemo[MODI] = "MODI";
-    mnemo[CMPI] = "CMPI";
-    mnemo[CHKI] = "CHKI";
-    mnemo[LDW] = "LDW";
-    mnemo[LDB] = "LDB";
-    mnemo[POP] = "POP";
-    mnemo[STW] = "STW";
-    mnemo[STB] = "STB";
-    mnemo[PSH] = "PSH";
-    mnemo[BEQ] = "BEQ";
-    mnemo[BNE] = "BNE";
-    mnemo[BLT] = "BLT";
-    mnemo[BGE] = "BGE";
-    mnemo[BLE] = "BLE";
-    mnemo[BGT] = "BGT";
-    mnemo[BR] = "BR";
-    mnemo[BSR] = "BSR";
-    mnemo[RET] = "RET";
-    mnemo[RD] = "READ";
-    mnemo[WRD] = "WRD";
-    mnemo[WRH] = "WRH";
-    mnemo[WRL] = "WRL";
+    strcpy(mnemo[MOV], "MOV");
+    strcpy(mnemo[MVN], "MVN");
+    strcpy(mnemo[ADD], "ADD");
+    strcpy(mnemo[SUB], "SUB");
+    strcpy(mnemo[MUL], "MUL");
+    strcpy(mnemo[DIVIDE], "DIV");
+    strcpy(mnemo[MODULUS], "MOD");
+    strcpy(mnemo[CMP], "CMP");
+    strcpy(mnemo[MOVI], "MOVI");
+    strcpy(mnemo[MVNI], "MVNI");
+    strcpy(mnemo[ADDI], "ADDI");
+    strcpy(mnemo[SUBI], "SUBI");
+    strcpy(mnemo[MULI], "MULI");
+    strcpy(mnemo[DIVI], "DIVI");
+    strcpy(mnemo[MODI], "MODI");
+    strcpy(mnemo[CMPI], "CMPI");
+    strcpy(mnemo[CHKI], "CHKI");
+    strcpy(mnemo[LDW], "LDW");
+    strcpy(mnemo[LDB], "LDB");
+    strcpy(mnemo[POP], "POP");
+    strcpy(mnemo[STW], "STW");
+    strcpy(mnemo[STB], "STB");
+    strcpy(mnemo[PSH], "PSH");
+    strcpy(mnemo[BEQ], "BEQ");
+    strcpy(mnemo[BNE], "BNE");
+    strcpy(mnemo[BLT], "BLT");
+    strcpy(mnemo[BGE], "BGE");
+    strcpy(mnemo[BLE], "BLE");
+    strcpy(mnemo[BGT], "BGT");
+    strcpy(mnemo[BR], "BR");
+    strcpy(mnemo[BSR], "BSR");
+    strcpy(mnemo[RET], "RET");
+    strcpy(mnemo[RD], "READ");
+    strcpy(mnemo[WRD], "WRD");
+    strcpy(mnemo[WRH], "WRH");
+    strcpy(mnemo[WRL], "WRL");
 }
 
 //Возвращает свободный регистр
@@ -496,7 +497,7 @@ void Close(long globals) {
 }
 
 //Собирает Item comname[ ] и long comaddr[ ]
-void EnterCMD(char name[], int nameLength) {
+void EnterCMD(char *name, int nameLength) {
     comname[cno] = ident_new(name, nameLength);
     comaddr[cno] = pc * 4;
     cno++;

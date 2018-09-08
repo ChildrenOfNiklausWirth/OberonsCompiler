@@ -22,8 +22,7 @@ Node *addNode(int class) {
 
     Node *objects = objectsStart;
 
-    end.name = lexTokensFlow.current->symbols;
-    end.nameLength = lexTokensFlow.current->length;
+    node_setName(&end, lexTokensFlow.current->symbols, lexTokensFlow.current->length);
 
 
     while (namesEquals(lexTokensFlow.current->symbols, lexTokensFlow.current->length, objects->next->name,
@@ -92,7 +91,11 @@ void openScope() {
     Node *s = node_new();
     s->class = HEAD;
     s->dsc = objectsStart;
-    s->next = &end;
+
+    if (s->next == NULL) {
+        s->next = &end;
+    }
+
     objectsStart = s;
 }
 
@@ -369,7 +372,8 @@ void StatSequence() {
             } else if (node->class == TYP) {
                 Mark("Illegal assignment", -1);
             } else {
-                Mark("Statement should contain assignment expression, function call or conditional", (lexTokensFlow.current - 1)->line);
+                Mark("Statement should contain assignment expression, function call or conditional",
+                     (lexTokensFlow.current - 1)->line);
             }
         } else if (lexTokensFlow.current->type == terminalSymbols.IF.type) {
             tf_next(&lexTokensFlow);

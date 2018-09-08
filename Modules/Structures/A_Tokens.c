@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <memory.h>
 #include "A_Tokens.h"
 
-Ident *ident_new(char name[], int nameLength) {
-    Ident *ident;
-    ident = calloc(1, sizeof(ident));
-    ident->name = malloc(sizeof(char) * nameLength);
-    for (int i = 0; i < nameLength; ++i)
-        ident->name[i] = name[i];
+Ident *ident_new(char *name, int nameLength) {
+    Ident *ident = malloc(sizeof(*ident));
+    ident->nameLength = nameLength;
+    ident->name = malloc(strlen(name) + 1);
+    strcpy(ident->name, name);
     return ident;
 }
 

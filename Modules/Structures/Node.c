@@ -30,11 +30,18 @@ Node* node_new() {
 }
 
 void node_setName(Node *obj, char *name, int name_size) {
-    obj->name = calloc((size_t) name_size, sizeof(char));
-    for (int i = 0; i < name_size; ++i) {
+
+    if (obj->name == NULL) {
+        obj->name = calloc((size_t) name_size, sizeof(char));
+    } else {
+        obj->name = realloc(obj->name, name_size * sizeof(char));
+    }
+
+    obj->nameLength = name_size;
+
+    for (int i = 0; i < obj->nameLength; ++i) {
         obj->name[i] = name[i];
     }
-    obj->nameLength = name_size;
 }
 
 int nodes_equals(Node object1, struct Node object2) {

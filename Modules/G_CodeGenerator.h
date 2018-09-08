@@ -137,7 +137,7 @@ void Open();
 
 void Close(long globals);
 
-void EnterCMD(char name[], int nameLength);
+void EnterCMD(char *name, int nameLength);
 
 void Load(FILE *loadFile);
 

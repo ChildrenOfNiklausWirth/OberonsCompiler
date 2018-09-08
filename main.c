@@ -56,5 +56,6 @@ int main(int argc, char *argv[]) {
             printf("No such file \"%s\"", inputFileName);
         }
     }
+   exit(0);
 }
 
