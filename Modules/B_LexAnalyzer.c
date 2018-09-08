@@ -11,17 +11,20 @@ enum OS os = OS_TYPE;
 int numberOfLine;
 struct TokensFlow lexTokensFlow;
 
-void parseCommentaries(FILE *file, char *c) {
+int parseCommentaries(FILE *file, char *c) {
     do {
-        fscanf(file, "%c", c);
+        if (fscanf(file, "%c", c) == EOF)
+            return 0;
         if (*c == '\n')
             numberOfLine++;
     } while (*c != '*');
     fscanf(file, "%c", c);
     if (*c != '/')
         parseCommentaries(file, c);
-    else
+    else {
         fscanf(file, "%c", c);
+        return 1;
+    }
 }
 
 int readNextToken(FILE *file, Token *token) {
@@ -39,12 +42,15 @@ int readNextToken(FILE *file, Token *token) {
             return 0;
     }
 
+    int parsResult;
     //Parsing of comments
     if (firstSymbol == '/') {
         fscanf(file, "%c", &firstSymbol);
         if (firstSymbol == '*') {
-            parseCommentaries(file, &firstSymbol);
-            if(firstSymbol=='\n')
+            parsResult = parseCommentaries(file, &firstSymbol);
+            if (!parsResult)
+                Mark("Incorrect comment", numberOfLine);
+            if (firstSymbol == '\n')
                 numberOfLine++;
             return readNextToken(file, token);
         } else
