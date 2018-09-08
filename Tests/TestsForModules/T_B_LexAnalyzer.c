@@ -9,7 +9,7 @@ char firstAddress[] = "../Tests/SamplePrograms/1_Test.txt";
 char secondAddress[] = "../Tests/SamplePrograms/1_TestWithCommentaries.txt";
 char thirdAdress[] = "../Tests/SamplePrograms/2_Test.txt";
 
-void createRightResultForFirstAndSecondTest(struct TokensFlow *tokensflow) {
+void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
     Token tokens[42];
     int tokensSize = 42;
 
@@ -73,6 +73,80 @@ void createRightResultForFirstAndSecondTest(struct TokensFlow *tokensflow) {
     tokens[39] = token_newTokenWithType("END", 3, 40, 9);
     tokens[40] = token_newTokenWithType("TEST", 4, 37, 9);
     tokens[41] = token_newTokenWithType(";", 1, 38, 9);
+
+    for (int i = 0; i < tokensSize; ++i)
+        tf_addToken(tokensflow, &tokens[i]);
+
+    if (tokensflow->size != tokensSize)
+        printf("Problems with TokensFlow");
+
+
+}
+
+void createRightResultForSecondTest(struct TokensFlow *tokensflow) {
+    Token tokens[42];
+    int tokensSize = 42;
+
+    // /MODULE TEST;
+    tokens[0] = token_newTokenWithType("MODULE", 6, 63, 2);
+    tokens[1] = token_newTokenWithType("TEST", 4, 37, 2);
+    tokens[2] = token_newTokenWithType(";", 1, 38, 2);
+
+    //CONST IntConst = 16;
+    tokens[3] = token_newTokenWithType("CONST", 5, 57, 5);
+    tokens[4] = token_newTokenWithType("IntConst", 8, 37, 5);
+    tokens[5] = token_newTokenWithType("=", 1, 9, 5);
+    tokens[6] = token_newTokenWithType("16", 2, 34, 5);
+    tokens[7] = token_newTokenWithType(";", 1, 38, 5);
+
+    //VAR sum: INTEGER;
+    tokens[8] = token_newTokenWithType("VAR", 3, 59, 6);
+    tokens[9] = token_newTokenWithType("sum", 3, 37, 6);
+    tokens[10] = token_newTokenWithType(":", 1, 20, 6);
+    tokens[11] = token_newTokenWithType("INTEGER", 7, 37, 6);
+    tokens[12] = token_newTokenWithType(";", 1, 38, 6);
+
+    //BoolVar: BOOLE;
+    tokens[13] = token_newTokenWithType("BoolVar", 7, 37, 7);
+    tokens[14] = token_newTokenWithType(":", 1, 20, 7);
+    tokens[15] = token_newTokenWithType("BOOLEAN", 7, 37, 7);
+    tokens[16] = token_newTokenWithType(";", 1, 38, 7);
+
+
+    //PROCEDURE AddIntegers(a: INTEGER; b: INTEGER);
+    tokens[17] = token_newTokenWithType("PROCEDURE", 9, 60, 8);
+    tokens[18] = token_newTokenWithType("AddIntegers", 11, 37, 8);
+    tokens[19] = token_newTokenWithType("(", 1, 29, 8);
+    tokens[20] = token_newTokenWithType("a", 1, 37, 8);
+    tokens[21] = token_newTokenWithType(":", 1, 20, 8);
+    tokens[22] = token_newTokenWithType("INTEGER", 7, 37, 8);
+    tokens[23] = token_newTokenWithType(";", 1, 38, 8);
+    tokens[24] = token_newTokenWithType("b", 1, 37, 8);
+    tokens[25] = token_newTokenWithType(":", 1, 20, 8);
+    tokens[26] = token_newTokenWithType("INTEGER", 7, 37, 8);
+    tokens[27] = token_newTokenWithType(")", 1, 22, 8);
+    tokens[28] = token_newTokenWithType(";", 1, 38, 8);
+
+    //BEGIN
+    tokens[29] = token_newTokenWithType("BEGIN", 5, 61, 9);
+
+    //sum := a + b;
+    tokens[30] = token_newTokenWithType("sum", 3, 37, 10);
+    tokens[31] = token_newTokenWithType(":=", 2, 33, 10);
+    tokens[32] = token_newTokenWithType("a", 1, 37, 10);
+    tokens[33] = token_newTokenWithType("+", 1, 6, 10);
+    tokens[34] = token_newTokenWithType("b", 1, 37, 10);
+    tokens[35] = token_newTokenWithType(";", 1, 38, 10);
+
+    //END AddIntegers;
+    tokens[36] = token_newTokenWithType("END", 3, 40, 11);
+    tokens[37] = token_newTokenWithType("AddIntegers", 11, 37, 11);
+    tokens[38] = token_newTokenWithType(";", 1, 38, 11);
+
+    //END TEST;
+    tokens[39] = token_newTokenWithType("END", 3, 40, 12);
+    tokens[40] = token_newTokenWithType("TEST", 4, 37, 12);
+    tokens[41] = token_newTokenWithType(";", 1, 38, 12);
 
     for (int i = 0; i < tokensSize; ++i)
         tf_addToken(tokensflow, &tokens[i]);
@@ -203,7 +277,7 @@ void firstTest(enum Report report) {
 
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
-    createRightResultForFirstAndSecondTest(&rightTokensFlow);
+    createRightResultForFirstTest(&rightTokensFlow);
     FILE *file = fopen(firstAddress, "r");
     lexAnalysis(file);
 
@@ -227,7 +301,7 @@ void firstTest(enum Report report) {
 void secondTest(enum Report report) {
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
-    createRightResultForFirstAndSecondTest(&rightTokensFlow);
+    createRightResultForSecondTest(&rightTokensFlow);
 
     FILE *file = fopen(secondAddress, "r");
     lexAnalysis(file);

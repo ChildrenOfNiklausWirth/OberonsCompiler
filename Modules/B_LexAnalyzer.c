@@ -14,6 +14,8 @@ struct TokensFlow lexTokensFlow;
 void parseCommentaries(FILE *file, char *c) {
     do {
         fscanf(file, "%c", c);
+        if (*c == '\n')
+            numberOfLine++;
     } while (*c != '*');
     fscanf(file, "%c", c);
     if (*c != '/')
@@ -42,6 +44,8 @@ int readNextToken(FILE *file, Token *token) {
         fscanf(file, "%c", &firstSymbol);
         if (firstSymbol == '*') {
             parseCommentaries(file, &firstSymbol);
+            if(firstSymbol=='\n')
+                numberOfLine++;
             return readNextToken(file, token);
         } else
             switch (firstSymbol) {
