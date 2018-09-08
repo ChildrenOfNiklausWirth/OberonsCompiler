@@ -15,7 +15,7 @@ int parseCommentaries(FILE *file, char *c) {
     do {
         if (fscanf(file, "%c", c) == EOF)
             return 0;
-        if (*c == '\n')
+        if ( *c == '\n')
             numberOfLine++;
     } while (*c != '*');
     fscanf(file, "%c", c);
