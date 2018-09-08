@@ -1,4 +1,5 @@
 #include "../../Modules/B_LexAnalyzer.h"
+#include "../../Modules/Structures/A_Tokens.h"
 
 enum Report {
     REPORT, NO_REPORT
@@ -89,10 +90,10 @@ void createRightResultForThirdTest(struct TokensFlow *tokensflow) {
     tokens[1] = token_newTokenWithType("*", 1, 1, 2);
     tokens[2] = token_newTokenWithType("DIV", 3, 3, 3);
     tokens[3] = token_newTokenWithType("MOD", 3, 4, 4);
-    tokens[4] = token_newTokenWithType("AND", 3, 5, 5);
+    tokens[4] = token_newTokenWithType("&", 1, 5, 5);
     tokens[5] = token_newTokenWithType("+", 1, 6, 6);
     tokens[6] = token_newTokenWithType("-", 1, 7, 7);
-    tokens[7] = token_newTokenWithType("&", 1, 8, 8);
+    tokens[7] = token_newTokenWithType("OR", 2, 8, 8);
     tokens[8] = token_newTokenWithType("=", 1, 9, 9);
     tokens[9] = token_newTokenWithType("#", 1, 10, 10);
     tokens[10] = token_newTokenWithType("<", 1, 11, 11);
@@ -114,21 +115,21 @@ void createRightResultForThirdTest(struct TokensFlow *tokensflow) {
     tokens[26] = token_newTokenWithType("2134", 4, 34, 27);
     tokens[27] = token_newTokenWithType("ident", 5, 37, 28);
     tokens[28] = token_newTokenWithType(";", 1, 38, 29);
-    tokens[29] = token_newTokenWithType("END", 3, 40, 29);
-    tokens[30] = token_newTokenWithType("ELSE", 4, 41, 30);
-    tokens[31] = token_newTokenWithType("ELSEIF", 6, 42, 31);
-    tokens[32] = token_newTokenWithType("IF", 2, 44, 32);
-    tokens[33] = token_newTokenWithType("WHILE", 5, 46, 33);
-    tokens[34] = token_newTokenWithType("ARRAY", 5, 54, 34);
-    tokens[35] = token_newTokenWithType("RECORD", 6, 55, 35);
-    tokens[36] = token_newTokenWithType("CONST", 5, 57, 36);
-    tokens[37] = token_newTokenWithType("INTEGER", 7, 37, 37);
-    tokens[38] = token_newTokenWithType("BOOLEAN", 7, 37, 38);
-    tokens[39] = token_newTokenWithType("VAR", 3, 59, 39);
-    tokens[40] = token_newTokenWithType("PROCEDURE", 9, 60, 40);
-    tokens[41] = token_newTokenWithType("BEGIN", 5, 61, 41);
-    tokens[42] = token_newTokenWithType("MODULE", 6, 63, 42);
-    tokens[43] = token_newTokenWithType("EOF", 3, 64, 43);
+    tokens[29] = token_newTokenWithType("END", 3, 40, 30);
+    tokens[30] = token_newTokenWithType("ELSE", 4, 41, 31);
+    tokens[31] = token_newTokenWithType("ELSEIF", 6, 42, 32);
+    tokens[32] = token_newTokenWithType("IF", 2, 44, 33);
+    tokens[33] = token_newTokenWithType("WHILE", 5, 46, 34);
+    tokens[34] = token_newTokenWithType("ARRAY", 5, 54, 35);
+    tokens[35] = token_newTokenWithType("RECORD", 6, 55, 36);
+    tokens[36] = token_newTokenWithType("CONST", 5, 57, 37);
+    tokens[37] = token_newTokenWithType("INTEGER", 7, 37, 38);
+    tokens[38] = token_newTokenWithType("BOOLEAN", 7, 37, 39);
+    tokens[39] = token_newTokenWithType("VAR", 3, 59, 40);
+    tokens[40] = token_newTokenWithType("PROCEDURE", 9, 60, 41);
+    tokens[41] = token_newTokenWithType("BEGIN", 5, 61, 42);
+    tokens[42] = token_newTokenWithType("MODULE", 6, 63, 43);
+    tokens[43] = token_newTokenWithType("EOF", 3, 64, 44);
 
     tf_clear(tokensflow);
     tf_initialize(tokensflow);
@@ -152,11 +153,22 @@ int tf_assertEqualsTwoTokensFlows(struct TokensFlow tokensFlow, struct TokensFlo
                    rightTokensFlow.size);
 
         for (int i = 0; i < rightTokensFlow.size; ++i) {
+            if (tokensFlow.tokens[i].line != rightTokensFlow.tokens[i].line) {
+                printf("Not equal line number\n");
+
+                printf("right \t%d ", rightTokensFlow.tokens[i].line);
+                token_print(rightTokensFlow.tokens[i]);
+                printf("lex \t%d ", tokensFlow.tokens[i].line);
+                token_print(tokensFlow.tokens[i]);
+            }
+
             if (tokensFlow.tokens[i].length != rightTokensFlow.tokens[i].length ||
                 tokensFlow.tokens[i].type != rightTokensFlow.tokens[i].type) {
                 printf("Not equal type\n");
-                token_print(tokensFlow.tokens[i]);
+                printf("right \t%d ", rightTokensFlow.tokens[i].type);
                 token_print(rightTokensFlow.tokens[i]);
+                printf("lex \t%d ", tokensFlow.tokens[i].type);
+                token_print(tokensFlow.tokens[i]);
             }
             for (int j = 0; j < tokensFlow.tokens[i].length; ++j) {
                 if (tokensFlow.tokens[i].symbols[j] != rightTokensFlow.tokens[i].symbols[j]) {
@@ -192,8 +204,8 @@ void firstTest(enum Report report) {
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
     createRightResultForFirstAndSecondTest(&rightTokensFlow);
-
-    lexAnalysis(firstAddress);
+    FILE *file = fopen(firstAddress, "r");
+    lexAnalysis(file);
 
 
     if (report == REPORT) {
@@ -217,7 +229,8 @@ void secondTest(enum Report report) {
     tf_initialize(&rightTokensFlow);
     createRightResultForFirstAndSecondTest(&rightTokensFlow);
 
-    lexAnalysis(secondAddress);
+    FILE *file = fopen(secondAddress, "r");
+    lexAnalysis(file);
 
     if (report == REPORT) {
         printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
@@ -241,7 +254,8 @@ void thirdTest(enum Report report) {
     tf_initialize(&rightTokensFlow);
     createRightResultForThirdTest(&rightTokensFlow);
 
-    lexAnalysis(thirdAdress);
+    FILE *file = fopen(thirdAdress, "r");
+    lexAnalysis(file);
 
     if (report == REPORT) {
         printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
@@ -263,11 +277,11 @@ void thirdTest(enum Report report) {
 int main() {
     printf("LexAnalyzer Testing...\n\n");
     printf("-----------------------------------1 TEST-------------------------------------------------------\n");
-    firstTest(REPORT);
+    firstTest(NO_REPORT);
     printf("-----------------------------------2 TEST-------------------------------------------------------\n");
-    secondTest(REPORT);
+    secondTest(NO_REPORT);
     printf("-----------------------------------3 TEST-------------------------------------------------------\n");
-    thirdTest(REPORT);
+    thirdTest(NO_REPORT);
     printf("------------------------------------------------------------------------------------------------");
 
 }

@@ -236,6 +236,8 @@ int tf_equals(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) 
     for (int i = 0; i < tokensFlowOne.size; ++i) {
         if (tokensFlowOne.tokens[i].type != tokensFlowTwo.tokens[i].type)
             return 0;
+        if (tokensFlowOne.tokens[i].line != tokensFlowTwo.tokens[i].line)
+            return 0;
 
         for (int j = 0; j < tokensFlowOne.tokens[i].length; ++j)
             if (tokensFlowOne.tokens[i].symbols[j] != tokensFlowTwo.tokens[i].symbols[j])

@@ -2,10 +2,10 @@ NULL
 *
 DIV
 MOD
-AND
+&
 +
 -
-&
+OR
 =
 #
 <
