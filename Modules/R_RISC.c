@@ -40,15 +40,13 @@ void myDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
 
 void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
 
-    *opc = IR / (1 << 26) % (1 << 6);
+    *opc = IR / 0x4000000 % 0x40;
     *a = IR / (1 << 22) % (1 << 4);
     *b = IR / (1 << 18) % (1 << 4);
-    *c = IR % (1 << 4);
+    *c = IR % 0x40000;
 
     if (*opc < MOVI) {
         *c = R[IR & 0xF];//TODO закомментировать перед запуском T_R_RISC.c
-        if (*c >= 1 << 3)
-            *c -= 1 << 4;
     } else if (*opc < BEQ) {
         *c = IR % (1 << 18);
         if (*c >= (1 << 17))
