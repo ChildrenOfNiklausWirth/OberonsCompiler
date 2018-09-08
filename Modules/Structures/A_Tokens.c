@@ -29,7 +29,7 @@ Token token_newToken(char symbols[], int nameLength, int numberOfLine) {
 }
 
 Token token_newTokenWithType(char symbols[], int nameLength, int type, int numberOfLine) {
-    Token token = token_newToken(symbols, nameLength, numberOfLine);
+    Token token = token_newToken(symbols, nameLength + 1, numberOfLine);
     token.type = type;
     return token;
 }

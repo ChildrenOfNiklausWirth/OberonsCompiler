@@ -79,7 +79,7 @@ int readNextToken(FILE *file, Token *token) {
         token_initialize(token, 2);
         token->length = 2;
         token->symbols[0] = firstSymbol;
-        token->symbols[2] = '\0';
+        token->symbols[1] = '\0';
         token->type = token_defineType(*token, terminalSymbols);
 
         return 1;

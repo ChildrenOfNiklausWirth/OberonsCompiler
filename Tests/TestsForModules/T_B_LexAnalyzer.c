@@ -191,7 +191,7 @@ void createRightResultForThirdTest(struct TokensFlow *tokensflow) {
     tokens[28] = token_newTokenWithType(";", 1, 38, 29);
     tokens[29] = token_newTokenWithType("END", 3, 40, 30);
     tokens[30] = token_newTokenWithType("ELSE", 4, 41, 31);
-    tokens[31] = token_newTokenWithType("ELSEIF", 6, 42, 32);
+    tokens[31] = token_newTokenWithType("ELSIF", 5, 42, 32);
     tokens[32] = token_newTokenWithType("IF", 2, 44, 33);
     tokens[33] = token_newTokenWithType("WHILE", 5, 46, 34);
     tokens[34] = token_newTokenWithType("ARRAY", 5, 54, 35);
