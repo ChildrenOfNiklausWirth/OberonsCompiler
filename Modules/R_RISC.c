@@ -137,6 +137,8 @@ void RiscExecute(long start, FILE *outputFile) {
                 break;
             case LDW:
                 R[a] = M[(R[b] + c) / 4];
+                Z = (R[a] == 0);
+                N = (R[a] < 0);
                 break;
             case LDB:
                 //Не реализуется

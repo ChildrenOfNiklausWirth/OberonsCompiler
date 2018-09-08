@@ -313,8 +313,6 @@ void StatSequence() {
 
     while (true) {
 
-        node = NULL;
-
         if (lexTokensFlow.current->type < terminalSymbols.IDENT.type) {
             Mark("Statement expected", -1);
             do {
@@ -371,7 +369,7 @@ void StatSequence() {
             } else if (node->class == TYP) {
                 Mark("Illegal assignment", -1);
             } else {
-                Mark("Statement should contain assignment expression, function call or conditional", lexTokensFlow.current->line - 1);
+                Mark("Statement should contain assignment expression, function call or conditional", (lexTokensFlow.current - 1)->line);
             }
         } else if (lexTokensFlow.current->type == terminalSymbols.IF.type) {
             tf_next(&lexTokensFlow);
@@ -403,7 +401,7 @@ void StatSequence() {
             } else {
                 FixLink(item1.a);
             }
-            FixLink(item1.a);
+            FixLink(l);
             if (lexTokensFlow.current->type == terminalSymbols.END.type)
                 tf_next(&lexTokensFlow);
             else
@@ -429,7 +427,7 @@ void StatSequence() {
                  (lexTokensFlow.current->type >= terminalSymbols.ARR.type))
             break;
         else
-            Mark("\";\" expected at the end of statement", -1);
+            Mark("\";\" expected at the end of statement", (lexTokensFlow.current - 1)->line);
     }
 };
 

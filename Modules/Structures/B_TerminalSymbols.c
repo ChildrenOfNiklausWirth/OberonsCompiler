@@ -17,10 +17,10 @@ void tss_initialize(struct TerminalSymbols *terminalSymbols) {
     terminalSymbols->TIMES = ts_newTerminalSymbol("*", 1, 1);
     terminalSymbols->DIV = ts_newTerminalSymbol("DIV", 3, 3);
     terminalSymbols->MOD = ts_newTerminalSymbol("MOD", 3, 4);
-    terminalSymbols->AND = ts_newTerminalSymbol("AND", 3, 5);
+    terminalSymbols->AND = ts_newTerminalSymbol("&", 1, 5);
     terminalSymbols->PLUS = ts_newTerminalSymbol("+", 1, 6);
     terminalSymbols->MINUS = ts_newTerminalSymbol("-", 1, 7);
-    terminalSymbols->OR = ts_newTerminalSymbol("&", 1, 8);
+    terminalSymbols->OR = ts_newTerminalSymbol("OR", 2, 8);
     terminalSymbols->EQL = ts_newTerminalSymbol("=", 1, 9);
     terminalSymbols->NEQ = ts_newTerminalSymbol("#", 1, 10);
     terminalSymbols->LSS = ts_newTerminalSymbol("<", 1, 11);
@@ -44,7 +44,7 @@ void tss_initialize(struct TerminalSymbols *terminalSymbols) {
     terminalSymbols->SEMICOLON = ts_newTerminalSymbol(";", 1, 38);
     terminalSymbols->END = ts_newTerminalSymbol("END", 3, 40);
     terminalSymbols->ELSE = ts_newTerminalSymbol("ELSE", 4, 41);
-    terminalSymbols->ELSEIF = ts_newTerminalSymbol("ELSEIF", 6, 42);
+    terminalSymbols->ELSEIF = ts_newTerminalSymbol("ELSIF", 5, 42);
     terminalSymbols->IF = ts_newTerminalSymbol("IF", 2, 44);
     terminalSymbols->WHILE = ts_newTerminalSymbol("WHILE", 5, 46);
     terminalSymbols->ARR = ts_newTerminalSymbol("ARRAY", 5, 54);
@@ -101,8 +101,6 @@ int charIsASeparatingTerminalSymbol(struct TerminalSymbols terminalSymbols, char
     if (symbol == terminalSymbols.PLUS.name[0])
         return 1;
     if (symbol == terminalSymbols.MINUS.name[0])
-        return 1;
-    if (symbol == terminalSymbols.OR.name[0])
         return 1;
     if (symbol == terminalSymbols.EQL.name[0])
         return 1;

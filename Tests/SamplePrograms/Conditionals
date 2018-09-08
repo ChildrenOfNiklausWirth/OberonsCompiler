@@ -1,0 +1,64 @@
+MODULE Conditionals;
+VAR i: INTEGER;
+    b: BOOLEAN;
+
+BEGIN
+
+    i := 1;
+
+    IF i = 1 THEN
+        i := i + 1;
+        Write(i);
+    END;
+
+    IF i = 1 THEN
+        i := i + 1;
+        Write(i);
+    END;
+
+    IF i > 0 THEN
+        i := i + 1;
+        Write(i);
+    END;
+
+    IF i < 0 THEN
+        i := i + 1;
+        Write(i);
+    END;
+
+    IF i >= 3 THEN
+        i := i + 1;
+        Write(i);
+    END;
+
+    IF i <= 3 THEN
+        i := i + 1;
+        Write(i);
+    END;
+
+    IF (i + 6) DIV 5 <= 3 THEN
+        i := i + 1;
+        Write(i);
+    END;
+
+    IF (i * 6) > 40 THEN
+        i := 40;
+        Write(i);
+    ELSE
+        i := i + 1;
+        Write(i);
+    END;
+
+    IF i < 1 THEN
+        Write(1);
+    ELSIF i = 2 THEN
+        Write(2);
+    ELSIF i = 3 THEN
+        Write(3);
+    ELSIF (i >= 3) & (i <= 5) THEN
+        Write(4);
+    ELSE
+        Write(5);
+    END;
+
+END Conditionals.

@@ -68,7 +68,7 @@ long GetReg() {
 unsigned long encode(long op, long a, long b, long c) {
     if (op >= 32)
         op -= 64;
-    return ((((((op << 4) | a) << 4) | b) << 18) | (unsigned long) c % (1 << 18));
+    return  ((((((op << 4) | a) << 4) | b) << 18) | ((unsigned long) c & 0x3FFFF));
 }
 
 void Put(long op, long a, long b, long c) {
@@ -143,7 +143,6 @@ long negated(long cond) {
         return cond + 1;
 }
 
-//TODO ?
 long merged(long L0, long L1) {
     long L2, L3;
     if (L0 != 0) {
@@ -160,9 +159,8 @@ long merged(long L0, long L1) {
         return L1;
 }
 
-//TODO ?
 void fix(long at, long with) {
-    code[at] = code[at] / (1 << 22) * (1 << 22) + with % (1 << 22);
+    code[at] = (code[at] & 0xFFC00000) | (with & 0x3FFFFF);
 }
 
 long fixWith(long L0, long L1) {
@@ -179,7 +177,7 @@ long fixWith(long L0, long L1) {
 long FixLink(long L) {
     long L1;
     while (L != 0) {
-        L1 = code[L] % (1 << 18);
+        L1 = code[L] & 0x3FFFF;
         fix(L, pc - L);
         L = L1;
     }
@@ -320,6 +318,10 @@ void Op2(int op, struct Item *item1, struct Item *item2) {
         if (op == terminalSymbols.OR.type) {
             item1->a = item2->a;
             item1->b = merged(item2->b, item1->b);
+            item1->c = item2->c;
+        } else if (op == terminalSymbols.AND.type) {
+            item1->a = merged(item2->a, item1->a);
+            item1->b = item2->b;
             item1->c = item2->c;
         }
     } else Mark("Type mismatch", -1);
@@ -487,7 +489,6 @@ void Open() {
 }
 
 
-//TODO почему то не используется
 void Close(long globals) {
     Put(POP, LNK, SP, 4);
     PutBR(RET, LNK);
@@ -557,7 +558,6 @@ void Exec(FILE *outputFile) {
         i++;
     if (i < cno)
         RiscExecute(comaddr[i], outputFile);
-
 }
 
 
