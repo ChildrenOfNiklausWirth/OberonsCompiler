@@ -8,28 +8,28 @@ long M[(RMemSize / 4) - 1];//€чейки пам€ти
 
 void myDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
 
-    *opc = ((IR >> 26) & 63);
+    *opc = ((IR >> 26) & ((1 << 6) - 1));
 
-    if (*opc < F1) {//F0
-        *a = ((IR >> 22) & 15);
-        *b = ((IR >> 18) & 15);
-        *c = (IR & 15);
+    if (*opc < MOVI) {//F0
+        *a = ((IR >> 22) & ((1 << 4) - 1));
+        *b = ((IR >> 18) & ((1 << 4) - 1));
+        *c = (IR & ((1 << 4) - 1));
         if (*c >= 1 << 3)
             *c -= 1 << 4;
-    } else if (*opc < F2) {//F1
-        *a = ((IR >> 22) & 15);
-        *b = ((IR >> 18) & 15);
-        *c = (IR & 262143);
+    } else if (*opc < LDW) {//F1
+        *a = ((IR >> 22) & ((1 << 4) - 1));
+        *b = ((IR >> 18) & ((1 << 4) - 1));
+        *c = (IR & ((1 << 18) - 1));
         if (*c >= 1 << 17)
             *c -= 1 << 18;
-    } else if (*opc < F3) {//F2
-        *a = ((IR >> 22) & 15);
-        *b = ((IR >> 18) & 15);
-        *c = (IR & 262143);
+    } else if (*opc < BEQ) {//F2
+        *a = ((IR >> 22) & ((1 << 4) - 1));
+        *b = ((IR >> 18) & ((1 << 4) - 1));
+        *c = (IR & ((1 << 18) - 1));
         if (*c >= 1 << 17)
             *c -= 1 << 18;
     } else {//F3
-        *c = (IR & 67108863);
+        *c = (IR & ((1 << 26) - 1));
         if (*c >= 1 << 25)
             *c -= 1 << 26;
 
@@ -40,20 +40,23 @@ void myDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
 
 void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
 
-    *opc = IR / int_hexToDecimal(4000000) % int_hexToDecimal(40);
-    *a = IR / int_hexToDecimal(400000) % int_hexToDecimal(10);
-    *b = IR / int_hexToDecimal(40000) % int_hexToDecimal(10);
+    *opc = IR / (1 << 26) % (1 << 6);
+    *a = IR / (1 << 22) % (1 << 4);
+    *b = IR / (1 << 18) % (1 << 4);
+    *c = IR % (1 << 4);
 
     if (*opc < MOVI) {
-        *c = R[IR & 0xF];
+        *c = R[IR & 0xF];//TODO закомментировать перед запуском T_R_RISC.c
+        if (*c >= 1 << 3)
+            *c -= 1 << 4;
     } else if (*opc < BEQ) {
-        *c = IR % int_hexToDecimal(40000);
-        if (*c >= int_hexToDecimal(20000))
-            *c -= int_hexToDecimal(40000);
+        *c = IR % (1 << 18);
+        if (*c >= (1 << 17))
+            *c -= (1 << 18);
     } else {
-        *c = IR % int_hexToDecimal(4000000);
-        if (*c >= int_hexToDecimal(2000000))
-            *c -= int_hexToDecimal(4000000);
+        *c = IR % (1 << 26);
+        if (*c >= (1 << 25))
+            *c -= (1 << 26);
     }
 
 }
@@ -72,7 +75,7 @@ void RiscExecute(long start, FILE *outputFile) {
         nxt = R[15] + 4;
         IR = M[R[15] / 4];
 
-        wirthDecode(IR, &opc, &a, &b, &c);
+        wirthDecode((unsigned long) IR, &opc, &a, &b, &c);
         switch (opc) {
 //F0----------------------------------------------------------------------
             case MOV:

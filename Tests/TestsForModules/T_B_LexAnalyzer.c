@@ -87,7 +87,7 @@ void createRightResultForThirdTest(struct TokensFlow *tokensflow) {
     int tokenSize = 44;
     tokens[0] = token_newTokenWithType("NULL", 4, 0, 1);
     tokens[1] = token_newTokenWithType("*", 1, 1, 2);
-    tokens[2] = token_newTokenWithType("/", 1, 3, 3);
+    tokens[2] = token_newTokenWithType("DIV", 3, 3, 3);
     tokens[3] = token_newTokenWithType("MOD", 3, 4, 4);
     tokens[4] = token_newTokenWithType("AND", 3, 5, 5);
     tokens[5] = token_newTokenWithType("+", 1, 6, 6);
@@ -187,7 +187,7 @@ void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct Token
 }
 
 //__________________________________________________________________________________________________
-void firstTest(enum Report print) {
+void firstTest(enum Report report) {
 
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
@@ -196,7 +196,7 @@ void firstTest(enum Report print) {
     lexAnalysis(firstAddress);
 
 
-    if (print == REPORT) {
+    if (report == REPORT) {
         printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
         tf_printWithTypeTwoTokensFlow(lexTokensFlow, rightTokensFlow);
         printf("\n\n\n");
@@ -212,14 +212,14 @@ void firstTest(enum Report print) {
 
 }
 
-void secondTest(enum Report print) {
+void secondTest(enum Report report) {
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
     createRightResultForFirstAndSecondTest(&rightTokensFlow);
 
     lexAnalysis(secondAddress);
 
-    if (print == PRINT) {
+    if (report == REPORT) {
         printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
         tf_printWithTypeTwoTokensFlow(lexTokensFlow, rightTokensFlow);
         printf("\n\n\n");
@@ -236,14 +236,14 @@ void secondTest(enum Report print) {
 
 }
 
-void thirdTest(enum PrintOfTokensFlow print) {
+void thirdTest(enum Report report) {
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
     createRightResultForThirdTest(&rightTokensFlow);
 
     lexAnalysis(thirdAdress);
 
-    if (print == REPORT) {
+    if (report == REPORT) {
         printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
         tf_printWithTypeTwoTokensFlow(lexTokensFlow, rightTokensFlow);
         printf("\n\n\n");
@@ -266,5 +266,8 @@ int main() {
     firstTest(REPORT);
     printf("-----------------------------------2 TEST-------------------------------------------------------\n");
     secondTest(REPORT);
+    printf("-----------------------------------3 TEST-------------------------------------------------------\n");
+    thirdTest(REPORT);
     printf("------------------------------------------------------------------------------------------------");
+
 }

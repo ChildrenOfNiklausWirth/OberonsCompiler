@@ -52,9 +52,6 @@
 #define BSR 57
 #define RET 58
 
-#define F1 MOVI
-#define F2 LDW
-#define F3 BEQ
 
 
 void myDecode(unsigned long IR, long *opc, long *a, long *b, long *c);
