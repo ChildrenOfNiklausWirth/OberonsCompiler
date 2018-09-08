@@ -21,8 +21,6 @@ Type *type_new();
 
 int type_equals(Type type1, Type type2);
 
-
-
 struct Item {
     int mode;
     int level;
@@ -30,10 +28,7 @@ struct Item {
     long a, b, c, r;
 };
 
-int item_equals(struct Item item1, struct Item item2);
-
-
-
+//int item_equals(struct Item item1, struct Item item2);
 
 typedef struct Node {
     int class;
@@ -50,7 +45,7 @@ Node *node_new();
 
 void node_setName(struct Node *obj, char *name, int name_size);
 
-int object_equals(struct Node object1, struct Node object2);
+int nodes_equals(struct Node object1, struct Node object2);
 
 
 #endif //OBERONSCOMPILER_C_OBJECT_H

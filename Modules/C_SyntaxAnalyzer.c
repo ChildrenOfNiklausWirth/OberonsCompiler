@@ -112,14 +112,14 @@ void enter(int class, long value, char *name, int size, Type *type) {
 
 void scope_initialise() {
     openScope();
-    enter(TYP, 1, terminalSymbols.BOOL.name, terminalSymbols.BOOL.nameLength, &boolType);
-    enter(TYP, 2, terminalSymbols.INT.name, terminalSymbols.INT.nameLength, &intType);
-    enter(CONST, 1, "TRUE", 4, &boolType);
-    enter(CONST, 0, "FALSE", 5, &boolType);
-    enter(S_PROC, 1, "Read", 4, &boolType);
-    enter(S_PROC, 2, "Write", 5, NULL);
-    enter(S_PROC, 3, "WriteHex", 8, NULL);
-    enter(S_PROC, 4, "WriteLn", 7, NULL);
+    enter(TYP, 1, terminalSymbols.BOOL.name, terminalSymbols.BOOL.nameLength + 1, &boolType);
+    enter(TYP, 2, terminalSymbols.INT.name, terminalSymbols.INT.nameLength + 1, &intType);
+    enter(CONST, 1, "TRUE", 5, &boolType);
+    enter(CONST, 0, "FALSE", 6, &boolType);
+    enter(S_PROC, 1, "Read", 5, &boolType);
+    enter(S_PROC, 2, "Write", 6, NULL);
+    enter(S_PROC, 3, "WriteHex", 9, NULL);
+    enter(S_PROC, 4, "WriteLn", 8, NULL);
     universe = objectsStart;
 }
 

@@ -2,34 +2,30 @@
 #include "Node.h"
 #include "../B_LexAnalyzer.h"
 
-int item_equals(struct Item item1, struct Item item2) {
-    if (item1.level != item2.level)
-        return 0;
-    if (item1.mode != item2.mode)
-        return 0;
-    if (item1.a != item2.a)
-        return 0;
-    if (item1.b != item2.b)
-        return 0;
-    if (item1.c != item2.c)
-        return 0;
-    if (item1.r != item2.r)
-        return 0;
-    if (type_equals(*item1.type, *item2.type) == 0)
-        return 0;
-
-
-    return 1;
-
-
-}
+//int item_equals(struct Item item1, struct Item item2) {
+//    if (item1.level != item2.level)
+//        return 0;
+//    if (item1.mode != item2.mode)
+//        return 0;
+//    if (item1.a != item2.a)
+//        return 0;
+//    if (item1.b != item2.b)
+//        return 0;
+//    if (item1.c != item2.c)
+//        return 0;
+//    if (item1.r != item2.r)
+//        return 0;
+//    if (type_equals(*item1.type, *item2.type) == 0)
+//        return 0;
+//
+//    return 1;
+//}
 
 
 
 
 Node* node_new() {
-    Node *node;
-    node = calloc(1, sizeof *node);
+    Node *node = calloc(1, sizeof *node);
     return node;
 }
 
@@ -41,7 +37,7 @@ void node_setName(Node *obj, char *name, int name_size) {
     obj->nameLength = name_size;
 }
 
-int object_equals(Node object1, struct Node object2) {
+int nodes_equals(Node object1, struct Node object2) {
     if (object1.nameLength != object2.nameLength)
         return 0;
     if (object1.level != object2.level)
@@ -50,9 +46,9 @@ int object_equals(Node object1, struct Node object2) {
         return 0;
     if (object1.val != object2.val)
         return 0;
-    if (object_equals(*object1.dsc, *object2.dsc) == 0)
+    if (nodes_equals(*object1.dsc, *object2.dsc) == 0)
         return 0;
-    if (object_equals(*object1.next, *object2.next) == 0)
+    if (nodes_equals(*object1.next, *object2.next) == 0)
         return 0;
     if (type_equals(*object1.type, *object2.type) == 0)
         return 0;
@@ -73,7 +69,7 @@ int type_equals(Type type1, Type type2) {
         return 0;
     if (type_equals(*type1.base, *type2.base) == 0)
         return 0;
-    if (object_equals(*type1.fields, *type2.fields) == 0)
+    if (nodes_equals(*type1.fields, *type2.fields) == 0)
         return 0;
     return 1;
 }
@@ -83,6 +79,8 @@ Type *type_new() {
 
     if (type != NULL)
         return type;
-    else
-       printf("Error while allocating memory for new type\nLine: %i", lexTokensFlow.current->line);
+    else {
+        printf("Error while allocating memory for new type\nLine: %i", lexTokensFlow.current->line);
+        return NULL;
+    }
 }

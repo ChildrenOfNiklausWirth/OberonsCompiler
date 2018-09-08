@@ -56,9 +56,9 @@ Token *tf_next(struct TokensFlow *tokensFlow);
 
 void tf_clear(struct TokensFlow *tokensFlow);
 
-void tf_print(struct TokensFlow tokensFlow);
-
-void tf_printWithType(struct TokensFlow tokensFlow);
+//void tf_print(struct TokensFlow tokensFlow);
+//
+//void tf_printWithType(struct TokensFlow tokensFlow);
 
 int tf_equals(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo);
 //__________________________________________________________________________________________________

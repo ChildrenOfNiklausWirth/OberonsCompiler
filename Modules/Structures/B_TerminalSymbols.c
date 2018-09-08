@@ -44,7 +44,7 @@ void tss_initialize(struct TerminalSymbols *terminalSymbols) {
     terminalSymbols->SEMICOLON = ts_newTerminalSymbol(";", 1, 38);
     terminalSymbols->END = ts_newTerminalSymbol("END", 3, 40);
     terminalSymbols->ELSE = ts_newTerminalSymbol("ELSE", 4, 41);
-    terminalSymbols->ELSEIF = ts_newTerminalSymbol("ELSEIF", 6, 42);
+    terminalSymbols->ELSEIF = ts_newTerminalSymbol("ELSIF", 5, 42);
     terminalSymbols->IF = ts_newTerminalSymbol("IF", 2, 44);
     terminalSymbols->WHILE = ts_newTerminalSymbol("WHILE", 5, 46);
     terminalSymbols->ARR = ts_newTerminalSymbol("ARRAY", 5, 54);

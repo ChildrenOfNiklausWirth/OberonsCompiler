@@ -68,7 +68,7 @@ long GetReg() {
 unsigned long encode(long op, long a, long b, long c) {
     if (op >= 32)
         op -= 64;
-    return  ((((((op << 4) | a) << 4) | b) << 18) | ((unsigned long) c & 0x3FFFF));
+    return ((((((op << 4) | a) << 4) | b) << 18) | ((unsigned long) c & 0x3FFFF));
 }
 
 void Put(long op, long a, long b, long c) {
@@ -94,14 +94,14 @@ void TestRange(long x) {
 }
 
 //Загружает переменную или константу в code[ ]
-struct Item load(struct Item *item) {
+void load(struct Item *item) {
     long r;
     if (item->mode == VARIABLE) {
         if (item->level == 0)
             item->a = MemSize + item->a - pc * 4;
         r = GetReg();
         Put(LDW, r, item->r, item->a);
-        set_EXCL(regs, item->r);
+        set_EXCL(regs, (int) item->r);
         item->r = r;
     } else if (item->mode == CONST) {
         TestRange(item->a);
@@ -111,7 +111,7 @@ struct Item load(struct Item *item) {
     item->mode = REG;
 }
 
-struct Item loadBool(struct Item *item) {
+void loadBool(struct Item *item) {
     if (item->type->form != BOOLEAN)
         Mark("Boolean?", -1);
     load(item);
@@ -132,7 +132,7 @@ void PutOp(long operation, struct Item *item1, struct Item *item2) {
         if (item2->mode != REG)
             load(item2);
         Put(operation, item1->r, item1->r, item2->r);
-        set_EXCL(regs, item2->r);
+        set_EXCL(regs, (int) item2->r);
     }
 }
 
@@ -174,7 +174,7 @@ long fixWith(long L0, long L1) {
 
 }
 
-long FixLink(long L) {
+void FixLink(long L) {
     long L1;
     while (L != 0) {
         L1 = code[L] & 0x3FFFF;
@@ -237,7 +237,7 @@ void Index(struct Item *item1, struct Item *item2) {
         Put(CHKI, item2->r, 0, item1->type->len);
         Put(MULI, item2->r, item2->r, item1->type->base->size);
         Put(ADD, item2->r, item1->r, item2->r);
-        set_EXCL(regs, item1->r);
+        set_EXCL(regs, (int) item1->r);
         item1->r = item2->r;
     }
     item1->type = item1->type->base;
@@ -267,7 +267,7 @@ void Op1(int op, struct Item *item) {
         if (item->mode != COND)
             loadBool(item);
         PutBR(BEQ + negated(item->c), item->a);
-        set_EXCL(regs, item->r);
+        set_EXCL(regs, (int) item->r);
         item->a = pc - 1;
         FixLink(item->b);
         item->b = 0;
@@ -275,7 +275,7 @@ void Op1(int op, struct Item *item) {
         if (item->mode != COND)
             loadBool(item);
         PutBR(BEQ + item->c, item->b);
-        set_EXCL(regs, item->r);
+        set_EXCL(regs, (int) item->r);
         item->b = pc - 1;
         FixLink(item->a);
         item->a = 0;
@@ -335,7 +335,7 @@ void Relation(int op, struct Item *item1, struct Item *item2) {
     } else {
         PutOp(CMP, item1, item2);
         item1->c = op - terminalSymbols.EQL.type;
-        set_EXCL(regs, item2->r);
+        set_EXCL(regs, (int) item2->r);
     }
     item1->mode = COND;
     item1->type = &boolType;
@@ -345,12 +345,11 @@ void Relation(int op, struct Item *item1, struct Item *item2) {
 }
 
 void Store(struct Item *item1, struct Item *item2) {
-    long r;
-    if (((item1->type->form == BOOLEAN) || (item1->type->form == INTEGER)) &&
+   if (((item1->type->form == BOOLEAN) || (item1->type->form == INTEGER)) &&
         (item1->type->form == item2->type->form)) {
         if (item2->mode == COND) {
             Put(BEQ + negated(item2->c), item2->r, 0, item2->a);
-            set_EXCL(regs, item2->r);
+            set_EXCL(regs, (int) item2->r);
             item2->a = pc - 1;
             FixLink(item2->b);
             item2->r = GetReg();
@@ -367,14 +366,15 @@ void Store(struct Item *item1, struct Item *item2) {
 
         } else
             Mark("Wrong assertion", -1);
-        set_EXCL(regs, item1->r);
-        set_EXCL(regs, item2->r);
+        set_EXCL(regs, (int) item1->r);
+        set_EXCL(regs, (int) item2->r);
     } else
         Mark("Type mismatch", -1);
 }
 
 void Parameter(struct Item *item, Type *ftyp, int class) {
-    long r;
+    long r = 0;
+
     if (item->type == ftyp) {
         if (class == PAR) {
             if (item->mode == VARIABLE)
@@ -389,13 +389,13 @@ void Parameter(struct Item *item, Type *ftyp, int class) {
             else
                 Mark("Parameter type mismatch", -1);
             Put(PSH, r, SP, 4);
-            set_EXCL(regs, r);
+            set_EXCL(regs, (int) r);
 
         } else {
             if (item->mode != REG)
                 load(item);
             Put(PSH, item->r, SP, 4);
-            set_EXCL(regs, item->r);
+            set_EXCL(regs, (int) item->r);
         }
     } else Mark("Parameter type mismatch", -1);
 
@@ -406,7 +406,7 @@ void CJump(struct Item *item) {
         if (item->mode != COND)
             loadBool(item);
         PutBR(BEQ + negated(item->c), item->a);
-        set_EXCL(regs, item->r);
+        set_EXCL(regs, (int) item->r);
         FixLink(item->b);
         item->a = pc - 1;
     } else {
@@ -448,11 +448,11 @@ void IOCall(struct Item *item1, struct Item *item2) {
     } else if (item1->a == 2) {
         load(item2);
         Put(WRD, 0, 0, item2->r);
-        set_EXCL(regs, item2->r);
+        set_EXCL(regs, (int) item2->r);
     } else if (item1->a == 3) {
         load(item2);
         Put(WRH, 0, 0, item2->r);
-        set_EXCL(regs, item2->r);
+        set_EXCL(regs, (int) item2->r);
     } else {
         Put(WRL, 0, 0, 0);
     }
@@ -522,7 +522,8 @@ void decode(FILE *outputFile) {
             if (a >= 0x20000) {
                 a -= 0x40000;
             }
-            fprintf(outputFile, "R%.2lu, R%.2lu, %s%#+.8x\n", w >> 22 & 0x0F, w >> 18 & 0x0F, a < 0?"-":"", a < 0 ? - (unsigned) a : (unsigned) a);
+            fprintf(outputFile, "R%.2lu, R%.2lu, %s%#+.8x\n", w >> 22 & 0x0F, w >> 18 & 0x0F, a < 0 ? "-" : "",
+                    a < 0 ? -(unsigned) a : (unsigned) a);
         } else {
             a = (int) (w & 0x3FFFFFF);
 
@@ -533,7 +534,7 @@ void decode(FILE *outputFile) {
                 if (a >= 0x2000000) {
                     a -= 0x4000000;
                 }
-                fprintf(outputFile, "%s%#+.6x\n", a < 0 ? "-":"", a < 0 ? - (unsigned) (a * 4) : (unsigned) a * 4);
+                fprintf(outputFile, "%s%#+.6x\n", a < 0 ? "-" : "", a < 0 ? -(unsigned) (a * 4) : (unsigned) a * 4);
             }
         }
     }

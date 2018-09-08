@@ -259,10 +259,12 @@ int tf_assertEqualsTwoTokensFlows(struct TokensFlow tokensFlow, struct TokensFlo
 
 void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) {
     for (int i = 0; i < tokensFlowOne.size; ++i) {
-        for (int j = 0; j < tokensFlowOne.tokens[i].length; ++j) {
-            printf("%c", tokensFlowOne.tokens[i].symbols[j]);
-        }
+        printf("%s", tokensFlowOne.tokens[i].symbols);
+//        for (int j = 0; j < tokensFlowOne.tokens[i].length; ++j) {
+//            printf("%c", tokensFlowOne.tokens[i].symbols[j]);
+//        }
         printf("\t\t\ttype : %d\t\t", tokensFlowOne.tokens[i].type);
+
 
         for (int j = 0; j < tokensFlowTwo.tokens[i].length; ++j) {
             printf("%c", tokensFlowTwo.tokens[i].symbols[j]);
