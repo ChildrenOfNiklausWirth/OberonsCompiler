@@ -236,8 +236,14 @@ int tf_assertEqualsTwoTokensFlows(struct TokensFlow tokensFlow, struct TokensFlo
                 token_print(tokensFlow.tokens[i]);
             }
 
-            if (tokensFlow.tokens[i].length != rightTokensFlow.tokens[i].length ||
-                tokensFlow.tokens[i].type != rightTokensFlow.tokens[i].type) {
+            if (tokensFlow.tokens[i].length != rightTokensFlow.tokens[i].length) {
+                printf("Not equal length\n");
+                printf("right \t%d ", rightTokensFlow.tokens[i].type);
+                token_print(rightTokensFlow.tokens[i]);
+                printf("lex \t%d ", tokensFlow.tokens[i].type);
+                token_print(tokensFlow.tokens[i]);
+            }
+            if(tokensFlow.tokens[i].type != rightTokensFlow.tokens[i].type){
                 printf("Not equal type\n");
                 printf("right \t%d ", rightTokensFlow.tokens[i].type);
                 token_print(rightTokensFlow.tokens[i]);
