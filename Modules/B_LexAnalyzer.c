@@ -31,6 +31,7 @@ int readNextToken(FILE *file, Token *token) {
     int tokenLength = 0;
     char firstSymbol, lastSymbol;
 
+
     if (fscanf(file, "%c", &firstSymbol) == EOF)
         return 0;
 
@@ -75,9 +76,10 @@ int readNextToken(FILE *file, Token *token) {
     }
 
     if (fscanf(file, "%c", &lastSymbol) == EOF) {
-        token_initialize(token, 1);
-        token->length = 1;
+        token_initialize(token, 2);
+        token->length = 2;
         token->symbols[0] = firstSymbol;
+        token->symbols[2] = '\0';
         token->type = token_defineType(*token, terminalSymbols);
 
         return 1;
@@ -111,7 +113,7 @@ int readNextToken(FILE *file, Token *token) {
 
     }
 
-    token_initialize(token, tokenLength);
+    token_initialize(token, tokenLength + 1);
 
     if (os == WINDOWS)
         if (lastSymbol == '\n')
@@ -121,9 +123,11 @@ int readNextToken(FILE *file, Token *token) {
     fseek(file, -tokenLength - 1, SEEK_CUR);
 
 
-    for (int i = 0; i < tokenLength; ++i)
+    for (int i = 0; i < tokenLength; ++i) {
         token->symbols[i] = (char) getc(file);
+    }
 
+    token->symbols[tokenLength] = '\0';
 
     token->type = token_defineType(*token, terminalSymbols);
 

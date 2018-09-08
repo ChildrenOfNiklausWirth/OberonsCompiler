@@ -10,11 +10,11 @@ struct Set *set_new() {
     return set;
 }
 
-void set_initialize(struct Set *set) {
-    set->maxSize = 1;
-    set->size = 0;
-    set->array = malloc(sizeof(int) * 1);
-}
+//void set_initialize(struct Set *set) {
+//    set->maxSize = 1;
+//    set->size = 0;
+//    set->array = malloc(sizeof(int) * 1);
+//}
 
 void set_allocatedMemory(struct Set *set, int addedMemoryCells) {
     set->maxSize += addedMemoryCells;

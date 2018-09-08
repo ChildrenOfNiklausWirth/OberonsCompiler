@@ -47,10 +47,10 @@ int token_equals(Token token1, Token token2) {
 }
 
 int token_equalsWithString(Token token, const char str[], int strLength) {
-    if (token.length != strLength)
+    if (token.length != strLength + 1)
         return 0;
 
-    for (int i = 0; i < token.length; ++i)
+    for (int i = 0; i < token.length - 1; ++i)
         if (token.symbols[i] != str[i])
             return 0;
 
@@ -58,8 +58,9 @@ int token_equalsWithString(Token token, const char str[], int strLength) {
 }
 
 void token_print(Token token) {
-    for (int i = 0; i < token.length; ++i)
-        printf("%c", token.symbols[i]);
+    printf("%s", token.symbols);
+//    for (int i = 0; i < token.length; ++i)
+//        printf("%c", token.symbols[i]);
     printf("\n");
 }
 
@@ -159,12 +160,12 @@ int token_defineType(Token token, struct TerminalSymbols terminalSymbols) {
         return terminalSymbols.EOFF.type;
 
     int sum = 0;
-    for (int k = 0; k < token.length; ++k)
+    for (int k = 0; k < token.length - 1; ++k)
         if (charIsDigit(token.symbols[k]))
             sum++;
         else break;
 
-    if (sum == token.length)
+    if (sum == token.length - 1)
         return terminalSymbols.NUMBER.type;
 
 
@@ -210,25 +211,25 @@ void tf_clear(struct TokensFlow *tokensFlow) {
     tokensFlow->pointer = 0;
 }
 
-void tf_print(struct TokensFlow tokensFlow) {
-    for (int i = 0; i < tokensFlow.size; ++i) {
-        for (int j = 0; j < tokensFlow.tokens[i].length; ++j) {
-            printf("%c", tokensFlow.tokens[i].symbols[j]);
-        }
-        printf("\n");
-
-    }
-
-}
-
-void tf_printWithType(struct TokensFlow tokensFlow) {
-    for (int i = 0; i < tokensFlow.size; ++i) {
-        for (int j = 0; j < tokensFlow.tokens[i].length; ++j) {
-            printf("%c", tokensFlow.tokens[i].symbols[j]);
-        }
-        printf("\t\ttype : %d\n", tokensFlow.tokens[i].type);
-    }
-}
+//void tf_print(struct TokensFlow tokensFlow) {
+//    for (int i = 0; i < tokensFlow.size; ++i) {
+//        for (int j = 0; j < tokensFlow.tokens[i].length; ++j) {
+//            printf("%c", tokensFlow.tokens[i].symbols[j]);
+//        }
+//        printf("\n");
+//
+//    }
+//
+//}
+//
+//void tf_printWithType(struct TokensFlow tokensFlow) {
+//    for (int i = 0; i < tokensFlow.size; ++i) {
+//        for (int j = 0; j < tokensFlow.tokens[i].length; ++j) {
+//            printf("%c", tokensFlow.tokens[i].symbols[j]);
+//        }
+//        printf("\t\ttype : %d\n", tokensFlow.tokens[i].type);
+//    }
+//}
 
 int tf_equals(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) {
     if (tokensFlowOne.size != tokensFlowTwo.size)
@@ -242,7 +243,6 @@ int tf_equals(struct TokensFlow tokensFlowOne, struct TokensFlow tokensFlowTwo) 
         for (int j = 0; j < tokensFlowOne.tokens[i].length; ++j)
             if (tokensFlowOne.tokens[i].symbols[j] != tokensFlowTwo.tokens[i].symbols[j])
                 return 0;
-
     }
     return 1;
 }
