@@ -1,5 +1,5 @@
 #include <malloc.h>
-#include "B_LexAnalyzer.h"
+#include "LexAnalyzer.h"
 
 
 enum OS {

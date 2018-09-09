@@ -3,11 +3,11 @@
 #include <malloc.h>
 #include <math.h>
 #include <stdlib.h>
-#include "Structures/B_TerminalSymbols.h"
-#include "Structures/A_Tokens.h"
-#include "B_LexAnalyzer.h"
+#include "Structures/TerminalSymbols.h"
+#include "Structures/Tokens.h"
+#include "LexAnalyzer.h"
 #include "Structures/Node.h"
-#include "G_CodeGenerator.h"
+#include "CodeGenerator.h"
 
 const int WordSize = 4;
 

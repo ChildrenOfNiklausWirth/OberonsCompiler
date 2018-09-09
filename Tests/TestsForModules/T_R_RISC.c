@@ -1,6 +1,6 @@
 #include "../../Modules/SimpleFunctions/SimpleFunctions.h"
-#include "../../Modules/R_RISC.h"
-#include "../../Modules/G_CodeGenerator.h"
+#include "../../Modules/RISC.h"
+#include "../../Modules/CodeGenerator.h"
 
 enum Report {
     REPORT,//Test with report
@@ -244,7 +244,7 @@ int main() {
     maxTests += (59 - 48 - 2);
     for (int op = 48; op <= 58; ++op) {
         if (op != 54 && op != 55)
-            if (opTest(ONLY_ERROR, op, 0, 1 << 4, 0, 1 << 4, 0, 1 << 13)) {//TODO попробуй поставить minC<0
+            if (opTest(ONLY_ERROR, op, 0, 1 << 4, 0, 1 << 4, 0, 1 << 13)) {//TODO пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ minC<0
                 passedTest++;
                 printOperation(op);
                 printf("TRUE\n");

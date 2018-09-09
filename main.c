@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <mem.h>
-#include "Modules/B_LexAnalyzer.h"
-#include "Modules/C_SyntaxAnalyzer.h"
-#include "Modules/G_CodeGenerator.h"
+#include "Modules/LexAnalyzer.h"
+#include "Modules/SyntaxAnalyzer.h"
+#include "Modules/CodeGenerator.h"
 
 int FLAG_LOAD = 1;
 int FLAG_EXECUTABLE = 0;

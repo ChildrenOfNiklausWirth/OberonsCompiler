@@ -1,5 +1,5 @@
 #include <memory.h>
-#include "G_CodeGenerator.h"
+#include "CodeGenerator.h"
 
 int MemSize = 1024;
 Ident *comname[NUMBER_OF_COMMANDS];

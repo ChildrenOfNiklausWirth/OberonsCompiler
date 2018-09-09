@@ -4,15 +4,15 @@ project(OberonsCompiler_C)
 set(CMAKE_C_STANDARD 11)
 
 set(LIBRARIES
-        Modules/Structures/B_TerminalSymbols.c
-        Modules/Structures/A_Tokens.c
-        Modules/B_LexAnalyzer.c
-        Modules/C_SyntaxAnalyzer.c
-        Modules/G_CodeGenerator.c
+        Modules/Structures/TerminalSymbols.c
+        Modules/Structures/Tokens.c
+        Modules/LexAnalyzer.c
+        Modules/SyntaxAnalyzer.c
+        Modules/CodeGenerator.c
         Modules/SimpleFunctions/SimpleFunctions.c
         Modules/Structures/Node.c
         Modules/Structures/Set.c
-        Modules/R_RISC.c
+        Modules/RISC.c
         )
 
 

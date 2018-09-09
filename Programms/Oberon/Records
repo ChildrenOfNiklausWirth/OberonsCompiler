@@ -19,7 +19,7 @@ MODULE Records;
     PROCEDURE proc2(x: INTEGER);
         VAR s: S;
         BEGIN
-            IF x > 3 THEN
+            IF x >= 3 THEN
                 s.b := TRUE;
                 Write(s.s1);
             END;

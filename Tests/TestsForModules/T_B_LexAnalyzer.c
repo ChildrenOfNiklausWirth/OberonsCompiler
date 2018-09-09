@@ -1,5 +1,5 @@
-#include "../../Modules/B_LexAnalyzer.h"
-#include "../../Modules/Structures/A_Tokens.h"
+#include "../../Modules/LexAnalyzer.h"
+#include "../../Modules/Structures/Tokens.h"
 
 enum Report {
     REPORT, NO_REPORT

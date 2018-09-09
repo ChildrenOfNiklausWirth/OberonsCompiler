@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "Node.h"
-#include "../B_LexAnalyzer.h"
+#include "../LexAnalyzer.h"
 
 //int item_equals(struct Item item1, struct Item item2) {
 //    if (item1.level != item2.level)

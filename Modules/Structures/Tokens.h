@@ -1,7 +1,7 @@
 #ifndef OBERONSCOMPILER_A_TOKENS_H
 #define OBERONSCOMPILER_A_TOKENS_H
 
-#include "B_TerminalSymbols.h"
+#include "TerminalSymbols.h"
 
 
 typedef struct {

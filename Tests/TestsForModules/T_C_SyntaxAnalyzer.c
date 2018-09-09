@@ -1,4 +1,4 @@
-#include "../../Modules/C_SyntaxAnalyzer.c"
+#include "../../Modules/SyntaxAnalyzer.c"
 
 char address[] = "../Tests/SamplePrograms/Trigonometry";
 

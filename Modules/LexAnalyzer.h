@@ -2,8 +2,8 @@
 #define OBERONSCOMPILER_B_LEKSANALYZER_H
 
 #include <stdio.h>
-#include "Structures/A_Tokens.h"
-#include "Structures/B_TerminalSymbols.h"
+#include "Structures/Tokens.h"
+#include "Structures/TerminalSymbols.h"
 
 #ifdef _WIN32
 #define OS_TYPE WINDOWS

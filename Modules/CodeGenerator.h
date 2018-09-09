@@ -5,9 +5,9 @@
 #include "Structures/Node.h"
 #include "Structures/Set.h"
 #include "SimpleFunctions/SimpleFunctions.h"
-#include "Structures/B_TerminalSymbols.h"
-#include "B_LexAnalyzer.h"
-#include "R_RISC.h"
+#include "Structures/TerminalSymbols.h"
+#include "LexAnalyzer.h"
+#include "RISC.h"
 
 #define MAXCODE 10000
 #define NUMBER_OF_COMMANDS 16
