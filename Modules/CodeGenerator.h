@@ -3,11 +3,7 @@
 
 #include <stdbool.h>
 #include "Structures/Node.h"
-#include "Structures/Set.h"
-#include "SimpleFunctions/SimpleFunctions.h"
-#include "Structures/TerminalSymbols.h"
-#include "LexAnalyzer.h"
-#include "RISC.h"
+#include <stdio.h>
 
 #define MAXCODE 10000
 #define NUMBER_OF_COMMANDS 16

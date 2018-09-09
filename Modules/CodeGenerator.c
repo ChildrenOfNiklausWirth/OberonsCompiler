@@ -1,5 +1,10 @@
 #include <memory.h>
 #include "CodeGenerator.h"
+#include "Structures/Set.h"
+#include "SimpleFunctions/SimpleFunctions.h"
+#include "Structures/TerminalSymbols.h"
+#include "LexAnalyzer.h"
+#include "RISC.h"
 
 int MemSize = 1024;
 Ident *comname[NUMBER_OF_COMMANDS];

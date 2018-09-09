@@ -1,8 +1,6 @@
 #ifndef OBERONSCOMPILER_A_TOKENS_H
 #define OBERONSCOMPILER_A_TOKENS_H
-
 #include "TerminalSymbols.h"
-
 
 typedef struct {
     int nameLength;

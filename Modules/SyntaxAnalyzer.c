@@ -8,6 +8,7 @@
 #include "LexAnalyzer.h"
 #include "Structures/Node.h"
 #include "CodeGenerator.h"
+#include "SimpleFunctions/SimpleFunctions.h"
 
 const int WordSize = 4;
 

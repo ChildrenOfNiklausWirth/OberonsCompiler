@@ -1,7 +1,5 @@
 #ifndef OBERONSCOMPILER_C_OBJECT_H
 #define OBERONSCOMPILER_C_OBJECT_H
-
-#include <malloc.h>
 struct Item;
 typedef struct Node Node;
 typedef struct type Type;
