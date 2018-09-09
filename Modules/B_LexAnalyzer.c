@@ -10,12 +10,13 @@ enum OS os = OS_TYPE;
 
 int numberOfLine;
 struct TokensFlow lexTokensFlow;
+FILE *lexOutputFile;
 
 int parseCommentaries(FILE *file, char *c) {
     do {
         if (fscanf(file, "%c", c) == EOF)
             return 0;
-        if ( *c == '\n')
+        if (*c == '\n')
             numberOfLine++;
     } while (*c != '*');
     fscanf(file, "%c", c);
@@ -137,7 +138,8 @@ int readNextToken(FILE *file, Token *token) {
 
 }
 
-void lexAnalysis(FILE *inputFile) {
+void lexAnalysis(FILE *inputFile, FILE *outputFile) {
+    lexOutputFile = outputFile;
     numberOfLine = 1;
 
     if (os == UNSUPPORTED) {
@@ -163,5 +165,8 @@ void Mark(char msg[], int line) {
         line = lexTokensFlow.current->line;
     }
 
-    printf("\nLine number: %d. Error: \"%s\". \n", line, msg);
+    if (lexOutputFile != NULL)
+        fprintf(lexOutputFile, "Line number: %d. Error: \"%s\". \n", line, msg);
+    else
+        printf("\nLine number: %d. Error: \"%s\". \n", line, msg);
 }
