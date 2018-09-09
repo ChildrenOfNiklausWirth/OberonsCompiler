@@ -1,29 +1,7 @@
+#include "Node.h"
 #include <stdio.h>
 #include <malloc.h>
-#include "Node.h"
 #include "../LexAnalyzer.h"
-
-//int item_equals(struct Item item1, struct Item item2) {
-//    if (item1.level != item2.level)
-//        return 0;
-//    if (item1.mode != item2.mode)
-//        return 0;
-//    if (item1.a != item2.a)
-//        return 0;
-//    if (item1.b != item2.b)
-//        return 0;
-//    if (item1.c != item2.c)
-//        return 0;
-//    if (item1.r != item2.r)
-//        return 0;
-//    if (type_equals(*item1.type, *item2.type) == 0)
-//        return 0;
-//
-//    return 1;
-//}
-
-
-
 
 Node* node_new() {
     Node *node = calloc(1, sizeof *node);

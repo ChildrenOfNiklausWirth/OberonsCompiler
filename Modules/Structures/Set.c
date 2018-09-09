@@ -1,5 +1,5 @@
-#include <stdlib.h>
 #include "Set.h"
+#include <stdlib.h>
 
 struct Set *set_new() {
     struct Set *set;

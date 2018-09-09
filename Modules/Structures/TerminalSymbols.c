@@ -1,8 +1,5 @@
 #include "TerminalSymbols.h"
 
-//__________________________________________________________________________________________________
-
-
 struct TerminalSymbol ts_newTerminalSymbol(char name[], int nameLength, int type) {
     struct TerminalSymbol terminalSymbol;
     terminalSymbol.name = name;
@@ -12,6 +9,7 @@ struct TerminalSymbol ts_newTerminalSymbol(char name[], int nameLength, int type
 }
 
 //__________________________________________________________________________________________________
+
 void tss_initialize(struct TerminalSymbols *terminalSymbols) {
     terminalSymbols->NULLL = ts_newTerminalSymbol("NULL", 4, 0);
     terminalSymbols->TIMES = ts_newTerminalSymbol("*", 1, 1);
@@ -60,76 +58,3 @@ void tss_initialize(struct TerminalSymbols *terminalSymbols) {
     terminalSymbols->TYPE = ts_newTerminalSymbol("TYPE", 4, 58);
 
 }
-
-int charIsDigit(char c) {
-    if (c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7' || c == '8' || c == '9' ||
-        c == '0')
-        return 1;
-    return 0;
-}
-
-int bothCharIsDigit(char c1, char c2) {
-    if ((c1 == '0' || c1 == '1' || c1 == '2' ||
-         c1 == '3' || c1 == '4' || c1 == '5' ||
-         c1 == '6' || c1 == '7' || c1 == '8' || c1 == '9')
-        &
-        (c2 == '0' ||
-         c2 == '1' ||
-         c2 == '2' ||
-         c2 == '3' ||
-         c2 == '4' ||
-         c2 == '5' ||
-         c2 == '6' ||
-         c2 == '7' ||
-         c2 == '8' ||
-         c2 == '9'))
-        return 1;
-    return 0;
-
-}
-
-int bothCharIsMathSymbol(char c1, char c2) {
-    if ((c1 == '=' || c1 == '<' || c1 == '>' || c1 == ':') & (c2 == '=' || c2 == '<' || c2 == '>' || c2 == ':'))
-        return 1;
-    return 0;
-}
-
-int charIsASeparatingTerminalSymbol(struct TerminalSymbols terminalSymbols, char symbol) {
-
-    if (symbol == terminalSymbols.TIMES.name[0])
-        return 1;
-    if (symbol == terminalSymbols.PLUS.name[0])
-        return 1;
-    if (symbol == terminalSymbols.MINUS.name[0])
-        return 1;
-    if (symbol == terminalSymbols.EQL.name[0])
-        return 1;
-    if (symbol == terminalSymbols.NEQ.name[0])
-        return 1;
-    if (symbol == terminalSymbols.LSS.name[0])
-        return 1;
-    if (symbol == terminalSymbols.GTR.name[0])
-        return 1;
-    if (symbol == terminalSymbols.PERIOD.name[0])
-        return 1;
-    if (symbol == terminalSymbols.COMMA.name[0])
-        return 1;
-    if (symbol == terminalSymbols.COLON.name[0])
-        return 1;
-    if (symbol == terminalSymbols.RPAREN.name[0])
-        return 1;
-    if (symbol == terminalSymbols.LPAREN.name[0])
-        return 1;
-    if (symbol == terminalSymbols.RBRAK.name[0])
-        return 1;
-    if (symbol == terminalSymbols.LBRAK.name[0])
-        return 1;
-    if (symbol == terminalSymbols.NOT.name[0])
-        return 1;
-    if (symbol == terminalSymbols.SEMICOLON.name[0])
-        return 1;
-    return 0;
-}
-
-
-//__________________________________________________________________________________________________

@@ -1,7 +1,7 @@
+#include "Tokens.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
-#include "Tokens.h"
 
 Ident *ident_new(char *name, int nameLength) {
     Ident *ident = malloc(sizeof(*ident));

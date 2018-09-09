@@ -61,15 +61,4 @@ struct TerminalSymbols {
 
 void tss_initialize(struct TerminalSymbols *terminalSymbols);
 
-int charIsDigit(char c);
-
-int bothCharIsDigit(char c1, char c2);
-
-int bothCharIsMathSymbol(char c1, char c2);
-
-int charIsASeparatingTerminalSymbol(struct TerminalSymbols terminalSymbols, char symbol);
-
-
-//__________________________________________________________________________________________________
-
 #endif //OBERONSCOMPILER_B_TERMINALSYMBOLS_H
