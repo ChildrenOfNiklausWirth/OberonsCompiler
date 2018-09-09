@@ -515,7 +515,7 @@ void EnterCMD(char *name, int nameLength) {
     cno++;
 }
 
-void decode(FILE *outputFile) {
+void decodeHex(FILE *outputFile) {
 
     cg_initialize();
 

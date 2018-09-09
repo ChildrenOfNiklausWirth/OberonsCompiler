@@ -245,7 +245,7 @@ int node_assertEqualsTwoNodes(Node node1, Node node2) {
 int main() {
     printf("SyntaxAnalyzer Testing...\n\n");
     FILE *file = fopen(address, "r");
-    lexAnalysis(file);
+    lexAnalysis(file,stdout);
     moduleWithoutCloseScope();
 
     Node *rightObjectStart = getRightResultForObjectStart();

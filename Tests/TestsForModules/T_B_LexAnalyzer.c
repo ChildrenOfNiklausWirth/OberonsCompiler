@@ -5,10 +5,6 @@ enum Report {
     REPORT, NO_REPORT
 };
 
-char firstAddress[] = "../Tests/SamplePrograms/1_Simple.txt";
-char secondAddress[] = "../Tests/SamplePrograms/2_SimpleWithComments.txt";
-char thirdAdress[] = "../Tests/SamplePrograms/3_AllTerminalSymbols.txt";
-
 void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
     Token tokens[42];
     int tokensSize = 42;
@@ -243,7 +239,7 @@ int tf_assertEqualsTwoTokensFlows(struct TokensFlow tokensFlow, struct TokensFlo
                 printf("lex \t%d ", tokensFlow.tokens[i].type);
                 token_print(tokensFlow.tokens[i]);
             }
-            if(tokensFlow.tokens[i].type != rightTokensFlow.tokens[i].type){
+            if (tokensFlow.tokens[i].type != rightTokensFlow.tokens[i].type) {
                 printf("Not equal type\n");
                 printf("right \t%d ", rightTokensFlow.tokens[i].type);
                 token_print(rightTokensFlow.tokens[i]);
@@ -286,8 +282,8 @@ void firstTest(enum Report report) {
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
     createRightResultForFirstTest(&rightTokensFlow);
-    FILE *file = fopen(firstAddress, "r");
-    lexAnalysis(file);
+    FILE *inputFile = fopen("../Tests/SamplePrograms/1_Simple.txt", "r");
+    lexAnalysis(inputFile, stdout);
 
 
     if (report == REPORT) {
@@ -311,8 +307,8 @@ void secondTest(enum Report report) {
     tf_initialize(&rightTokensFlow);
     createRightResultForSecondTest(&rightTokensFlow);
 
-    FILE *file = fopen(secondAddress, "r");
-    lexAnalysis(file);
+    FILE *inputFile = fopen("../Tests/SamplePrograms/2_SimpleWithComments.txt", "r");
+    lexAnalysis(inputFile, stdout);
 
     if (report == REPORT) {
         printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");
@@ -336,8 +332,8 @@ void thirdTest(enum Report report) {
     tf_initialize(&rightTokensFlow);
     createRightResultForThirdTest(&rightTokensFlow);
 
-    FILE *file = fopen(thirdAdress, "r");
-    lexAnalysis(file);
+    FILE *file = fopen("../Tests/SamplePrograms/3_AllTerminalSymbols.txt", "r");
+    lexAnalysis(file, stdout);
 
     if (report == REPORT) {
         printf("LEX\t\t\t\t\t\tRIGHT RESULT\t\n\n");

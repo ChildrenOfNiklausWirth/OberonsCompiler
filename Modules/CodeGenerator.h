@@ -89,7 +89,7 @@ unsigned long encode(long op, long a, long b, long c);
 
 unsigned long encodeF3(long op, long disp);
 
-void decode(FILE *outputFile);
+void decodeHex(FILE *outputFile);
 
 void laconicDecode(FILE *outputFile);
 

@@ -140,7 +140,7 @@ void printReport(unsigned long IR, long op, long a, long b, long c,
     printf("\nDecimal form\n");
     printf("%lu\n", IR);
     printf("\nComparison\n\n");
-    printf("\tEncode \t\tMy decode \tWirth decode\n");
+    printf("\tEncode \t\tMy decode \tWirth decodeHex\n");
     printf("op \t%li \t\t%li \t\t%li\n", op, mop, wop);
     printf("a \t%li \t\t%li \t\t%li\n", a, ma, wa);
     printf("b \t%li \t\t%li \t\t%li\n", b, mb, wb);
@@ -157,10 +157,10 @@ int decodingTest(enum Report report, long op, long a, long b, long c) {
     else
         IR = encode(op, a, b, c);
 
-    //my decode
+    //my decodeHex
     long mop, ma, mb, mc;
     myDecode(IR, &mop, &ma, &mb, &mc);
-    //wirth decode
+    //wirth decodeHex
     long wop, wa, wb, wc;
     wirthDecode(IR, &wop, &wa, &wb, &wc);
 
