@@ -1,5 +1,5 @@
 #include "RISC.h"
-
+#include <stdlib.h>
 
 bool N, Z;//negative,zero
 long R[16];//регистры
@@ -59,7 +59,8 @@ void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
 
 }
 
-void RiscExecute(long start, FILE *outputFile) {
+LongList RiscExecute(long start, FILE *outputFile) {
+    LongList longList = longList_new();
 
     long IR;//instruction register
     long opc;//Операция
@@ -159,6 +160,7 @@ void RiscExecute(long start, FILE *outputFile) {
                 scanf("%li", &R[a]);
                 break;
             case WRD:
+                longList_add(&longList, R[c]);
                 fprintf(outputFile, "%li ", R[c]);
                 break;
             case WRH:
@@ -211,6 +213,7 @@ void RiscExecute(long start, FILE *outputFile) {
         }
         R[15] = nxt;
     }
+    return longList;
 
 }
 

@@ -1,0 +1,24 @@
+/* Correct output :
+10 0
+9 1
+8 2
+7 3
+6 4
+*/
+MODULE Loops;
+    VAR i, j: INTEGER;
+
+BEGIN
+    i := 10;
+    j := 0;
+
+    WHILE i # j DO
+        Write(i);
+        Write(j);
+        WriteLn;
+
+        i := i - 1;
+        j := j + 1;
+    END;
+
+END Loops.

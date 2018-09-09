@@ -1,0 +1,25 @@
+/*Should print 4 0 6*/
+MODULE Arrays;
+    TYPE ARR5 = ARRAY 5 OF INTEGER;
+    VAR a: ARR5;
+        i: INTEGER;
+
+    PROCEDURE proc1(x: INTEGER; VAR arr: ARR5);
+    BEGIN
+        arr[x] := arr[x] + x;
+    END proc1;
+
+BEGIN
+    i := 6;
+    a[0] := 0;
+    a[1] := 1;
+    a[2] := 2;
+    a[3] := 3;
+    a[4] := 4;
+
+    Write(a[4]);
+    Write(a[i]);
+    proc1(3, a);
+    Write(a[3]);
+
+END Arrays.

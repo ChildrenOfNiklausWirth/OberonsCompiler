@@ -1,4 +1,5 @@
 #include <memory.h>
+#include <stdlib.h>
 #include "CodeGenerator.h"
 #include "Structures/Set.h"
 #include "SimpleFunctions/SimpleFunctions.h"
@@ -579,9 +580,9 @@ void laconicDecode(FILE *outputFile) {
 
 }
 
-void Load(FILE *outputFile) {
+LongList Load(FILE *outputFile) {
     RiscLoad((const long *) code, pc);
-    RiscExecute(entry * 4, outputFile);
+    return RiscExecute(entry * 4, outputFile);
 }
 
 

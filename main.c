@@ -12,8 +12,9 @@ int FLAG_EXECUTABLE = 0;
 int main(int argc, char *argv[]) {
 
 //    char *inputFileName = argv[1];
-//    char *decodedFileName = argv[2];
-//    char *outputFileName = argv[3];
+//    char *outputFileName = argv[2];
+//    char *decodedFileName = argv[3];
+//    char *decodedFileNameHex = argv[4];
     int errflag = 0;
 
     char *inputFileName = "..\\Programms\\Oberon\\Records";

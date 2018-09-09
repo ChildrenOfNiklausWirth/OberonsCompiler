@@ -1,6 +1,6 @@
 #ifndef OBERONSCOMPILER_C_R_RISC_H
 #define OBERONSCOMPILER_C_R_RISC_H
-
+#include "Structures/LongList.h"
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -53,12 +53,11 @@
 #define RET 58
 
 
-
 void myDecode(unsigned long IR, unsigned long *opc, long *a, long *b, long *c);
 
 void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c);
 
-void RiscExecute(long start, FILE *outputFile);
+LongList RiscExecute(long start, FILE *outputFile);
 
 void RiscLoad(const long code[], long len);
 

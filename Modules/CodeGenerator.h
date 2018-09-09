@@ -1,8 +1,9 @@
 #ifndef OBERONSCOMPILER_C_G_CODEGENERATOR_H
 #define OBERONSCOMPILER_C_G_CODEGENERATOR_H
 
-#include <stdbool.h>
 #include "Structures/Node.h"
+#include "Structures/LongList.h"
+#include <stdbool.h>
 #include <stdio.h>
 
 #define MAXCODE 10000
@@ -137,7 +138,7 @@ void Close(long globals);
 
 void EnterCMD(char *name, int nameLength);
 
-void Load(FILE *loadFile);
+LongList Load(FILE *loadFile);
 
 void Exec(FILE *outputFile);
 
