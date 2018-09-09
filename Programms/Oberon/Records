@@ -1,4 +1,4 @@
-/* Correct output: 11 26 12 12 5 */
+/* Correct output: 11 26 12 12 0 5 */
 MODULE Records;
     TYPE S = RECORD
                 s1, s2: INTEGER;
