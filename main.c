@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     char *inputFileName = "..\\Programms\\Oberon\\Records";
     char *outputFileName = "..\\Programms\\Output\\Records.txt";
     char *decodedFileName = "..\\Programms\\RiscCode\\Records.txt";
-    char *decodedFileNameD = "..\\Programms\\RiscCodeD\\Records.txt";
+    char *decodedFileNameHex = "..\\Programms\\RiscCodeHex\\Records.txt";
 
     if (inputFileName == NULL) {
         printf("Specify input file name");
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     if (errflag == 0) {
         FILE *inputFile = fopen(inputFileName, "r");
         FILE *decodedFile = fopen(decodedFileName, "w+");
-        FILE *decodedFileD = fopen(decodedFileNameD, "w+");
+        FILE *decodedFileHex = fopen(decodedFileNameHex, "w+");
         FILE *outputFile = stdout;
 
         if (strcmp(outputFileName, "0") != 0) {
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
         if (inputFile != NULL) {
             lexAnalysis(inputFile,outputFile);
             module();
-            decode(decodedFileD);
+            decodeHex(decodedFileHex);
             laconicDecode(decodedFile);
 
 
