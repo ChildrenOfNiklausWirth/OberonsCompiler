@@ -473,6 +473,7 @@ void Header(long size) {
 
 }
 
+//Вызов процедуры
 void Enter(long size) {
     Put(PSH, LNK, SP, 4);
     Put(PSH, FP, SP, 4);
@@ -480,6 +481,7 @@ void Enter(long size) {
     Put(SUBI, SP, SP, size);
 }
 
+//Выход из процедуры
 void Return(long size) {
     Put(MOV, SP, 0, FP);
     Put(POP, FP, SP, 4);

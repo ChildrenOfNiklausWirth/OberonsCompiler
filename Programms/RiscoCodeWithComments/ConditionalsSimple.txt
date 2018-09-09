@@ -1,0 +1,112 @@
+Enter: 00000000
+0	 MOVI	 13	 0	 1016
+4	 PSH	 14	 13	 4
+8	 MOVI	 0	 0	 1
+12	 STW	 0	 15	 1008   i = 1
+16	 LDW	 0	 15	 1004
+20	 CMPI	 0	 0	 1      i = 1, Z = 1, N = 0
+24	 BNE	 0	 0	 6      ~Z -> pc = 48
+28	 LDW	 0	 15	 992    i++
+32	 ADDI	 0	 0	 1
+36	 STW	 0	 15	 984
+40	 LDW	 0	 15	 980
+44	 WRD	 0	 0	 0      print( i = 2 )
+48	 LDW	 0	 15	 972
+52	 CMPI	 0	 0	 1      i = 2, Z = 0, N = 0
+56	 BNE	 0	 0	 6      ~Z -> pc = 80
+60	 LDW	 0	 15	 960    {
+64	 ADDI	 0	 0	 1
+68	 STW	 0	 15	 952    Missed
+72	 LDW	 0	 15	 948
+76	 WRD	 0	 0	 0      }
+80	 LDW	 0	 15	 940
+84	 CMPI	 0	 0	 0      i = 2, Z = 0, N = 0
+88	 BLE	 0	 0	 6      Z || N
+92	 LDW	 0	 15	 928    i++
+96	 ADDI	 0	 0	 1
+100	 STW	 0	 15	 920
+104	 LDW	 0	 15	 916
+108	 WRD	 0	 0	 0      print(i = 3)
+112	 LDW	 0	 15	 908
+116	 CMPI	 0	 0	 0      i = 3, Z = 0, N = 0
+120	 BGE	 0	 0	 6      ~N - >144
+124	 LDW	 0	 15	 896    i++
+128	 ADDI	 0	 0	 1
+132	 STW	 0	 15	 888
+136	 LDW	 0	 15	 884
+140	 WRD	 0	 0	 0      print (i = 4)
+144	 LDW	 0	 15	 876
+148	 CMPI	 0	 0	 3      i = 4, Z = 0, N = 0
+152	 BLT	 0	 0	 6      N - > 176
+156	 LDW	 0	 15	 864    i++
+160	 ADDI	 0	 0	 1
+164	 STW	 0	 15	 856
+168	 LDW	 0	 15	 852
+172	 WRD	 0	 0	 0      print(i = 5)
+176	 LDW	 0	 15	 844
+180	 CMPI	 0	 0	 3      i = 5, Z = 0, N = 0
+184	 BGT	 0	 0	 6      ~(Z || N) -> 208
+188	 LDW	 0	 15	 832    i++
+192	 ADDI	 0	 0	 1
+196	 STW	 0	 15	 824
+200	 LDW	 0	 15	 820
+204	 WRD	 0	 0	 0      print(i = 6)
+208	 LDW	 0	 15	 812
+212	 ADDI	 0	 0	 6      i += 6 = 12
+216	 DIVI	 0	 0	 5      i -= 5 = 7
+220	 CMPI	 0	 0	 3      i = 7, Z = 0, N = 0
+224	 BGT	 0	 0	 6      ~(Z || N) -> 248
+228	 LDW	 0	 15	 792    {
+232	 ADDI	 0	 0	 1
+236	 STW	 0	 15	 784    Missed
+240	 LDW	 0	 15	 780
+244	 WRD	 0	 0	 0      }
+248	 LDW	 0	 15	 772
+252	 MULI	 0	 0	 6      i *= 6 = 42
+256	 CMPI	 0	 0	 40     i = 42, Z = 0, N = 0
+260	 BLE	 0	 0	 6      Z || N -> 284
+264	 MOVI	 0	 0	 40     i = 40
+268	 STW	 0	 15	 752
+272	 LDW	 0	 15	 748
+276	 WRD	 0	 0	 0      print( i = 40)
+280	 BR	 0	 0	 6          -> 304
+284	 LDW	 0	 15	 736    {
+288	 ADDI	 0	 0	 1
+292	 STW	 0	 15	 728    Missed
+296	 LDW	 0	 15	 724
+300	 WRD	 0	 0	 0      }
+304	 LDW	 0	 15	 716
+308	 CMPI	 0	 0	 1      i = 40, Z = 0, N = 0
+312	 BGE	 0	 0	 4      Z || N -> 328
+316	 MOVI	 0	 0	 1      {
+320	 WRD	 0	 0	 0      print(i = 40)
+324	 BR	 0	 0	 24         }
+328	 LDW	 0	 15	 692
+332	 CMPI	 0	 0	 2      i = 40, Z = 0, N = 0
+336	 BNE	 0	 0	 4      ~Z -> 352
+340	 MOVI	 0	 0	 2      {
+344	 WRD	 0	 0	 0      Missed
+348	 BR	 0	 0	 18         }
+352	 LDW	 0	 15	 668
+356	 CMPI	 0	 0	 3      Z = 0, N = 0
+360	 BNE	 0	 0	 4      ~Z -> 376
+364	 MOVI	 0	 0	 3      {
+368	 WRD	 0	 0	 0      Missed
+372	 BR	 0	 0	 12         }
+376	 LDW	 0	 15	 644
+380	 CMPI	 0	 0	 3      Z = 0, N = 0
+384	 BLT	 0	 0	 7      N -> 412
+388	 LDW	 0	 15	 632    {
+392	 CMPI	 0	 0	 5
+396	 BGT	 0	 0	 4
+400	 MOVI	 0	 0	 4      Missed
+404	 WRD	 0	 0	 0
+408	 BR	 0	 0	 3          }
+412	 MOVI	 0	 0	 5      print (5)
+416	 WRD	 0	 0	 0
+420	 LDW	 0	 15	 600
+424	 WRD	 0	 0	 0      print (i = )
+428	 POP	 14	 13	 4
+432	 RET	 14
+
+436 bytes
