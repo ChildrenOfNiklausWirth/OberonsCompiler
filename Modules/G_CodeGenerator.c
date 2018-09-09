@@ -351,7 +351,7 @@ void Relation(int op, struct Item *item1, struct Item *item2) {
 }
 
 void Store(struct Item *item1, struct Item *item2) {
-   if (((item1->type->form == BOOLEAN) || (item1->type->form == INTEGER)) &&
+    if (((item1->type->form == BOOLEAN) || (item1->type->form == INTEGER)) &&
         (item1->type->form == item2->type->form)) {
         if (item2->mode == COND) {
             Put(BEQ + negated(item2->c), item2->r, 0, item2->a);
@@ -550,6 +550,27 @@ void decode(FILE *outputFile) {
 
 }
 
+void laconicDecode(FILE *outputFile) {
+    cg_initialize();
+
+    unsigned long w, op;
+    long a, b, c;
+    char str[150];
+    fprintf(outputFile, "Enter: %#+.8x\n", entry * 4);
+    for (unsigned long j = 0; j < pc; ++j) {
+        w = code[j];
+        myDecode(w, &op, &a, &b, &c);
+        if (op != RET)
+            fprintf(outputFile, "%lu\t %s\t %lu\t %lu\t %lu\n", j * 4, mnemo[op], a, b, c);
+        else
+            fprintf(outputFile, "%lu\t %s\t %lu\n", j * 4, mnemo[op], c);
+
+    }
+    fprintf(outputFile, "\n%d bytes\n", pc * 4);
+
+    fclose(outputFile);
+
+}
 
 void Load(FILE *outputFile) {
     RiscLoad((const long *) code, pc);

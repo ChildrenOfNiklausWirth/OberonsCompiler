@@ -54,7 +54,7 @@
 
 
 
-void myDecode(unsigned long IR, long *opc, long *a, long *b, long *c);
+void myDecode(unsigned long IR, unsigned long *opc, long *a, long *b, long *c);
 
 void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c);
 

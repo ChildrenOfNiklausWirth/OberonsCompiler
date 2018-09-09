@@ -5,9 +5,9 @@ enum Report {
     REPORT, NO_REPORT
 };
 
-char firstAddress[] = "../Tests/SamplePrograms/1_Test.txt";
-char secondAddress[] = "../Tests/SamplePrograms/1_TestWithCommentaries.txt";
-char thirdAdress[] = "../Tests/SamplePrograms/2_Test.txt";
+char firstAddress[] = "../Tests/SamplePrograms/1_Simple.txt";
+char secondAddress[] = "../Tests/SamplePrograms/2_SimpleWithComments.txt";
+char thirdAdress[] = "../Tests/SamplePrograms/3_AllTerminalSymbols.txt";
 
 void createRightResultForFirstTest(struct TokensFlow *tokensflow) {
     Token tokens[42];

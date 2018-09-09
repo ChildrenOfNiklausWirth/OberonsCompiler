@@ -6,7 +6,7 @@ long R[16];//регистры
 long M[(RMemSize / 4) - 1];//€чейки пам€ти
 //FILE W;
 
-void myDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
+void myDecode(unsigned long IR, unsigned long *opc, long *a, long *b, long *c) {
 
     *opc = ((IR >> 26) & ((1 << 6) - 1));
 

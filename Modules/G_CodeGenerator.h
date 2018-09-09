@@ -95,6 +95,8 @@ unsigned long encodeF3(long op, long disp);
 
 void decode(FILE *outputFile);
 
+void laconicDecode(FILE *outputFile);
+
 void FixLink(long L);
 
 void IncLevel(int n);
