@@ -1,4 +1,4 @@
-/* Correct output: 2 3 4 5 6 5 7 7 */
+/* Correct output: 2 3 4 5 6 5 6 */
 
 MODULE Conditionals;
 VAR i: INTEGER;
