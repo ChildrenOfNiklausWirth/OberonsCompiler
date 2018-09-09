@@ -1,3 +1,4 @@
+/*Should print 4 0 6*/
 MODULE Arrays;
     TYPE ARR5 = ARRAY 5 OF INTEGER;
     VAR a: ARR5;
