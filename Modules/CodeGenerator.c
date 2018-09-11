@@ -295,7 +295,7 @@ void Op1(int op, struct Item *item) {
 
 }
 
-//Генерирует выражения вида item1.a op item2.b
+//Генерирует выражения вида item1.a op item2.b //TODO заменить на switch
 void Op2(int op, struct Item *item1, struct Item *item2) {
     if ((item1->type->form == INTEGER) && (item2->type->form == INTEGER)) {
         if ((item1->mode == CONST) && (item2->mode == CONST)) {
@@ -339,7 +339,7 @@ void Op2(int op, struct Item *item1, struct Item *item2) {
     } else Mark("Type mismatch", -1);
 
 }
-
+//Вызывается в условных опертаторах, проверяет соответствие типов и генерирует команду сравнения CMP
 void Relation(int op, struct Item *item1, struct Item *item2) {
     if (item1->type->form != INTEGER || item2->type->form != INTEGER) {
         Mark("Wrong type", -1);
@@ -355,7 +355,7 @@ void Relation(int op, struct Item *item1, struct Item *item2) {
     item1->b = 0;
 
 }
-
+//Освобождает неиспользуемые регистры
 void Store(struct Item *item1, struct Item *item2) {
     if (((item1->type->form == BOOLEAN) || (item1->type->form == INTEGER)) &&
         (item1->type->form == item2->type->form)) {
@@ -412,7 +412,7 @@ void Parameter(struct Item *item, Type *ftyp, int class) {
     } else Mark("Parameter type mismatch", -1);
 
 }
-
+//Генерирует команду обхода тела условного оператора
 void CJump(struct Item *item) {
     if (item->type->form == BOOLEAN) {
         if (item->mode != COND)
@@ -442,7 +442,7 @@ void FJump(long *L) {
 void Call(struct Item *item) {
     PutBR(BSR, item->a - pc);
 }
-
+//Генерирует команды ввода и вывода
 void IOCall(struct Item *item1, struct Item *item2) {
     struct Item z;
 
@@ -495,6 +495,7 @@ void Return(long size) {
     PutBR(RET, LNK);
 }
 
+//Инициализация curlve, pc, cno и regs
 void Open() {
     curlev = 0;
     pc = 0;

@@ -1,23 +1,23 @@
 Enter: 0x00000098
-0	 PSH	 14	 13	 4
-4	 PSH	 12	 13	 4
-8	 MOV	 12	 0	 4294967293
-12	 SUBI	 13	 13	 0
-16	 LDW	 0	 12	 8
-20	 LDW	 1	 0	 8
-24	 BEQ	 1	 0	 9
-28	 LDW	 0	 12	 8
-32	 LDW	 1	 12	 8
-36	 LDW	 2	 1	 0
-40	 ADDI	 2	 2	 1
-44	 STW	 2	 0	 0
-48	 LDW	 0	 12	 8
-52	 LDW	 1	 0	 0
-56	 WRD	 0	 0	 1
-60	 MOV	 13	 0	 4294967292
-64	 POP	 12	 13	 4
-68	 POP	 14	 13	 8
-72	 RET	 14
+0	 PSH	 14	 13	 4              SP -= 4, LNK = SP
+4	 PSH	 12	 13	 4              SP -= 4, FP = SP
+8	 MOV	 12	 0	 4294967293     FP = R0 << 4294967292
+12	 SUBI	 13	 13	 0              SP -= 0
+16	 LDW	 0	 12	 8              R0 = adr(s1)
+20	 LDW	 1	 0	 8              R1 = R0 + 8 = s.b
+24	 BEQ	 1	 0	 9              IF s.b == 0 -> 60
+28	 LDW	 0	 12	 8              R0 = adr(s.1)
+32	 LDW	 1	 12	 8              R1 = adr(s.1)
+36	 LDW	 2	 1	 0              R2 = s.1
+40	 ADDI	 2	 2	 1              R2 = s.1 - 1
+44	 STW	 2	 0	 0              M[adr(s.1)] = R2 -> s.1 = s.1 - 1
+48	 LDW	 0	 12	 8              R0 = adr(s.1)
+52	 LDW	 1	 0	 0              R1 = s.1
+56	 WRD	 0	 0	 1              print(s.1)
+60	 MOV	 13	 0	 4294967292     SP = R0 << 4294967292
+64	 POP	 12	 13	 4              SP -= 4, FP = M[SP]
+68	 POP	 14	 13	 8              SP -= 8, LNK = M[SP]
+72	 RET	 14                     PC = LNK
 76	 PSH	 14	 13	 4
 80	 PSH	 12	 13	 4
 84	 MOV	 12	 0	 4294967293

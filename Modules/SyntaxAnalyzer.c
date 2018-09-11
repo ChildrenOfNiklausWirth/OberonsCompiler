@@ -25,18 +25,18 @@ Node *addNode(int class) {
 
     node_setName(&end, lexTokensFlow.current->symbols, lexTokensFlow.current->length);
 
-
+    //Пролистывание objects до текущей обрабатываемой лексемы
     while (namesEquals(lexTokensFlow.current->symbols, lexTokensFlow.current->length, objects->next->name,
                        objects->next->nameLength) != 1)
         objects = objects->next;
 
-    if (objects->next == &end) {
+    if (objects->next == &end) {//end == первой лексеме обрабатываемой цепочки
         Node *newObject = node_new();
         node_setName(newObject, lexTokensFlow.current->symbols, lexTokensFlow.current->length);
         newObject->class = class;
         newObject->next = &end;
         objects->next = newObject;
-        return newObject;
+        return newObject;//Возвращаем первый элемент обрабатываемой цепочки
     } else {
         Mark("declared again", -1);
         return objects->next;
@@ -73,7 +73,7 @@ Node *find() {
         objects = objects->dsc;
     }
 }
-
+//Ищет поле в структуре
 Node *findField(Node *list) {
     node_setName(&end, lexTokensFlow.current->symbols, lexTokensFlow.size);
     while (namesEquals(list->name, list->nameLength, lexTokensFlow.current->symbols, lexTokensFlow.current->length) !=
@@ -88,6 +88,7 @@ bool isParam(Node *obj) {
     return (obj->class == PAR) || ((obj->class == VARIABLE) && (obj->val > 0));
 }
 
+//Инициализация objectStart и запись типов, констант и стандартных функций в objectStart.dsc
 void openScope() {
     Node *s = node_new();
     s->class = HEAD;
@@ -104,6 +105,7 @@ void closeScope() {
     objectsStart = objectsStart->dsc;
 }
 
+//Добавление node с заданными параметрами в objectsStart
 void enter(int class, long value, char *name, int size, Type *type) {
     Node *node = node_new();
     node->class = class;
@@ -114,6 +116,8 @@ void enter(int class, long value, char *name, int size, Type *type) {
     objectsStart->next = node;
 }
 
+
+//Добавление стандартных типов,  констант и функций в objectStart
 void scope_initialise() {
     openScope();
     enter(TYP, 1, terminalSymbols.BOOL.name, terminalSymbols.BOOL.nameLength + 1, &boolType);
@@ -129,7 +133,7 @@ void scope_initialise() {
 
 //expression = SimpleExpresion [("=" | "#" | "<" "<=" |">" |">=") SimpleExpression]
 void expression(struct Item *item1);
-
+//Обрабатывает цепочку селекторов
 void selector(struct Item *item) {
     struct Item item2;
 
@@ -221,7 +225,7 @@ void term(struct Item *item) {
 
     factor(item); // Proceed factor
 
-    while ((lexTokensFlow.current->type >= terminalSymbols.TIMES.type) &&
+    while ((lexTokensFlow.current->type >= terminalSymbols.TIMES.type) &&//Пока арифметический или логический оператор
            (lexTokensFlow.current->type <= terminalSymbols.AND.type)) {
 
         operator = lexTokensFlow.current->type;
@@ -307,7 +311,7 @@ void param(struct Item *item) {
         Mark(")?", -1);
 }
 
-//StatSequence=statement{";"statement}
+//StatSequence=statement{";"statement}, обработка statement-ов начиная от BEGIN до END ModuleName
 void StatSequence() {
     Node *par;
     Node *node;
@@ -433,7 +437,7 @@ void StatSequence() {
 
         if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type)
             tf_next(&lexTokensFlow);
-        else if ((lexTokensFlow.current->type >= terminalSymbols.SEMICOLON.type) &
+        else if ((lexTokensFlow.current->type >= terminalSymbols.SEMICOLON.type) &//если LTF.current = END
                  (lexTokensFlow.current->type < terminalSymbols.IF.type) ||
                  (lexTokensFlow.current->type >= terminalSymbols.ARR.type))
             break;
@@ -451,7 +455,7 @@ Node *identList(int class) {
         //Add Identifier to parse tree
         Node *firstAdded = addNode(class); //Have to save link for parameter setup later
         tf_next(&lexTokensFlow);
-
+        //Обработка цепочки
         while (lexTokensFlow.current->type == terminalSymbols.COMMA.type) {
             tf_next(&lexTokensFlow);
             if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
@@ -569,6 +573,7 @@ Type *type() {
 
 // ORDER SENSITIVE
 // declarations = ["CONST" {ident = expression ;}] [TYPE {ident = type;}] [VAR = {IdentList : type ;}] {ProcedureDeclarations;}
+//Инициализация структур переменных и констант в модулях и функциях
 void declarations(long *varsize) {
 
     Node *firstAdded;
@@ -579,6 +584,7 @@ void declarations(long *varsize) {
     if ((lexTokensFlow.current->type < terminalSymbols.CONSTT.type) &&
         (lexTokensFlow.current->type != terminalSymbols.END.type)) {
 
+        //TODO почему не numberOfLines в качестве аргумента
         Mark("There are no declarations in MODULE", -1); // REPLACE
 
         while ((lexTokensFlow.current->type < terminalSymbols.CONSTT.type) ||
@@ -650,7 +656,7 @@ void declarations(long *varsize) {
                 Type *tp = type(); // Proceed type identification
                 obj = firstAdded;
 
-                while (obj != &end) {
+                while (obj != &end) {//obj - цепочка идентифицируемых объектов одного типа, последний объект цепочки - тип переменных
                     obj->type = tp;
                     obj->level = curlev;
                     *varsize = *varsize + obj->type->size;
@@ -676,7 +682,7 @@ void declarations(long *varsize) {
     }
 }
 
-//FPSection=["VAR"]IdentList ":" type
+//FPSection=["VAR"]IdentList ":" type, парсит цепочку параметров сигнатуры
 void FPSection(long *parblksize) {
     Node *obj, *firstAdded;
     Type *tp;
@@ -723,7 +729,7 @@ void FPSection(long *parblksize) {
 
 //procedureDeclaration = ProcedureHeading; ProcedureBody ident;
 // ProcedureHeading = PROCEDURE ident [FormalParameters];
-//
+//Обрабатывает процедуры
 void procedureDeclaration() {
     int const marksize = 8;
     Node *procedure, *obj;
@@ -840,6 +846,7 @@ void moduleWithoutCloseScope() {
     char *moduleIdentifier = NULL;
     int moduleIdentifierLength = 0;
 
+    //
     if (tf_next(&lexTokensFlow)->type == terminalSymbols.MODULE.type) {
         scope_initialise();
         Open();
@@ -857,7 +864,7 @@ void moduleWithoutCloseScope() {
 
         declarations(&varsize); // Proceed declarations
 
-        while (lexTokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
+        while (lexTokensFlow.current->type == terminalSymbols.PROCEDURE.type) {//Обработка всех объявленных процедур
             procedureDeclaration();
             if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
                 tf_next(&lexTokensFlow);
