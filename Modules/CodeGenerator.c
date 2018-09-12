@@ -1,5 +1,6 @@
 #include <memory.h>
 #include <stdlib.h>
+#include <mem.h>
 #include "CodeGenerator.h"
 #include "Structures/Set.h"
 #include "SimpleFunctions/SimpleFunctions.h"
@@ -170,16 +171,16 @@ void fix(long at, long with) {
     code[at] = (code[at] & 0xFFC00000) | (with & 0x3FFFFF);
 }
 
-long fixWith(long L0, long L1) {
-    long L2;
-    while (L0 != 0) {
-        L2 = code[L0] % (1 << 18);
-        fix(L0, L1 - L0);
-        L0 = L2;
-    }
-    return L0;
-
-}
+//long fixWith(long L0, long L1) {
+//    long L2;
+//    while (L0 != 0) {
+//        L2 = code[L0] % (1 << 18);
+//        fix(L0, L1 - L0);
+//        L0 = L2;
+//    }
+//    return L0;
+//
+//}
 
 void FixLink(long L) {
     long L1;
@@ -339,6 +340,7 @@ void Op2(int op, struct Item *item1, struct Item *item2) {
     } else Mark("Type mismatch", -1);
 
 }
+
 //Вызывается в условных опертаторах, проверяет соответствие типов и генерирует команду сравнения CMP
 void Relation(int op, struct Item *item1, struct Item *item2) {
     if (item1->type->form != INTEGER || item2->type->form != INTEGER) {
@@ -355,6 +357,7 @@ void Relation(int op, struct Item *item1, struct Item *item2) {
     item1->b = 0;
 
 }
+
 //Освобождает неиспользуемые регистры
 void Store(struct Item *item1, struct Item *item2) {
     if (((item1->type->form == BOOLEAN) || (item1->type->form == INTEGER)) &&
@@ -412,6 +415,7 @@ void Parameter(struct Item *item, Type *ftyp, int class) {
     } else Mark("Parameter type mismatch", -1);
 
 }
+
 //Генерирует команду обхода тела условного оператора
 void CJump(struct Item *item) {
     if (item->type->form == BOOLEAN) {
@@ -442,6 +446,7 @@ void FJump(long *L) {
 void Call(struct Item *item) {
     PutBR(BSR, item->a - pc);
 }
+
 //Генерирует команды ввода и вывода
 void IOCall(struct Item *item1, struct Item *item2) {
     struct Item z;
@@ -504,7 +509,7 @@ void Open() {
 }
 
 
-void Close(long globals) {
+void Close() {
     Put(POP, LNK, SP, 4);
     PutBR(RET, LNK);
 
@@ -523,9 +528,8 @@ void decodeHex(FILE *outputFile) {
 
     unsigned long w, op;
     long a;
-    char str[150];
-    fprintf(outputFile, "Enter: %#+.8x\n", entry * 4);
-    for (unsigned long j = 0; j < pc; ++j) {
+    fprintf(outputFile, "Enter: %#+.8x\n", (unsigned int) (entry * 4));
+    for (int j = 0; j < pc; ++j) {
         w = code[j];
         op = (w >> 26) & 0x3F;
         fprintf(outputFile, "%#.8x %#.8x %-4s ", (unsigned int) j * 4, (unsigned int) w, mnemo[op]);
@@ -538,18 +542,19 @@ void decodeHex(FILE *outputFile) {
                 a -= 0x40000;
             }
             fprintf(outputFile, "R%.2lu, R%.2lu, %s%#+.8x\n", w >> 22 & 0x0F, w >> 18 & 0x0F, a < 0 ? "-" : "",
-                    a < 0 ? -(unsigned) a : (unsigned) a);
+                    a < 0 ? (unsigned int) -a : (unsigned) a);
         } else {
             a = (int) (w & 0x3FFFFFF);
 
             if (op == RET) {
                 // c = link register
-                fprintf(outputFile, "R%.2d\n", a);
+                fprintf(outputFile, "R%.2li\n", a);
             } else {
                 if (a >= 0x2000000) {
                     a -= 0x4000000;
                 }
-                fprintf(outputFile, "%s%#+.6x\n", a < 0 ? "-" : "", a < 0 ? -(unsigned) (a * 4) : (unsigned) a * 4);
+                fprintf(outputFile, "%s%#+.6x\n", a < 0 ? "-" : "", a < 0 ? (unsigned int) -(a * 4)
+                                                                          : (unsigned) a * 4);
             }
         }
     }
@@ -564,15 +569,16 @@ void laconicDecode(FILE *outputFile) {
 
     unsigned long w, op;
     long a, b, c;
-    char str[150];
-    fprintf(outputFile, "Enter: %#+.8x\n", entry * 4);
-    for (unsigned long j = 0; j < pc; ++j) {
+    fprintf(outputFile, "Enter: %#+.8x\n", (unsigned int) (entry * 4));
+    for (int j = 0; j < pc; ++j) {
         w = code[j];
+        if (j == 2)
+            printf("Loh");
         myDecode(w, &op, &a, &b, &c);
         if (op != RET)
-            fprintf(outputFile, "%lu\t %s\t %lu\t %lu\t %lu\n", j * 4, mnemo[op], a, b, c);
+            fprintf(outputFile, "%d\t %s\t %lu\t %lu\t %li\n", j * 4, mnemo[op], a, b, c);
         else
-            fprintf(outputFile, "%lu\t %s\t %lu\n", j * 4, mnemo[op], c);
+            fprintf(outputFile, "%d\t %s\t %lu\n", j * 4, mnemo[op], c);
 
     }
     fprintf(outputFile, "\n%d bytes\n", pc * 4);
@@ -581,9 +587,9 @@ void laconicDecode(FILE *outputFile) {
 
 }
 
-LongList Load(FILE *outputFile) {
+void Load(FILE *outputFile) {
     RiscLoad((const long *) code, pc);
-    return RiscExecute(entry * 4, outputFile);
+    RiscExecute(entry * 4, outputFile);
 }
 
 

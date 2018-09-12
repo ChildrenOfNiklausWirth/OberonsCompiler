@@ -129,11 +129,11 @@ void Return(long size);
 
 void Open();
 
-void Close(long globals);
+void Close();
 
 void EnterCMD(char *name, int nameLength);
 
-LongList Load(FILE *loadFile);
+void Load(FILE *loadFile);
 
 void Exec(FILE *outputFile);
 

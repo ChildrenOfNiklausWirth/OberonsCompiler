@@ -1,5 +1,4 @@
 #include "RISC.h"
-#include <stdlib.h>
 
 bool N, Z;//negative,zero
 long R[16];//регистры
@@ -14,8 +13,8 @@ void myDecode(unsigned long IR, unsigned long *opc, long *a, long *b, long *c) {
         *a = ((IR >> 22) & ((1 << 4) - 1));
         *b = ((IR >> 18) & ((1 << 4) - 1));
         *c = (IR & ((1 << 4) - 1));
-        if (*c >= 1 << 3)
-            *c -= 1 << 4;
+        //if (*c >= 1 << 3)//TODO раскоментировать перед запуском тестов encoding & Decoding
+        //    *c -= 1 << 4;
     } else if (*opc < LDW) {//F1
         *a = ((IR >> 22) & ((1 << 4) - 1));
         *b = ((IR >> 18) & ((1 << 4) - 1));
@@ -59,8 +58,8 @@ void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
 
 }
 
-LongList RiscExecute(long start, FILE *outputFile) {
-    LongList longList = longList_new();
+void RiscExecute(long start, FILE *outputFile) {
+    // LongList longList = longList_new();
 
     long IR;//instruction register
     long opc;//Операция
@@ -73,6 +72,9 @@ LongList RiscExecute(long start, FILE *outputFile) {
     while (loop) {
         nxt = R[15] + 4;
         IR = M[R[15] / 4];
+        if (nxt == 196)
+            printf("Loh");
+
 
         wirthDecode((unsigned long) IR, &opc, &a, &b, &c);
         switch (opc) {
@@ -102,13 +104,13 @@ LongList RiscExecute(long start, FILE *outputFile) {
                 Z = (R[b] == c);
                 N = R[b] < c;
                 break;
-
 //F1----------------------------------------------------------------------
             case MOVI:
                 R[a] = c << b;
                 break;
             case MVNI:
                 R[a] = -(c << b);
+                break;
             case ADDI:
                 R[a] = R[b] + c;
                 break;
@@ -157,10 +159,10 @@ LongList RiscExecute(long start, FILE *outputFile) {
                 M[R[b] / 4] = R[a];
                 break;
             case RD:
-                scanf("%li", &R[a]);
+                scanf("%li");
                 break;
             case WRD:
-                longList_add(&longList, R[c]);
+//                longList_add(&longList, R[c]);
                 fprintf(outputFile, "%li ", R[c]);
                 break;
             case WRH:
@@ -213,7 +215,7 @@ LongList RiscExecute(long start, FILE *outputFile) {
         }
         R[15] = nxt;
     }
-    return longList;
+    //return longList;
 
 }
 

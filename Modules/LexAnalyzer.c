@@ -1,4 +1,4 @@
-#include <malloc.h>
+
 #include "LexAnalyzer.h"
 
 
@@ -98,6 +98,7 @@ int parseCommentaries(FILE *file, char *c) {
         fscanf(file, "%c", c);
         return 1;
     }
+    return 0;
 }
 
 int readNextToken(FILE *file, Token *token) {

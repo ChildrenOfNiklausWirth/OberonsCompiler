@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
+#include <mem.h>
 
 Ident *ident_new(char *name, int nameLength) {
     Ident *ident = malloc(sizeof(*ident));
@@ -18,7 +19,7 @@ void token_initialize(Token *token, int nameLength) {
     token->type = 0;
 }
 
-Token token_newToken(char symbols[], int nameLength, int numberOfLine) {
+Token token_newToken(const char symbols[], int nameLength, int numberOfLine) {
     Token token;
     token.symbols = malloc(sizeof(char) * nameLength);
     token.length = nameLength;

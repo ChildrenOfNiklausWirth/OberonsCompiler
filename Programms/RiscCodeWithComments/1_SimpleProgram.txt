@@ -1,21 +1,21 @@
 Enter: 00000000
-0	 MOVI	 13	 0	 1012
-4	 PSH	 14	 13	 4
-8	 MOVI	 0	 0	 6      x := 6
-12	 STW	 0	 15	 1008
-16	 MOVI	 0	 0	 0      y := 0
-20	 STW	 0	 15	 996
+0	 MOVI	 13	 0	 1012   SP = 1012
+4	 PSH	 14	 13	 4      SP -= 4, M[SP/4] = LNK
+8	 MOVI	 0	 0	 6      R0 = 6
+12	 STW	 0	 15	 1008   x = R0
+16	 MOVI	 0	 0	 0      R0 = 0
+20	 STW	 0	 15	 996    y = R0
 24	 LDW	 0	 15	 996    x - y
 28	 LDW	 1	 15	 988
 32	 SUB	 0	 0	 1
 36	 LDW	 1	 15	 984    x + y
 40	 LDW	 2	 15	 976
 44	 ADD	 1	 1	 2
-48	 MUL	 0	 0	 1      (x - y) * (x + y)
-52	 STW	 0	 15	 960    //
-56	 LDW	 0	 15	 964    //ÇÀ×ÅÌ
-60	 STW	 0	 15	 956    //
-64	 POP	 14	 13	 4      //SP = LNK
+48	 MUL	 0	 0	 1      R0 = (x - y) * (x + y)
+52	 STW	 0	 15	 960    z = R0
+56	 LDW	 0	 15	 964    R0 = x
+60	 STW	 0	 15	 956    y = R0
+64	 POP	 14	 13	 4      LNK = M[SP/4], SP += 4
 68	 RET	 14
 
 72 bytes

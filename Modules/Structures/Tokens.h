@@ -20,7 +20,7 @@ typedef struct {
 
 void token_initialize(Token *token, int nameLength);
 
-Token token_newToken(char symbols[], int nameLength, int numberOfLine);
+Token token_newToken(const char symbols[], int nameLength, int numberOfLine);
 
 Token token_newTokenWithType(char symbols[], int nameLength, int type, int numberOfLine);
 

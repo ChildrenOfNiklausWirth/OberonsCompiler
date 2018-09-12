@@ -42,7 +42,7 @@ Node *addNode(int class) {
         return objects->next;
     }
 
-};
+}
 
 //Поиск объекта в objectStart
 Node *find() {
@@ -364,7 +364,7 @@ void StatSequence() {
                     }
                 }
 
-                if (~isParam(par)) {
+                if (!isParam(par)) {
                     Call(&item1);
                 } else {
                     Mark("Too many arguments", -1);
@@ -838,7 +838,7 @@ void procedureDeclaration() {
         }
     }
 
-};
+}
 
 
 void moduleWithoutCloseScope() {

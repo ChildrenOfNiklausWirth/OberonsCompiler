@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 
-int namesEquals(char *name1, int size1, char *name2, int size2) {
+int namesEquals(const char *name1, int size1, char *name2, int size2) {
     if (size1 == size2) {
 
         for (int i = 0; i < size1; ++i)
@@ -23,7 +23,6 @@ void binaryPrint(long n) {
         length--;
     }
     for (int i = 0; i < length; ++i)
-        printf("%d", (int) ((n >> length - i - 1) & 1));
+        printf("%d", (int) ((n >> (length - i - 1)) & 1));
     printf("\n");
-
 }
