@@ -9,7 +9,6 @@ MODULE FixedPoint;
     PROCEDURE pow2(VAR int: INTEGER);
         VAR i, res: INTEGER;
     BEGIN
-
         i := int;
         res := 1;
 
@@ -38,7 +37,6 @@ MODULE FixedPoint;
             num := num DIV 10;
             k := k DIV 10;
         END;
-        Write(frac);
 
         k := BITS - 2;
         res := 0;

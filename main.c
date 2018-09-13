@@ -23,6 +23,10 @@ int FLAG_EXECUTABLE = 0;
 int main(int argc, char *argv[]) {
     int noArgumentFlag = 0;
 
+    if (argc < 5) {
+        printf("Input fromat: inputFile decodedFile decodedFileHex (outputFile | 0)");
+    }
+
     if (argv[1] == NULL) {
         printf("Specify input file name");
         noArgumentFlag = 1;

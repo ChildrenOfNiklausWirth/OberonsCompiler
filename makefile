@@ -1,8 +1,8 @@
-CC=GCC
+CC=gcc
 CFLAGS=-c -std=c11 -pedantic -Wall -Wextra
 
-compiler.exe: main.o LexAnalyzer.o SyntaxAnalyzer.o CodeGenerator.o RISC.o Node.o Set.o TerminalSymbols.o Tokens.o SimpleFunctions.o
-	$(CC) main.o LexAnalyzer.o SyntaxAnalyzer.o CodeGenerator.o RISC.o Node.o Set.o TerminalSymbols.o Tokens.o SimpleFunctions.o -o compiler.exe
+compiler.exe: main.o LexAnalyzer.o SyntaxAnalyzer.o CodeGenerator.o RISC.o Node.o Set.o TerminalSymbols.o Tokens.o SimpleFunctions.o LongList.o
+	$(CC) main.o LexAnalyzer.o SyntaxAnalyzer.o CodeGenerator.o RISC.o Node.o Set.o TerminalSymbols.o Tokens.o SimpleFunctions.o LongList.o -o compiler.exe
 
 main.o: main.c
 	$(CC) $(CFLAGS) main.c
@@ -33,3 +33,6 @@ Tokens.o: Modules/Structures/Tokens.c
 	
 SimpleFunctions.o: Modules/SimpleFunctions/SimpleFunctions.c
 	$(CC) $(CFLAGS) Modules/SimpleFunctions/SimpleFunctions.c
+
+LongList.o: Modules/Structures/LongList.c
+	$(CC) $(CFLAGS) Modules/Structures/LongList.c

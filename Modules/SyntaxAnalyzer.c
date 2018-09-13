@@ -330,7 +330,7 @@ void StatSequence() {
             } while (lexTokensFlow.current->type < terminalSymbols.IDENT.type);
         }
 
-      if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
+        if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
             node = find();
             tf_next(&lexTokensFlow);
             MakeItem(&item1, node);
@@ -446,7 +446,7 @@ void StatSequence() {
         else
             Mark("\";\" expected at the end of statement", (lexTokensFlow.current - 1)->line);
     }
-};
+}
 
 // identList = ident {, ident};
 //Идентификация нескольких переменных одного типа
@@ -493,9 +493,11 @@ Type *type() {
 
         Mark("Type identifier expected", -1);
 
-        do { tf_next(&lexTokensFlow); }
+        tf_next(&lexTokensFlow);
         while (!(lexTokensFlow.current->type == terminalSymbols.IDENT.type &&
-                 lexTokensFlow.current->type >= terminalSymbols.ARR.type));
+                 lexTokensFlow.current->type >= terminalSymbols.ARR.type)) {
+            tf_next(&lexTokensFlow);
+        }
     }
 
     if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
