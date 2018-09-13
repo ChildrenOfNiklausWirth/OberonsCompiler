@@ -1,0 +1,89 @@
+MODULE FixedPoint;
+    CONST BITS = 32;
+    TYPE FP = RECORD
+                int, frac: INTEGER;
+              END;
+    VAR fp1, fp2 : FP;
+        p: INTEGER;
+
+    PROCEDURE pow2(VAR int: INTEGER);
+        VAR i, res: INTEGER;
+    BEGIN
+
+        i := int;
+        res := 1;
+
+        WHILE (i > 0) DO
+            res := res * 2;
+            i := i - 1;
+        END;
+
+        int := res;
+    END pow2;
+
+    PROCEDURE makeFrac(VAR fp :FP; num: INTEGER);
+        VAR i, k, j, frac, res, pow: INTEGER;
+            negated: BOOLEAN;
+        BEGIN
+        i := 10;
+        WHILE (num MOD i # num) DO
+            i := i * 10;
+        END;
+
+        frac := 0;
+        k := i;
+        WHILE (k >= 10) DO
+            frac := frac * 10;
+            frac := frac + (num MOD 10);
+            num := num DIV 10;
+            k := k DIV 10;
+        END;
+        Write(frac);
+
+        k := BITS - 2;
+        res := 0;
+        negated := FALSE;
+
+        frac := frac * 2;
+        IF frac - i >= 0 THEN
+            negated := TRUE;
+            frac := frac - i;
+        END;
+
+        WHILE (k >= 0) DO
+        Write(frac);
+            frac := frac * 2;
+            IF frac - i >= 0 THEN
+                pow := k;
+                pow2(pow);
+                res := res + pow;
+                frac := frac - i;
+                Write(k);
+            END;
+            k := k - 1;
+        END;
+        IF negated THEN
+            fp.frac := -res;
+        ELSE
+            fp.frac := res
+        END;
+    END makeFrac;
+
+    PROCEDURE add(VAR fp1, fp2, res: FP);
+        VAR int, frac: INTEGER;
+        PROCEDURE addPP(VAR fp1, fp2, res : FP);
+        VAR frac: INTEGER;
+        BEGIN
+            frac := fp1.int + fp2.int;
+            Write(frac);
+        END addPP;
+    BEGIN
+        IF (fp1.int > 0) & (fp2.int > 0) THEN
+            addPP(fp1, fp2, res);
+        END;
+    END add;
+
+BEGIN
+    makeFrac(fp1, 7500);
+    Write(fp1.frac);
+END FixedPoint.

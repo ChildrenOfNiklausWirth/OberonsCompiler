@@ -214,6 +214,7 @@ int readNextToken(FILE *file, Token *token) {
 void lexAnalysis(FILE *inputFile, FILE *outputFile) {
     lexOutputFile = outputFile;
     numberOfLine = 1;
+    syntaxError = 0;
 
     if (os == UNSUPPORTED) {
         printf("Unsupported OS type. Working in Linux compatibility mode.");
@@ -233,6 +234,8 @@ void lexAnalysis(FILE *inputFile, FILE *outputFile) {
 }
 
 void Mark(char msg[], int line) {
+
+    syntaxError = 1;
 
     if (line < 0) {
         line = lexTokensFlow.current->line;

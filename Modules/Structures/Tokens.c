@@ -2,7 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
+#include "../LexAnalyzer.h"
+
+#ifdef _WIN32
 #include <mem.h>
+#endif
 
 Ident *ident_new(char *name, int nameLength) {
     Ident *ident = malloc(sizeof(*ident));

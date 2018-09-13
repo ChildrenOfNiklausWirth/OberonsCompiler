@@ -1,0 +1,14 @@
+MODULE Overflow;
+    VAR x: INTEGER;
+BEGIN
+    x := 65536;
+    x := (x * 32768);
+
+    IF x > 0 THEN
+            Write(1);
+    ELSE
+            Write(0);
+    END;
+
+    Write(x);
+END Overflow.

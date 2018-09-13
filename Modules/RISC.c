@@ -1,11 +1,11 @@
 #include "RISC.h"
 
-bool N, Z;//negative,zero
-long R[16];//регистры
-long M[(RMemSize / 4) - 1];//€чейки пам€ти
+bool N, Z; // negative,zero
+int R[16]; // регистры
+int M[(RMemSize / 4) - 1]; // €чейки пам€ти in bytes
 //FILE W;
 
-void myDecode(unsigned long IR, unsigned long *opc, long *a, long *b, long *c) {
+void myDecode(unsigned int IR, unsigned int *opc, int *a, int *b, int *c) {
 
     *opc = ((IR >> 26) & ((1 << 6) - 1));
 
@@ -37,7 +37,7 @@ void myDecode(unsigned long IR, unsigned long *opc, long *a, long *b, long *c) {
 
 }
 
-void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
+void wirthDecode(unsigned int IR, int *opc, int *a, int *b, int *c) {
 
     *opc = IR / 0x4000000 % 0x40;
     *a = IR / (1 << 22) % (1 << 4);
@@ -58,13 +58,13 @@ void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c) {
 
 }
 
-void RiscExecute(long start, FILE *outputFile) {
+void RiscExecute(int start, FILE *outputFile) {
     // LongList longList = longList_new();
 
-    long IR;//instruction register
-    long opc;//ќпераци€
-    long nxt;//”казатель
-    long a = 0, b = 0, c = 0;//ѕараметры
+    int IR;//instruction register
+    int opc;//ќпераци€
+    int nxt;//”казатель
+    int a = 0, b = 0, c = 0;//ѕараметры
 
     R[14] = 0;
     R[15] = start + ProgOrg;
@@ -72,11 +72,9 @@ void RiscExecute(long start, FILE *outputFile) {
     while (loop) {
         nxt = R[15] + 4;
         IR = M[R[15] / 4];
-        if (nxt == 196)
-            printf("Loh");
 
 
-        wirthDecode((unsigned long) IR, &opc, &a, &b, &c);
+        wirthDecode((unsigned) IR, &opc, &a, &b, &c);
         switch (opc) {
 //F0----------------------------------------------------------------------
             case MOV:
@@ -130,7 +128,6 @@ void RiscExecute(long start, FILE *outputFile) {
                 Z = (R[b] == c);
                 N = R[b] < c;
                 break;
-
 //F2----------------------------------------------------------------------
             case CHKI:
                 if (R[a] < 0 || R[a] >= c)
@@ -163,7 +160,7 @@ void RiscExecute(long start, FILE *outputFile) {
                 break;
             case WRD:
 //                longList_add(&longList, R[c]);
-                fprintf(outputFile, "%li ", R[c]);
+                fprintf(outputFile, "%d ", R[c]);
                 break;
             case WRH:
                 fprintf(outputFile, " %o", (unsigned int) R[c]);
@@ -222,6 +219,6 @@ void RiscExecute(long start, FILE *outputFile) {
 void RiscLoad(const long code[], long len) {
 
     for (int i = 0; i < len; ++i)
-        M[i + ProgOrg / 4] = code[i];
+        M[i + ProgOrg / 4] = (int) code[i];
 
 }

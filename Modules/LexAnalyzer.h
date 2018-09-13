@@ -13,6 +13,7 @@
 #define OS_TYPE UNSUPPORTED
 #endif
 
+int syntaxError;
 extern struct TerminalSymbols terminalSymbols; //need to be initialised with ts_initialise
 extern struct TokensFlow lexTokensFlow; //need to be created with lexAnalysis
 

@@ -1,6 +1,10 @@
 #include <memory.h>
 #include <stdlib.h>
+
+#ifdef _WIN32
 #include <mem.h>
+#endif
+
 #include "CodeGenerator.h"
 #include "Structures/Set.h"
 #include "SimpleFunctions/SimpleFunctions.h"
@@ -96,9 +100,8 @@ void PutBR(long op, long disp) {
 
 //Проверяет размер переменной
 void TestRange(long x) {
-    if ((x >= (1 << 17)) || (x < -(1 << 17)))
-        Mark("Value is out of range", -1);
-
+    if (x >= 131071 || x < -131070)
+       Mark("CONST size is more than \"im\" part of command", -1);
 }
 
 //Загружает переменную или константу в code[ ]
@@ -500,7 +503,7 @@ void Return(long size) {
     PutBR(RET, LNK);
 }
 
-//Инициализация curlve, pc, cno и regs
+//Инициализация curlev, pc, cno и regs
 void Open() {
     curlev = 0;
     pc = 0;
@@ -527,8 +530,8 @@ void decodeHex(FILE *outputFile) {
     cg_initialize();
 
     unsigned long w, op;
-    long a;
-    fprintf(outputFile, "Enter: %#+.8x\n", (unsigned int) (entry * 4));
+    long c;
+    fprintf(outputFile, "Enter: %s%#.8x\n", entry == 0 ? "0x" : "", (unsigned int) (entry * 4));
     for (int j = 0; j < pc; ++j) {
         w = code[j];
         op = (w >> 26) & 0x3F;
@@ -537,24 +540,26 @@ void decodeHex(FILE *outputFile) {
         if (op < MOVI) {
             fprintf(outputFile, "R%.2lu, R%.2lu, R%.2lu\n", ((w >> 22) & 0x0F), ((w >> 18) & 0x0F), w & 0x0F);
         } else if (op < BEQ) {
-            a = (int) (w & 0x3FFFF);
-            if (a >= 0x20000) {
-                a -= 0x40000;
-            }
-            fprintf(outputFile, "R%.2lu, R%.2lu, %s%#+.8x\n", w >> 22 & 0x0F, w >> 18 & 0x0F, a < 0 ? "-" : "",
-                    a < 0 ? (unsigned int) -a : (unsigned) a);
+
+            c = (int) (w & 0x3FFFF);
+
+            if (c >= 0x20000)
+                c -= 0x40000;
+
+            fprintf(outputFile, "R%.2lu, R%.2lu, %s%#.8x\n", w >> 22 & 0x0F, w >> 18 & 0x0F, c < 0 ? "-" : c == 0 ? "0x" : "",
+                    c < 0 ? (unsigned int) -c : (unsigned) c);
         } else {
-            a = (int) (w & 0x3FFFFFF);
+            c = (int) (w & 0x3FFFFFF);
 
             if (op == RET) {
                 // c = link register
-                fprintf(outputFile, "R%.2li\n", a);
+                fprintf(outputFile, "R%.2li\n", c);
             } else {
-                if (a >= 0x2000000) {
-                    a -= 0x4000000;
+                if (c >= 0x2000000) {
+                    c -= 0x4000000;
                 }
-                fprintf(outputFile, "%s%#+.6x\n", a < 0 ? "-" : "", a < 0 ? (unsigned int) -(a * 4)
-                                                                          : (unsigned) a * 4);
+                fprintf(outputFile, "%s%#.6x\n", c < 0 ? "-" : "", c < 0 ? (unsigned int) -(c * 4)
+                                                                         : (unsigned) c * 4);
             }
         }
     }
@@ -565,15 +570,13 @@ void decodeHex(FILE *outputFile) {
 }
 
 void laconicDecode(FILE *outputFile) {
-    cg_initialize();
-
     unsigned long w, op;
     long a, b, c;
-    fprintf(outputFile, "Enter: %#+.8x\n", (unsigned int) (entry * 4));
+    cg_initialize();
+
+    fprintf(outputFile, "Enter: %s%#.8x\n", entry == 0 ? "0x" : "", (unsigned int) (entry * 4));
     for (int j = 0; j < pc; ++j) {
         w = code[j];
-        if (j == 2)
-            printf("Loh");
         myDecode(w, &op, &a, &b, &c);
         if (op != RET)
             fprintf(outputFile, "%d\t %s\t %lu\t %lu\t %li\n", j * 4, mnemo[op], a, b, c);
@@ -581,15 +584,15 @@ void laconicDecode(FILE *outputFile) {
             fprintf(outputFile, "%d\t %s\t %lu\n", j * 4, mnemo[op], c);
 
     }
-    fprintf(outputFile, "\n%d bytes\n", pc * 4);
 
+    fprintf(outputFile, "\n%d bytes\n", pc * 4);
     fclose(outputFile);
 
 }
 
 void Load(FILE *outputFile) {
     RiscLoad((const long *) code, pc);
-    RiscExecute(entry * 4, outputFile);
+    RiscExecute((int) entry * 4, outputFile);
 }
 
 
@@ -600,7 +603,7 @@ void Exec(FILE *outputFile) {
     while (i < cno && namesEquals(s, sizeof(s), comname[i]->name, comname[i]->nameLength))
         i++;
     if (i < cno)
-        RiscExecute(comaddr[i], outputFile);
+        RiscExecute((int) comaddr[i], outputFile);
 }
 
 

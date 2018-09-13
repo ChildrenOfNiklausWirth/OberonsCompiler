@@ -1,38 +1,49 @@
 #include <stdlib.h>
-#include <mem.h>
 #include "Modules/LexAnalyzer.h"
-#define HEAD_INPUT "../Programms/Oberon/"
-#define HEAD_OUTPUT "../Programms/Output/"
-#define HEAD_DECODED "../Programms/RiscCode/"
-#define HEAD_DECODED_HEX "../Programms/RiscCodeHex/"
+#include "Modules/CodeGenerator.h"
+#include "Modules/SyntaxAnalyzer.h"
+#ifdef _WIN32
+#include <mem.h>
+#elif __linux
+#include <string.h>
+#include <zconf.h>
+
+#endif
+
+#define HEAD_INPUT "../Programs/Oberon/"
+#define HEAD_OUTPUT "../Programs/Output/"
+#define HEAD_DECODED "../Programs/RISCCode/"
+#define HEAD_DECODED_HEX "../Programs/RISCCodeHex/"
+
+
+
 int FLAG_LOAD = 1;
 int FLAG_EXECUTABLE = 0;
 
-
 int main(int argc, char *argv[]) {
-    int errflag = 0;
+    int noArgumentFlag = 0;
 
     if (argv[1] == NULL) {
         printf("Specify input file name");
-        errflag = 1;
+        noArgumentFlag = 1;
     }
 
     if (argv[2] == NULL) {
         printf("Specify decoded file name");
-        errflag = 1;
+        noArgumentFlag = 1;
     }
 
     if (argv[3] == NULL) {
         printf("Specify decoded file name with HEX addressing");
-        errflag = 1;
+        noArgumentFlag = 1;
     }
 
     if (argv[4] == NULL) {
         printf("Specify output file name or set to 0 for stdout");
-        errflag = 1;
+        noArgumentFlag = 1;
     }
 
-    if (errflag == 0) {
+    if (noArgumentFlag == 0) {
 
         char *inputFileName = malloc(sizeof(char) * (strlen(argv[1]) + strlen(HEAD_INPUT) + 1));
         snprintf(inputFileName, (strlen(argv[1]) + strlen(HEAD_INPUT) + 1),"%s%s", HEAD_INPUT, argv[1]);
@@ -49,7 +60,7 @@ int main(int argc, char *argv[]) {
 
         if (strcmp(argv[4], "0") != 0) {
             outputFileName = malloc(sizeof(char) * (strlen(argv[4]) + strlen(HEAD_OUTPUT) + 1));
-            snprintf(outputFileName, (strlen(argv[4]) + strlen(HEAD_OUTPUT) + 1),"%s%s\0", HEAD_OUTPUT, argv[4] );
+            snprintf(outputFileName, (strlen(argv[4]) + strlen(HEAD_OUTPUT) + 1),"%s%s", HEAD_OUTPUT, argv[4] );
             outputFile = fopen(outputFileName, "w+");
         }
 
@@ -60,12 +71,11 @@ int main(int argc, char *argv[]) {
             laconicDecode(decodedFile);
 
 
-            if (FLAG_EXECUTABLE)
+            if (FLAG_EXECUTABLE && (syntaxError == 0))
                 Exec(outputFile);
-            if (FLAG_LOAD)
+            if (FLAG_LOAD && (syntaxError == 0))
                 Load(outputFile);
             return 0;
-
         } else {
             printf("No such file \"%s\"", inputFileName);
         }

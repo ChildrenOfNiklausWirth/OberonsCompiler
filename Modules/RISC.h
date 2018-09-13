@@ -53,11 +53,11 @@
 #define RET 58
 
 
-void myDecode(unsigned long IR, unsigned long *opc, long *a, long *b, long *c);
+void myDecode(unsigned int IR, unsigned int *opc, int *a, int *b, int *c);
 
-void wirthDecode(unsigned long IR, long *opc, long *a, long *b, long *c);
+void wirthDecode(unsigned int IR, int *opc, int *a, int *b, int *c);
 
-void RiscExecute(long start, FILE *outputFile);
+void RiscExecute(int start, FILE *outputFile);
 
 void RiscLoad(const long code[], long len);
 

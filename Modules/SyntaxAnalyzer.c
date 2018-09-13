@@ -3,6 +3,7 @@
 #include <malloc.h>
 #include <math.h>
 #include <stdlib.h>
+#include <memory.h>
 #include "Structures/TerminalSymbols.h"
 #include "Structures/Tokens.h"
 #include "LexAnalyzer.h"
@@ -39,7 +40,7 @@ Node *addNode(int class) {
         return newObject;//Возвращаем первый элемент обрабатываемой цепочки
     } else {
         Mark("declared again", -1);
-        return objects->next;
+        return NULL;
     }
 
 }
@@ -73,6 +74,7 @@ Node *find() {
         objects = objects->dsc;
     }
 }
+
 //Ищет поле в структуре
 Node *findField(Node *list) {
     node_setName(&end, lexTokensFlow.current->symbols, lexTokensFlow.size);
@@ -93,7 +95,6 @@ void openScope() {
     Node *s = node_new();
     s->class = HEAD;
     s->dsc = objectsStart;
-
     if (s->next == NULL) {
         s->next = &end;
     }
@@ -133,6 +134,7 @@ void scope_initialise() {
 
 //expression = SimpleExpresion [("=" | "#" | "<" "<=" |">" |">=") SimpleExpression]
 void expression(struct Item *item1);
+
 //Обрабатывает цепочку селекторов
 void selector(struct Item *item) {
     struct Item item2;
@@ -286,17 +288,17 @@ void expression(struct Item *item1) {
     }
 }
 
-void parameter(Node *framePointer) {
+Node *parameter(Node *framePointer) {
     struct Item item;
     expression(&item);
 
     if (isParam(framePointer)) {
         Parameter(&item, framePointer->type, framePointer->class);
-        *framePointer = *(framePointer)->next;
     } else {
         item.mode = -1;
         Mark("too many arguments", -1);
     }
+    return framePointer->next;
 }
 
 void param(struct Item *item) {
@@ -349,7 +351,7 @@ void StatSequence() {
                         tf_next(&lexTokensFlow);
                     else {
                         while (true) {
-                            parameter(par);
+                            par = parameter(par);
 
                             if (lexTokensFlow.current->type == terminalSymbols.COMMA.type)
                                 tf_next(&lexTokensFlow);
@@ -656,7 +658,8 @@ void declarations(long *varsize) {
                 Type *tp = type(); // Proceed type identification
                 obj = firstAdded;
 
-                while (obj != &end) {//obj - цепочка идентифицируемых объектов одного типа, последний объект цепочки - тип переменных
+                while (obj !=
+                       &end) {//obj - цепочка идентифицируемых объектов одного типа, последний объект цепочки - тип переменных
                     obj->type = tp;
                     obj->level = curlev;
                     *varsize = *varsize + obj->type->size;
@@ -711,7 +714,7 @@ void FPSection(long *parblksize) {
     if (firstAdded->class == VARIABLE) {
         parsize = tp->size;
         if (tp->form >= ARRAY) {
-            Mark("not parameter", -1);
+            Mark("Only INTEGER and BOOLEAN types allowed to pass by value", (lexTokensFlow.current - 1)->line);
         }
     } else {
         parsize = WordSize;
@@ -735,6 +738,7 @@ void procedureDeclaration() {
     Node *procedure, *obj;
     char *procedureIdentifier;
     int procedureIdentifierLength;
+    int procedureDeclaredLine;
     long locblksize = 0; //
     long parblksize = 0; //
 
@@ -743,6 +747,7 @@ void procedureDeclaration() {
     if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
         procedureIdentifier = lexTokensFlow.current->symbols;
         procedureIdentifierLength = lexTokensFlow.current->length;
+        procedureDeclaredLine = lexTokensFlow.current->line;
         procedure = addNode(PROC);
         tf_next(&lexTokensFlow);
         parblksize = marksize;
@@ -751,7 +756,6 @@ void procedureDeclaration() {
         procedure->val = -1;
 
         if (lexTokensFlow.current->type == terminalSymbols.LPAREN.type) {
-
             tf_next(&lexTokensFlow);
 
             if (lexTokensFlow.current->type == terminalSymbols.RPAREN.type)
@@ -759,7 +763,6 @@ void procedureDeclaration() {
             else {
 
                 FPSection(&parblksize);
-
                 while (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
                     tf_next(&lexTokensFlow);
                     FPSection(&parblksize);
@@ -815,6 +818,8 @@ void procedureDeclaration() {
         if (lexTokensFlow.current->type == terminalSymbols.BEGIN.type) {
             tf_next(&lexTokensFlow);
             StatSequence();
+        } else {
+            Mark("Funtion was declared but there is no BEGIN block", procedureDeclaredLine);
         }
 
         if (lexTokensFlow.current->type == terminalSymbols.END.type) {
@@ -846,14 +851,14 @@ void moduleWithoutCloseScope() {
     char *moduleIdentifier = NULL;
     int moduleIdentifierLength = 0;
 
-    //
     if (tf_next(&lexTokensFlow)->type == terminalSymbols.MODULE.type) {
         scope_initialise();
-        Open();
-        openScope();
         if (tf_next(&lexTokensFlow)->type == terminalSymbols.IDENT.type) {
             moduleIdentifier = lexTokensFlow.current->symbols;
             moduleIdentifierLength = lexTokensFlow.current->length;
+
+            Open();
+            openScope();
 
             if (tf_next(&lexTokensFlow)->type == terminalSymbols.SEMICOLON.type) {
                 tf_next(&lexTokensFlow);
@@ -862,9 +867,11 @@ void moduleWithoutCloseScope() {
             Mark(";?", -1);
         }
 
-        declarations(&varsize); // Proceed declarations
+        // Proceed declarations
+        declarations(&varsize);
 
-        while (lexTokensFlow.current->type == terminalSymbols.PROCEDURE.type) {//Обработка всех объявленных процедур
+        // Обработка всех объявленных процедур
+        while (lexTokensFlow.current->type == terminalSymbols.PROCEDURE.type) {
             procedureDeclaration();
             if (lexTokensFlow.current->type == terminalSymbols.SEMICOLON.type) {
                 tf_next(&lexTokensFlow);
@@ -877,11 +884,12 @@ void moduleWithoutCloseScope() {
             tf_next(&lexTokensFlow);
             StatSequence();
         }
-        if (lexTokensFlow.current->type == terminalSymbols.END.type) {
-            tf_next(&lexTokensFlow);
 
-        } else
+        if (lexTokensFlow.current->type == terminalSymbols.END.type)
+            tf_next(&lexTokensFlow);
+        else
             Mark("End?", -1);
+
         if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
             if (namesEquals(moduleIdentifier, moduleIdentifierLength, lexTokensFlow.current->symbols,
                             lexTokensFlow.current->length) != 1) {
@@ -903,7 +911,7 @@ void moduleWithoutCloseScope() {
 void module() {
     moduleWithoutCloseScope();
     closeScope();
-    Close(varsize);
+    Close();
 }
 
 
