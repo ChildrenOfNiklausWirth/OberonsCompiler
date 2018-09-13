@@ -136,7 +136,7 @@ void printReport(unsigned int IR, int op, int a, int b, int c,
                  int mop,  int ma, int mb, int mc, int wop, int wa, int wb, int wc) {
     printf("---------------------------------------\n");
     printf("\nBinary digit after encoding \n");
-    binaryPrint(IR);
+    binaryPrint((long) IR);
     printf("\nDecimal form\n");
     printf("%d\n", IR);
     printf("\nComparison\n\n");
@@ -158,28 +158,28 @@ int decodingTest(enum Report report, int op, int a, int b, int c) {
         IR = encode(op, a, b, c);
 
     //my decode
-    long mop, ma, mb, mc;
-    myDecode(IR, &mop, &ma, &mb, &mc);
+    int  mop, ma, mb, mc;
+    myDecode((unsigned int) IR, (unsigned int *) &mop, &ma, &mb, &mc);
     //wirth decode
-    long wop, wa, wb, wc;
-    wirthDecode(IR, &wop, &wa, &wb, &wc);
+    int wop, wa, wb, wc;
+    wirthDecode((unsigned int) IR, &wop, &wa, &wb, &wc);
 
     if (op > WRL) {
         if ((op == wop && wop == mop) && (c == wc && wc == mc)) {
             if (report == REPORT)
-                printReport(IR, op, a, b, c, mop, ma, mb, mc, wop, wa, wb, wc);
+                printReport((unsigned int) IR, op, a, b, c, mop, ma, mb, mc, wop, wa, wb, wc);
             return 1;
         }
     } else {
         if ((op == wop && wop == mop) && (a == wa && wa == ma) && (b == wb && wb == mb) &&
             (c == wc && wc == mc)) {
             if (report == REPORT)
-                printReport(IR, op, a, b, c, mop, ma, mb, mc, wop, wa, wb, wc);
+                printReport((unsigned int) IR, op, a, b, c, mop, ma, mb, mc, wop, wa, wb, wc);
             return 1;
         }
     }
     if (report == ONLY_ERROR)
-        printReport(IR, op, a, b, c, mop, ma, mb, mc, wop, wa, wb, wc);
+        printReport((unsigned int) IR, op, a, b, c, mop, ma, mb, mc, wop, wa, wb, wc);
     return 0;
 
 

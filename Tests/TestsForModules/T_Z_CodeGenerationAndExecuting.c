@@ -138,6 +138,32 @@ int test_Conditionals() {
 
 }
 
+int test_ArrayInRecord() {
+    char *inputAddress = "../Tests/SamplePrograms/ArrayInRecord";
+
+    compile(inputAddress);
+    printf("Actual\t ");
+    longList_print(riscLonglist);
+    printf("\n");
+
+
+    LongList expectedLongList = longList_new();
+    longList_add(&expectedLongList, 4);
+    longList_add(&expectedLongList, 8);
+    longList_add(&expectedLongList, 4);
+    longList_add(&expectedLongList, 8);
+    longList_add(&expectedLongList, 4);
+    longList_add(&expectedLongList, 8);
+
+    printf("Expected ");
+    longList_print(expectedLongList);
+    printf("\n");
+    if (longList_equals(expectedLongList, riscLonglist))
+        return 1;
+    else
+        return 0;
+
+}
 
 
 int main() {
@@ -171,6 +197,13 @@ int main() {
     printf("Condtionals...\n");
     maxTestDigit++;
     if (test_Conditionals() == 1) {
+        printf("True\n\n");
+        rightTestDigit++;
+    } else printf("False\n\n");
+
+    printf("ArrayInRecord...\n");
+    maxTestDigit++;
+    if (test_ArrayInRecord() == 1) {
         printf("True\n\n");
         rightTestDigit++;
     } else printf("False\n\n");

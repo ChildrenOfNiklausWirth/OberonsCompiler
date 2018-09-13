@@ -1,0 +1,20 @@
+/* Correct output: 4 8 4 8 4 8*/
+MODULE ArrayInRecord;
+    TYPE
+        ARR10 = ARRAY 10 OF INTEGER;
+
+    VAR
+    sarr : ARR10;
+    i: INTEGER;
+
+
+
+BEGIN
+    i := 2;
+    sarr[i] := 4;
+    sarr[i + 2] := 8;
+    Write(sarr[i]);
+    Write(sarr[i + 2]);
+
+
+END ArrayInRecord.

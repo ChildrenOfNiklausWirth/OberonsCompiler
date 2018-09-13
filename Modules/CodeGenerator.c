@@ -77,10 +77,10 @@ long GetReg() {
 
 
 //Генерирует команды форматов F0,F1,F2
-unsigned long encode(long op, long a, long b, long c) {
+unsigned int encode(long op, long a, long b, long c) {
     if (op >= 32)
         op -= 64;
-    return ((((((op << 4) | a) << 4) | b) << 18) | ((unsigned long) c & 0x3FFFF));
+    return ((((((op << 4) | a) << 4) | b) << 18) | ((unsigned int) c & 0x3FFFF));
 }
 
 void Put(long op, long a, long b, long c) {
@@ -89,8 +89,8 @@ void Put(long op, long a, long b, long c) {
 }
 
 //Генерирует команды формата F3 (команды перехода)
-unsigned long encodeF3(long op, long disp) {
-    return (unsigned long) ((op - (1 << 6)) << 26) | (disp & 0x3FFFFFF);
+unsigned int encodeF3(long op, long disp) {
+    return (unsigned int) ((op - (1 << 6)) << 26) | (disp & 0x3FFFFFF);
 }
 
 void PutBR(long op, long disp) {
@@ -378,7 +378,7 @@ void Store(struct Item *item1, struct Item *item2) {
         } else if (item2->mode != REG)
             load(item2);
         if (item1->mode == VARIABLE) {
-            if (item1->level == 0)
+            if (item1->r == PC)
                 item1->a = (MemSize + item1->a) - pc * 4;
             Put(STW, item2->r, item1->r, item1->a);
 

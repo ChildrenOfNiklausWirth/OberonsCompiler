@@ -1,7 +1,7 @@
-/* Correct output: 11 26 12 12 0 5 */
+/* Correct output: 4 8 4 8 4 8*/
 MODULE ArrayInRecord;
     TYPE
-        ARR10 = ARRAY 10 OF INTEGER;
+        ARR10 = ARRAY 5 OF INTEGER;
         S = RECORD
                 s1, s2: INTEGER;
                 arr: ARR10;
@@ -10,6 +10,7 @@ MODULE ArrayInRecord;
 
     VAR v: S;
         i: INTEGER;
+        sarr : ARR10;
 
 
 BEGIN
@@ -17,10 +18,13 @@ BEGIN
     v.s2 := v.s1 + 4;
     v.arr[v.s1] := v.s1;
     v.arr[v.s2] := v.s2;
-
+    sarr[v.s1] := v.s1;
+    sarr[v.s2] := v.s2;
     Write(v.s1);
     Write(v.s2);
-    Write(v.arr[4]);
-    Write(v.arr[8]);
+    Write(sarr[v.s1]);
+    Write(sarr[v.s2]);
+    Write(v.arr[v.s1]);
+    Write(v.arr[v.s2]);
 
 END ArrayInRecord.

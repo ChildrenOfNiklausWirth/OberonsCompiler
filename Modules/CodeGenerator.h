@@ -80,9 +80,9 @@ struct Set *regs;
 
 void cg_initialize();
 
-unsigned long encode(long op, long a, long b, long c);
+unsigned int encode(long op, long a, long b, long c);
 
-unsigned long encodeF3(long op, long disp);
+unsigned int encodeF3(long op, long disp);
 
 void decodeHex(FILE *outputFile);
 
