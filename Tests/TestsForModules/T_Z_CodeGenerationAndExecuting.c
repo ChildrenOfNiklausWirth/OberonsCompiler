@@ -4,7 +4,7 @@
 #include "../../Modules/LexAnalyzer.h"
 #include "../../Modules/SyntaxAnalyzer.h"
 
-LongList compileAndGetOutput(char *inputAddress) {
+void compile(char *inputAddress) {
     FILE *inputFile = fopen(inputAddress, "r");
     FILE *decodedFile = NULL;
     FILE *decodedFileHex = NULL;
@@ -17,21 +17,20 @@ LongList compileAndGetOutput(char *inputAddress) {
         decodeHex(decodedFileHex);
         laconicDecode(decodedFile);
 
-        return Load(outputFile);
+        Load(outputFile);
 
 
     }
     printf("No such file\n");
-    return longList_new();
 }
 
 
 int test_Loops() {
     char *inputAddress = "../Tests/SamplePrograms/Loops";
 
-    LongList actualLongList = compileAndGetOutput(inputAddress);
+    compile(inputAddress);
     printf("Actual\t ");
-    longList_print(actualLongList);
+    longList_print(riscLonglist);
     printf("\n");
 
 
@@ -47,24 +46,24 @@ int test_Loops() {
     longList_add(&expectedLongList, 6);
     longList_add(&expectedLongList, 4);
 
+
     printf("Expected ");
     longList_print(expectedLongList);
     printf("\n");
-    if (longList_equals(expectedLongList, actualLongList))
+    if (longList_equals(expectedLongList, riscLonglist))
         return 1;
     else
         return 0;
 
 }
 
-
 int test_Arrays() {
 
     char *inputAddress = "../Tests/SamplePrograms/Arrays";
 
-    LongList actualLongList = compileAndGetOutput(inputAddress);
+    compile(inputAddress);
     printf("Actual\t ");
-    longList_print(actualLongList);
+    longList_print(riscLonglist);
     printf("\n");
 
 
@@ -76,19 +75,18 @@ int test_Arrays() {
     printf("Expected ");
     longList_print(expectedLongList);
     printf("\n");
-    if (longList_equals(expectedLongList, actualLongList))
+    if (longList_equals(expectedLongList, riscLonglist))
         return 1;
     else
         return 0;
 }
 
-
 int test_Records() {
     char *inputAddress = "../Tests/SamplePrograms/Records";
 
-    LongList actualLongList = compileAndGetOutput(inputAddress);
+    compile(inputAddress);
     printf("Actual\t ");
-    longList_print(actualLongList);
+    longList_print(riscLonglist);
     printf("\n");
 
 
@@ -103,7 +101,7 @@ int test_Records() {
     printf("Expected ");
     longList_print(expectedLongList);
     printf("\n");
-    if (longList_equals(expectedLongList, actualLongList))
+    if (longList_equals(expectedLongList, riscLonglist))
         return 1;
     else
         return 0;
@@ -114,9 +112,9 @@ int test_Conditionals() {
 
     char *inputAddress = "../Tests/SamplePrograms/Conditionals";
 
-    LongList actualLongList = compileAndGetOutput(inputAddress);
+    compile(inputAddress);
     printf("Actual\t ");
-    longList_print(actualLongList);
+    longList_print(riscLonglist);
     printf("\n");
 
 
@@ -133,12 +131,14 @@ int test_Conditionals() {
     printf("Expected ");
     longList_print(expectedLongList);
     printf("\n");
-    if (longList_equals(expectedLongList, actualLongList))
+    if (longList_equals(expectedLongList, riscLonglist))
         return 1;
     else
         return 0;
 
 }
+
+
 
 int main() {
     int rightTestDigit = 0;

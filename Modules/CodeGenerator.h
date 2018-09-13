@@ -2,7 +2,6 @@
 #define OBERONSCOMPILER_C_G_CODEGENERATOR_H
 
 #include "Structures/Node.h"
-#include "Structures/LongList.h"
 #include <stdbool.h>
 #include <stdio.h>
 

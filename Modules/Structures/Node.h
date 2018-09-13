@@ -29,13 +29,13 @@ struct Item {
 //int item_equals(struct Item item1, struct Item item2);
 
 typedef struct Node {
-    int class;
-    int level;
-    long val;
+    int class;//Допустимые значения в SA
+    int level;//Уровень вложенности
+    long val;//адрес точки входа в процедуру
     char *name;
     int nameLength;
-    Type *type;//
-    Node *dsc;//
+    Type *type;//Для переменных
+    Node *dsc;//Для процедур
     Node *next;
 } Node;
 

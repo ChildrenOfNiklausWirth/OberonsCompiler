@@ -132,35 +132,35 @@ void printOperation(int op) {
     }
 }
 
-void printReport(unsigned long IR, long op, long a, long b, long c,
-                 long mop, long ma, long mb, long mc, long wop, long wa, long wb, long wc) {
+void printReport(unsigned int IR, int op, int a, int b, int c,
+                 int mop,  int ma, int mb, int mc, int wop, int wa, int wb, int wc) {
     printf("---------------------------------------\n");
     printf("\nBinary digit after encoding \n");
     binaryPrint(IR);
     printf("\nDecimal form\n");
-    printf("%lu\n", IR);
+    printf("%d\n", IR);
     printf("\nComparison\n\n");
-    printf("\tEncode \t\tMy decode \tWirth decodeHex\n");
-    printf("op \t%li \t\t%li \t\t%li\n", op, mop, wop);
-    printf("a \t%li \t\t%li \t\t%li\n", a, ma, wa);
-    printf("b \t%li \t\t%li \t\t%li\n", b, mb, wb);
-    printf("c \t%li \t\t%li \t\t%li\n", c, mc, wc);
+    printf("\tEncode \t\tMy decode \tWirth decode\n");
+    printf("op \t%d \t\t%d \t\t%d\n", op, mop, wop);
+    printf("a \t%d \t\t%d \t\t%d\n", a, ma, wa);
+    printf("b \t%d \t\t%d \t\t%d\n", b, mb, wb);
+    printf("c \t%d \t\t%d \t\t%d\n", c, mc, wc);
 
 
 }
 
-int decodingTest(enum Report report, long op, long a, long b, long c) {
-    unsigned long IR;
+int decodingTest(enum Report report, int op, int a, int b, int c) {
+    int IR;
     //encoding
     if (op > WRL)
         IR = encodeF3(op, c);
     else
         IR = encode(op, a, b, c);
 
-    //my decodeHex
+    //my decode
     long mop, ma, mb, mc;
     myDecode(IR, &mop, &ma, &mb, &mc);
-    //wirth decodeHex
+    //wirth decode
     long wop, wa, wb, wc;
     wirthDecode(IR, &wop, &wa, &wb, &wc);
 

@@ -330,7 +330,7 @@ void StatSequence() {
             } while (lexTokensFlow.current->type < terminalSymbols.IDENT.type);
         }
 
-        if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
+      if (lexTokensFlow.current->type == terminalSymbols.IDENT.type) {
             node = find();
             tf_next(&lexTokensFlow);
             MakeItem(&item1, node);

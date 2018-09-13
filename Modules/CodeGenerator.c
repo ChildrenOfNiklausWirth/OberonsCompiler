@@ -445,7 +445,7 @@ void FJump(long *L) {
     *L = pc - 1;
 }
 
-//Генерация команды BSR по item->a
+//Генерация команды BSR по item->a (вызов процедуры)
 void Call(struct Item *item) {
     PutBR(BSR, item->a - pc);
 }

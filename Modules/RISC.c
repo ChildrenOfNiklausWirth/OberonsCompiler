@@ -46,6 +46,9 @@ void wirthDecode(unsigned int IR, int *opc, int *a, int *b, int *c) {
 
     if (*opc < MOVI) {
         *c = R[IR & 0xF];//TODO закомментировать перед запуском T_R_RISC.c
+        //*c = IR & ((1 << 4)-1);//TODO раскомментировать перед запуском тестов encoding & Decoding
+        //if (*c >= 1 << 3)
+        //    *c -= 1 << 4;
     } else if (*opc < BEQ) {
         *c = IR % (1 << 18);
         if (*c >= (1 << 17))
@@ -59,7 +62,7 @@ void wirthDecode(unsigned int IR, int *opc, int *a, int *b, int *c) {
 }
 
 void RiscExecute(int start, FILE *outputFile) {
-    // LongList longList = longList_new();
+    riscLonglist = longList_new();
 
     int IR;//instruction register
     int opc;//Операция
@@ -156,11 +159,11 @@ void RiscExecute(int start, FILE *outputFile) {
                 M[R[b] / 4] = R[a];
                 break;
             case RD:
-                scanf("%li");
+                scanf("%d", &R[c]);
                 break;
             case WRD:
-//                longList_add(&longList, R[c]);
-                fprintf(outputFile, "%d ", R[c]);
+                longList_add(&riscLonglist, R[c]);
+               fprintf(outputFile, "%d ", R[c]);
                 break;
             case WRH:
                 fprintf(outputFile, " %o", (unsigned int) R[c]);

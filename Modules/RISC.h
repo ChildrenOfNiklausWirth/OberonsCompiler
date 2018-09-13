@@ -52,6 +52,7 @@
 #define BSR 57
 #define RET 58
 
+LongList riscLonglist;
 
 void myDecode(unsigned int IR, unsigned int *opc, int *a, int *b, int *c);
 
