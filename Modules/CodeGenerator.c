@@ -378,7 +378,7 @@ void Store(struct Item *item1, struct Item *item2) {
         } else if (item2->mode != REG)
             load(item2);
         if (item1->mode == VARIABLE) {
-            if (item1->level == 0)
+            if (item1->r == PC)
                 item1->a = (MemSize + item1->a) - pc * 4;
             Put(STW, item2->r, item1->r, item1->a);
 
