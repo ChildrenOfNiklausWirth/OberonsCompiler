@@ -570,8 +570,8 @@ void decodeHex(FILE *outputFile) {
 }
 
 void laconicDecode(FILE *outputFile) {
-    unsigned long w, op;
-    long a, b, c;
+    unsigned int w, op;
+    int a, b, c;
     cg_initialize();
 
     fprintf(outputFile, "Enter: %s%#.8x\n", entry == 0 ? "0x" : "", (unsigned int) (entry * 4));
@@ -579,9 +579,9 @@ void laconicDecode(FILE *outputFile) {
         w = code[j];
         myDecode(w, &op, &a, &b, &c);
         if (op != RET)
-            fprintf(outputFile, "%d\t %s\t %lu\t %lu\t %li\n", j * 4, mnemo[op], a, b, c);
+            fprintf(outputFile, "%d\t %s\t %d\t %d\t %d\n", j * 4, mnemo[op], a, b, c);
         else
-            fprintf(outputFile, "%d\t %s\t %lu\n", j * 4, mnemo[op], c);
+            fprintf(outputFile, "%d\t %s\t %d\n", j * 4, mnemo[op], c);
 
     }
 

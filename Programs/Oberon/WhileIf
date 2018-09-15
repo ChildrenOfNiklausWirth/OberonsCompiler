@@ -1,0 +1,20 @@
+/* Correct output :6 4*/
+MODULE WhileIf;
+    VAR i, j: INTEGER;
+
+BEGIN
+    i := 10;
+    j := 0;
+
+    WHILE i # j DO
+        IF i < 7 THEN
+            Write(i);
+            Write(j);
+            WriteLn;
+        END;
+
+        i := i - 1;
+        j := j + 1;
+    END;
+
+END WhileIf.

@@ -1,0 +1,25 @@
+/*Should print 4 16 25*/
+MODULE PassingByLink;
+    VAR a , b, c: INTEGER;
+
+
+    PROCEDURE procedure(VAR x:INTEGER;VAR y:INTEGER;VAR z:INTEGER);
+            BEGIN
+            x := x * x;
+            y := y * y;
+            z := z * z;
+            END procedure;
+
+
+
+
+BEGIN
+a := 2;
+b := 4;
+c := 5;
+procedure(a,b,c);
+Write(a);
+Write(b);
+Write(c);
+
+END PassingByLink.

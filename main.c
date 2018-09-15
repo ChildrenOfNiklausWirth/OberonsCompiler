@@ -6,15 +6,12 @@
 #include <mem.h>
 #elif __linux
 #include <string.h>
-#include <zconf.h>
-
 #endif
 
-#define HEAD_INPUT "../Programs/Oberon/"
-#define HEAD_OUTPUT "../Programs/Output/"
-#define HEAD_DECODED "../Programs/RISCCode/"
-#define HEAD_DECODED_HEX "../Programs/RISCCodeHex/"
-
+#define HEAD_INPUT "Programs/Oberon/"
+#define HEAD_OUTPUT "Programs/Output/"
+#define HEAD_DECODED "Programs/RISCCode/"
+#define HEAD_DECODED_HEX "Programs/RISCCodeHex/"
 
 
 int FLAG_LOAD = 1;
@@ -23,25 +20,27 @@ int FLAG_EXECUTABLE = 0;
 int main(int argc, char *argv[]) {
     int noArgumentFlag = 0;
 
-    if (argv[1] == NULL) {
-        printf("Specify input file name");
+    if (argc < 5)
         noArgumentFlag = 1;
-    }
-
-    if (argv[2] == NULL) {
-        printf("Specify decoded file name");
-        noArgumentFlag = 1;
-    }
-
-    if (argv[3] == NULL) {
-        printf("Specify decoded file name with HEX addressing");
-        noArgumentFlag = 1;
-    }
-
-    if (argv[4] == NULL) {
-        printf("Specify output file name or set to 0 for stdout");
-        noArgumentFlag = 1;
-    }
+//    if (argv[1] == NULL) {
+//        printf("Specify input file name");
+//        noArgumentFlag = 1;
+//    }
+//
+//    if (argv[2] == NULL) {
+//        printf("Specify decoded file name");
+//        noArgumentFlag = 1;
+//    }
+//
+//    if (argv[3] == NULL) {
+//        printf("Specify decoded file name with HEX addressing");
+//        noArgumentFlag = 1;
+//    }
+//
+//    if (argv[4] == NULL) {
+//        printf("Specify output file name or set to 0 for stdout");
+//        noArgumentFlag = 1;
+//    }
 
     if (noArgumentFlag == 0) {
 
@@ -58,14 +57,24 @@ int main(int argc, char *argv[]) {
         FILE *decodedFileHex = fopen(decodedFileNameHex, "w+");
         FILE *outputFile = stdout;
 
+
+//        FILE *inputFile = fopen("../Programs/Oberon/WhileIf", "r");
+//        FILE *decodedFile = fopen("../Programs/RISCCode/WhileIf", "w+");
+//        FILE *decodedFileHex = fopen("../Programs/RISCCodeHex/WhileIf", "w+");
+//        FILE *outputFile = stdout;
+//        outputFile = fopen("../Programs/Output/WhileIf", "w+");
+
+
         if (strcmp(argv[4], "0") != 0) {
             outputFileName = malloc(sizeof(char) * (strlen(argv[4]) + strlen(HEAD_OUTPUT) + 1));
             snprintf(outputFileName, (strlen(argv[4]) + strlen(HEAD_OUTPUT) + 1),"%s%s", HEAD_OUTPUT, argv[4] );
             outputFile = fopen(outputFileName, "w+");
+        } else {
+            outputFile = stdout;
         }
 
         if (inputFile != NULL) {
-            lexAnalysis(inputFile,outputFile);
+            lexAnalysis(inputFile, outputFile);
             module();
             decodeHex(decodedFileHex);
             laconicDecode(decodedFile);

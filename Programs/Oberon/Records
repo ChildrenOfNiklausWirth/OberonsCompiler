@@ -13,6 +13,7 @@ MODULE ArrayInRecord;
 
 
 BEGIN
+    p15 =6;
     v.s1 := 4;
     v.s2 := v.s1 + 4;
     v.arr[v.s1] := v.s1;

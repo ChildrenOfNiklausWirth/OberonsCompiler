@@ -1,0 +1,35 @@
+Enter: 0x00000000
+0	 MOVI	 13	 0	 980
+4	 PSH	 14	 13	 4
+8	 MOVI	 0	 0	 2
+12	 STW	 0	 15	 968
+16	 LDW	 0	 15	 964
+20	 CHKI	 0	 0	 10
+24	 MULI	 0	 0	 4
+28	 ADDI	 0	 0	 1024
+32	 MOVI	 1	 0	 4
+36	 STW	 1	 0	 -40
+40	 LDW	 0	 15	 940
+44	 ADDI	 0	 0	 2
+48	 CHKI	 0	 0	 10
+52	 MULI	 0	 0	 4
+56	 ADDI	 0	 0	 1024
+60	 MOVI	 1	 0	 8
+64	 STW	 1	 0	 -40
+68	 LDW	 0	 15	 912
+72	 CHKI	 0	 0	 10
+76	 MULI	 0	 0	 4
+80	 ADDI	 0	 0	 1024
+84	 LDW	 1	 0	 -40
+88	 WRD	 0	 0	 1
+92	 LDW	 0	 15	 888
+96	 ADDI	 0	 0	 2
+100	 CHKI	 0	 0	 10
+104	 MULI	 0	 0	 4
+108	 ADDI	 0	 0	 1024
+112	 LDW	 1	 0	 -40
+116	 WRD	 0	 0	 1
+120	 POP	 14	 13	 4
+124	 RET	 14
+
+128 bytes

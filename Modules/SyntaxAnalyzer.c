@@ -446,7 +446,7 @@ void StatSequence() {
         else
             Mark("\";\" expected at the end of statement", (lexTokensFlow.current - 1)->line);
     }
-};
+}
 
 // identList = ident {, ident};
 //Идентификация нескольких переменных одного типа

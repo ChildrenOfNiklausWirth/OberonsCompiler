@@ -1,0 +1,29 @@
+/*Should print 0 1 2*/
+MODULE DoubleNesting;
+    VAR x , y: INTEGER;
+
+
+    PROCEDURE called2();
+            BEGIN
+            Write(2);
+                END called2;
+
+
+    PROCEDURE called1();
+            BEGIN
+            Write(1);
+            called2();
+              END called1;
+
+    PROCEDURE calling();
+    BEGIN
+        Write(0);
+        called1();
+    END calling;
+
+
+
+BEGIN
+calling();
+
+END DoubleNesting.

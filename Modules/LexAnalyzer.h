@@ -23,4 +23,5 @@ void lexAnalysis(FILE *inputFile, FILE *outputFile);
 
 void Mark(char msg[], int line);
 
+int charIsDigit(char c);
 #endif //OBERONSCOMPILER_B_LEKSANALYZER_H
