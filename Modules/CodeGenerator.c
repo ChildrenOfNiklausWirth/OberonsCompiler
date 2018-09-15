@@ -576,7 +576,7 @@ void laconicDecode(FILE *outputFile) {
 
     fprintf(outputFile, "Enter: %s%#.8x\n", entry == 0 ? "0x" : "", (unsigned int) (entry * 4));
     for (int j = 0; j < pc; ++j) {
-        w = code[j];
+        w = (int) code[j];
         myDecode(w, &op, &a, &b, &c);
         if (op != RET)
             fprintf(outputFile, "%d\t %s\t %d\t %d\t %d\n", j * 4, mnemo[op], a, b, c);
