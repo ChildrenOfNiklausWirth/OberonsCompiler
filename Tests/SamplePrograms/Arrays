@@ -21,5 +21,6 @@ BEGIN
     Write(a[i]);
     proc1(3, a);
     Write(a[3]);
+    WriteLn;
 
 END Arrays.

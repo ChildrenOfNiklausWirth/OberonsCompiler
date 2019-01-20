@@ -1,38 +1,24 @@
-CC=GCC
-CFLAGS=-c -std=c11 -pedantic -Wall -Wextra
+NAME = oberon_compiler
 
-compiler.exe: main.o LexAnalyzer.o SyntaxAnalyzer.o CodeGenerator.o RISC.o Node.o Set.o TerminalSymbols.o Tokens.o SimpleFunctions.o LongList.o
-	$(CC) main.o LexAnalyzer.o SyntaxAnalyzer.o CodeGenerator.o RISC.o Node.o Set.o TerminalSymbols.o Tokens.o SimpleFunctions.o LongList.o -o compiler.exe
+CC = gcc
 
-main.o: main.c
-	$(CC) $(CFLAGS) main.c
-	
-LexAnalyzer.o: Modules/LexAnalyzer.c
-	$(CC) $(CFLAGS) Modules/LexAnalyzer.c
+CFLAGS = -g -O0 -std=c11 -pedantic -Wall -Wextra
 
-SyntaxAnalyzer.o: Modules/SyntaxAnalyzer.c
-	$(CC) $(CFLAGS) Modules/SyntaxAnalyzer.c
-	
-CodeGenerator.o: Modules/CodeGenerator.c
-	$(CC) $(CFLAGS) Modules/CodeGenerator.c
-	
-RISC.o : Modules/RISC.c
-	$(CC) $(CFLAGS) Modules/RISC.c
-	
-Node.o: Modules/Structures/Node.c
-	$(CC) $(CFLAGS) Modules/Structures/Node.c
-	
-Set.o: Modules/Structures/Set.c
-	$(CC) $(CFLAGS) Modules/Structures/Set.c
+SOURCES =   Modules/LexAnalyzer.c Modules/SyntaxAnalyzer.c \
+			Modules/CodeGenerator.c Modules/RISC.c Modules/Structures/Node.c \
+			Modules/Structures/Set.c Modules/Structures/TerminalSymbols.c \
+			Modules/Structures/Tokens.c \
+			Modules/SimpleFunctions/SimpleFunctions.c Modules/Structures/LongList.c \
+			Tests/TestsForModules/T_B_LexAnalyzer.c \
+			Tests/TestsForModules/T_Z_CodeGenerationAndExecuting.c 
+			
 
-TerminalSymbols.o: Modules/Structures/TerminalSymbols.c
-	$(CC) $(CFLAGS) Modules/Structures/TerminalSymbols.c
+
+all: 
+	$(CC) $(CFLAGS) -o $(NAME) main.c $(SOURCES) 
+
+clean: 
+	rm $(NAME)
 	
-Tokens.o: Modules/Structures/Tokens.c
-	$(CC) $(CFLAGS) Modules/Structures/Tokens.c
+remake: clean all 
 	
-SimpleFunctions.o: Modules/SimpleFunctions/SimpleFunctions.c
-	$(CC) $(CFLAGS) Modules/SimpleFunctions/SimpleFunctions.c
-	
-LongList.o: Modules/Structures/LongList.c
-	$(CC) $(CFLAGS) Modules/Structures/LongList.c

@@ -74,6 +74,8 @@ BEGIN
     END;
 
     proc1(i); /* i += 1, write(i)*/
-    Write(i)
+    Write(i);
+    WriteLn;
+    
 
 END Conditionals.

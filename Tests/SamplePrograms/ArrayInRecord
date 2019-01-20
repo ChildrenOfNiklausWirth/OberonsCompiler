@@ -26,5 +26,6 @@ BEGIN
     Write(sarr[v.s2]);
     Write(v.arr[v.s1]);
     Write(v.arr[v.s2]);
+    WriteLn;
 
 END ArrayInRecord.

@@ -2,93 +2,78 @@
 #include "Modules/LexAnalyzer.h"
 #include "Modules/CodeGenerator.h"
 #include "Modules/SyntaxAnalyzer.h"
+#include "Tests/TestsForModules/T_B_LexAnalyzer.h"
+#include "Tests/TestsForModules/T_Z_CodeGenerationAndExecuting.h"
+#include <getopt.h>
 #ifdef _WIN32
 #include <mem.h>
 #elif __linux
 #include <string.h>
 #endif
 
-#define HEAD_INPUT "Programs/Oberon/"
-#define HEAD_OUTPUT "Programs/Output/"
-#define HEAD_DECODED "Programs/RISCCode/"
-#define HEAD_DECODED_HEX "Programs/RISCCodeHex/"
-
-
-int FLAG_LOAD = 1;
-int FLAG_EXECUTABLE = 0;
 
 int main(int argc, char *argv[]) {
-    int noArgumentFlag = 0;
 
-    if (argc < 5)
-        noArgumentFlag = 1;
-//    if (argv[1] == NULL) {
-//        printf("Specify input file name");
-//        noArgumentFlag = 1;
-//    }
-//
-//    if (argv[2] == NULL) {
-//        printf("Specify decoded file name");
-//        noArgumentFlag = 1;
-//    }
-//
-//    if (argv[3] == NULL) {
-//        printf("Specify decoded file name with HEX addressing");
-//        noArgumentFlag = 1;
-//    }
-//
-//    if (argv[4] == NULL) {
-//        printf("Specify output file name or set to 0 for stdout");
-//        noArgumentFlag = 1;
-//    }
-
-    if (noArgumentFlag == 0) {
-
-        char *inputFileName = malloc(sizeof(char) * (strlen(argv[1]) + strlen(HEAD_INPUT) + 1));
-        snprintf(inputFileName, (strlen(argv[1]) + strlen(HEAD_INPUT) + 1),"%s%s", HEAD_INPUT, argv[1]);
-        char *decodedFileName = malloc(sizeof(char) * (strlen(argv[2]) + strlen(HEAD_DECODED) + 1));
-        snprintf(decodedFileName, (strlen(argv[2]) + strlen(HEAD_DECODED) + 1),"%s%s", HEAD_DECODED, argv[2] );
-        char *decodedFileNameHex = malloc(sizeof(char) * (strlen(argv[3]) + strlen(HEAD_DECODED_HEX) + 1));
-        snprintf(decodedFileNameHex, (strlen(argv[3]) + strlen(HEAD_DECODED_HEX) + 1),"%s%s", HEAD_DECODED_HEX, argv[3] );
-        char *outputFileName;
-
-        FILE *inputFile = fopen(inputFileName, "r");
-        FILE *decodedFile = fopen(decodedFileName, "w+");
-        FILE *decodedFileHex = fopen(decodedFileNameHex, "w+");
-        FILE *outputFile = stdout;
+	int FLAG_LOAD = 1;
+	int FLAG_EXECUTABLE = 0;
+	int EXECUTE_MODE = 0;
 
 
-//        FILE *inputFile = fopen("../Programs/Oberon/WhileIf", "r");
-//        FILE *decodedFile = fopen("../Programs/RISCCode/WhileIf", "w+");
-//        FILE *decodedFileHex = fopen("../Programs/RISCCodeHex/WhileIf", "w+");
-//        FILE *outputFile = stdout;
-//        outputFile = fopen("../Programs/Output/WhileIf", "w+");
+	char inputFileName[1024];
+	//char *decodedFileName;
+	char decodedFileNameHex[1024];
+	int opt_index = 1;
 
+	int opt;
+	while ((opt = getopt(argc, argv, "w:e:t")) != -1) //XXX changed
+	{
+		switch (opt) {
+		/* Run tests*/
+		case 't':
+			lex_tests();
+			code_generation_and_executing_tests();
+			opt_index++;
+			break;
+			/* Execute file*/
+		case 'e':
+			EXECUTE_MODE = 1;
+			strcpy(inputFileName, optarg);
+			opt_index++;
+			break;
 
-        if (strcmp(argv[4], "0") != 0) {
-            outputFileName = malloc(sizeof(char) * (strlen(argv[4]) + strlen(HEAD_OUTPUT) + 1));
-            snprintf(outputFileName, (strlen(argv[4]) + strlen(HEAD_OUTPUT) + 1),"%s%s", HEAD_OUTPUT, argv[4] );
-            outputFile = fopen(outputFileName, "w+");
-        } else {
-            outputFile = stdout;
-        }
+			/*Write risc code to file*/
+		case 'w':
+			strcpy(decodedFileNameHex, optarg);
+			opt_index++;
+			break;
 
-        if (inputFile != NULL) {
-            lexAnalysis(inputFile, outputFile);
-            module();
-            decodeHex(decodedFileHex);
-            laconicDecode(decodedFile);
+		default:
+			fprintf(stderr, "Undefined option %s\n", argv[opt_index]);
+			exit(1);
+		}
+	}
+	if (EXECUTE_MODE) {
+		FILE *inputFile = fopen(inputFileName, "r");
+		//FILE *decodedFile = fopen(decodedFileName, "w+");
+		FILE *decodedFileHex = fopen(decodedFileNameHex, "w+");
+		FILE *outputFile = stdout;
 
+		if (inputFile != NULL) {
+			lexAnalysis(inputFile, outputFile);
+			module();
+			decodeHex(decodedFileHex);
+			//laconicDecode(decodedFile);
 
-            if (FLAG_EXECUTABLE && (syntaxError == 0))
-                Exec(outputFile);
-            if (FLAG_LOAD && (syntaxError == 0))
-                Load(outputFile);
-            return 0;
-        } else {
-            printf("No such file \"%s\"", inputFileName);
-        }
-    }
-    exit(0);
+			if (FLAG_EXECUTABLE && (syntaxError == 0))
+				Exec(outputFile);
+			if (FLAG_LOAD && (syntaxError == 0))
+				Load(outputFile);
+			return 0;
+		} else {
+			printf("No such file \"%s\"", inputFileName);
+		}
+	}
+
+	exit(0);
 }
 

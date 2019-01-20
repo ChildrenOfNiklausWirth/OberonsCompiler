@@ -1,5 +1,4 @@
-#include "../../Modules/LexAnalyzer.h"
-#include "../../Modules/Structures/Tokens.h"
+#include "T_B_LexAnalyzer.h"
 
 enum Report {
     REPORT, NO_REPORT
@@ -278,11 +277,11 @@ void tf_printWithTypeTwoTokensFlow(struct TokensFlow tokensFlowOne, struct Token
 
 //__________________________________________________________________________________________________
 void firstTest(enum Report report) {
-
+	printf("Testing on test without comments...");
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
     createRightResultForFirstTest(&rightTokensFlow);
-    FILE *inputFile = fopen("../Tests/SamplePrograms/1_Simple.txt", "r");
+    FILE *inputFile = fopen("Tests/SamplePrograms/1_Simple.txt", "r");
     lexAnalysis(inputFile, stdout);
 
 
@@ -295,19 +294,20 @@ void firstTest(enum Report report) {
 
     int result = tf_assertEqualsTwoTokensFlows(lexTokensFlow, rightTokensFlow);
     if (result == 1)
-        printf("True\n");
-    else printf("False\n");
+        printf("OK\n");
+    else printf("ERROR\n");
 
     tf_clear(&lexTokensFlow);
 
 }
 
 void secondTest(enum Report report) {
-    struct TokensFlow rightTokensFlow;
+	printf("Testing on test with comments...");
+	struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
     createRightResultForSecondTest(&rightTokensFlow);
 
-    FILE *inputFile = fopen("../Tests/SamplePrograms/2_SimpleWithComments.txt", "r");
+    FILE *inputFile = fopen("Tests/SamplePrograms/2_SimpleWithComments.txt", "r");
     lexAnalysis(inputFile, stdout);
 
     if (report == REPORT) {
@@ -319,8 +319,8 @@ void secondTest(enum Report report) {
 
     int result = tf_assertEqualsTwoTokensFlows(lexTokensFlow, rightTokensFlow);
     if (result == 1) {
-        printf("True\n");
-    } else printf("False\n");
+        printf("OK\n");
+    } else printf("ERROR\n");
 
     tf_clear(&lexTokensFlow);
 
@@ -328,11 +328,12 @@ void secondTest(enum Report report) {
 }
 
 void thirdTest(enum Report report) {
+	printf("Testing of all terminal symbols recognizing...");
     struct TokensFlow rightTokensFlow;
     tf_initialize(&rightTokensFlow);
     createRightResultForThirdTest(&rightTokensFlow);
 
-    FILE *file = fopen("../Tests/SamplePrograms/3_AllTerminalSymbols.txt", "r");
+    FILE *file = fopen("Tests/SamplePrograms/3_AllTerminalSymbols.txt", "r");
     lexAnalysis(file, stdout);
 
     if (report == REPORT) {
@@ -344,22 +345,19 @@ void thirdTest(enum Report report) {
 
     int result = tf_assertEqualsTwoTokensFlows(lexTokensFlow, rightTokensFlow);
     if (result == 1) {
-        printf("True\n");
-    } else printf("False\n");
+        printf("OK\n");
+    } else printf("ERROR\n");
 
     tf_clear(&lexTokensFlow);
 
 }
 //__________________________________________________________________________________________________
 
-int main() {
-    printf("LexAnalyzer Testing...\n\n");
-    printf("-----------------------------------1 TEST-------------------------------------------------------\n");
+void lex_tests() {
+    printf("LexAnalyzer Testing...\n");
     firstTest(NO_REPORT);
-    printf("-----------------------------------2 TEST-------------------------------------------------------\n");
     secondTest(NO_REPORT);
-    printf("-----------------------------------3 TEST-------------------------------------------------------\n");
     thirdTest(NO_REPORT);
-    printf("------------------------------------------------------------------------------------------------");
+    printf("\n");
 
 }

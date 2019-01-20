@@ -38,4 +38,5 @@ BEGIN
     proc1(v);
     Write(v.s1);
     proc2(5);
+    WriteLn;
 END Records.
